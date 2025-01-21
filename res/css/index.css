@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #222;
+
+}
+.top-1{
+    background-color: rgb(0, 0, 0);
+    margin-top: 0%;
+    padding: 1px;
+}
+.top-background {
+    height: 40vh;
+    background-color: black;
+    margin-top: 0%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.top-background div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.top-background .sign {
+    color: white;
+    font-family: '楷体', STKaiti, sans-serif; 
+    font-style: bold;
+    font-size: 50px;
+    margin-top: -2%; 
+    margin-right: -10%;
+}
+
+.top-background .sign-1 {
+    color: #999;
+    font-family: '楷体', STKaiti, sans-serif; 
+    font-style: bold;
+    font-size: 15px;
+    margin-bottom: -10%;
+}
+
+
+.main {
+    background-color: blue;
+    height: 1000px;
+    margin: 5%;
+    margin-top: -10%;
+}
