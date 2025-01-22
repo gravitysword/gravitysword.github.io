@@ -26,7 +26,6 @@ body {
     color: white;
     font-family: '楷体', STKaiti, sans-serif; 
     font-size: 50px;
-    font-weight:900 ;
     margin-top: -2%; 
     margin-right: -10%;
 }
@@ -35,7 +34,7 @@ body {
     color: #999;
     float: left;
     font-family: '楷体', STKaiti, sans-serif; 
-    font-weight:100 ;
+    font-style: bold;
     font-size: 15px;
     margin-bottom: -10%;
 }
@@ -48,17 +47,17 @@ body {
     margin-top: -5%;
 }
 
-
-
 .nav {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #333;
     padding: 10px 20px;
-
 }
 
+.logo img {
+    height: 50px;
+}
 
 .nav-links {
     list-style: none;
@@ -71,8 +70,24 @@ body {
     text-decoration: none;
     font-family: 'Arial', sans-serif;
     font-size: 16px;
+    font-weight: bold; /* 设置字体粗细 */
 }
 
 .nav-links a:hover {
     text-decoration: underline;
+    text-decoration-color: #fff;
+    color: #000;
+}
+
+.container {
+    display: flex; 
+
+}
+.container .introduce{
+    flex:1;
+    align-items: center;
+}
+
+.introduce img{
+    align-self: center;
 }
