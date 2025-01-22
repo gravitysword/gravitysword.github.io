@@ -1,42 +1,39 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #222;
+    background-color: #ffffff;
 
 }
 .top-1{
-    background-color: #000;
+    background-color:#000;
     margin-top: 0%;
 }
 .top-background {
-    height: 40vh;
+    height: 45vh;
     background-color: #000;;
     margin-top: 0%;
     display: flex;
-    justify-content: center;
     align-items: center;
+    font-family: '楷体', STKaiti, sans-serif;
+    
 }
 .top-background div {
-    flex: 1;
+    flex: 1; 
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.top-background .sign {
+.top-background .sign-0 {
     color: white;
-    font-family: '楷体', STKaiti, sans-serif; 
     font-size: 50px;
-    margin-top: -2%; 
-    margin-right: -10%;
+    font-weight:900;
+    margin-top:-15%;
 }
 
 .top-background .sign-1 {
     color: #999;
-    float: left;
-    font-family: '楷体', STKaiti, sans-serif; 
-    font-style: bold;
-    font-size: 15px;
-    margin-bottom: -10%;
+    font-size: 18px;
+    margin-top:15%;
 }
 
 
@@ -44,7 +41,7 @@ body {
     background-color: rgb(122, 122, 122);
     height: 1000px;
     margin: 10%;
-    margin-top: -5%;
+    margin-top: -7%;
 }
 
 .nav {
@@ -56,9 +53,12 @@ body {
 }
 
 .logo img {
-    height: 50px;
+    height: 40px;
 }
+.nav {
+    padding:10px;
 
+}
 .nav-links {
     list-style: none;
     display: flex;
@@ -71,12 +71,16 @@ body {
     font-family: 'Arial', sans-serif;
     font-size: 16px;
     font-weight: bold; /* 设置字体粗细 */
+    padding :15px;
+    border-radius: 10px;
+    margin : 15px;
 }
 
 .nav-links a:hover {
-    text-decoration: underline;
-    text-decoration-color: #fff;
-    color: #000;
+
+    border: #fff 2px solid;
+    margin: 13px;
+
 }
 
 .container {
@@ -86,8 +90,23 @@ body {
 .container .introduce{
     flex:1;
     align-items: center;
+    padding: 20px; /* 添加内边距 */
 }
 
 .introduce img{
     align-self: center;
+    max-width: 100%; /* 确保图片自适应容器宽度 */
+    height: auto; /* 保持图片宽高比 */
+}
+
+.introduce p {
+    color: #333; /* 设置文字颜色 */
+    font-family: 'Arial', sans-serif; /* 设置字体 */
+    font-size: 16px; /* 设置字体大小 */
+    line-height: 1.6; /* 设置行高 */
+    margin-top: 10px; /* 设置段落间距 */
+}
+
+.introduce .i-1 {
+    display: flex;
 }
