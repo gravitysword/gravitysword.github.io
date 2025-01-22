@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #ffffff;
+    background-color: #666;
 }
 
 .top-1 {
@@ -32,8 +32,6 @@ body {
     margin-top: -15%;
 }
 
-
-
 .top-background .sign-1 {
     color: #999;
     font-size: 18px;
@@ -41,7 +39,7 @@ body {
 }
 
 .main {
-    background-color: rgb(122, 122, 122);
+    background-color: #f9f9f9;
     height: 1000px;
     margin: 10%;
     margin-top: -7%;
@@ -51,7 +49,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #333;
+    background-color: #555;
     padding: 10px 20px;
     list-style: none;
 }
@@ -85,6 +83,9 @@ body {
     align-items: center;
     text-align: center;
 }
+.container div{
+    flex: 1;
+}
 
 .container .introduce {
     flex: 1;
@@ -92,13 +93,13 @@ body {
     padding: 20px; /* 添加内边距 */
 }
 
-.introduce img {
+.container .introduce img {
     align-self: center;
     max-width: 100%; /* 确保图片自适应容器宽度 */
     height: auto; /* 保持图片宽高比 */
 }
 
-.introduce p {
+.container .introduce p {
     color: #333; /* 设置文字颜色 */
     font-family: 'Arial', sans-serif; /* 设置字体 */
     font-size: 16px; /* 设置字体大小 */
@@ -106,31 +107,80 @@ body {
     margin-top: 10px; /* 设置段落间距 */
 }
 
-.introduce .i-0 {
+.container .introduce .i-0 {
     display: flex;
     justify-content: center;
     align-items: center;
     padding : 1px;
 }
-.introduce .i-0 img{
+
+.container .introduce .i-0 img{
     border-radius : 50%;
 }
-.introduce .i-0 .i-0-0 {
+
+.container .introduce .i-0 .i-0-0 {
     flex-grow: 1;
     margin-left: 5%;
     display: flex;
     flex-direction: column;
     text-align: left;
 }
-.introduce .i-0 .i-0-0 .i-0-0-0{
+
+.container .introduce .i-0 .i-0-0 .i-0-0-0{
     font-size: 20px;
     color: #fff;
     font-weight: bold;
 }
 
-.introduce .i-0 .i-0-0 .i-0-0-1{
+.container .introduce .i-0 .i-0-0 .i-0-0-1{
     margin-top: 3%;
     font-size: 16px;
     color: #fff;
 }
 
+.container .blogs ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.container .blogs li {
+    background-color: #fff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.container .blogs h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #333;
+}
+
+.container .blogs img {
+    float: left;
+    margin-right: 15px;
+    border-radius: 5px;
+}
+
+.container .blogs .tag {
+    display: inline-block;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.container .blogs p {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: #666;
+}
+
+.container .blogs .time {
+    font-size: 14px;
+    color: #999;
+}
