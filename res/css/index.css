@@ -3,6 +3,9 @@ body {
     padding: 0;
     background-color: #000000;
 }
+a {
+    text-decoration: none;
+}
 
 .top-1 {
     background-color: #000;
@@ -59,22 +62,59 @@ body {
     gap: 20px;
 }
 
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-family: 'Arial', sans-serif;
-    font-size: 16px;
+/* From Uiverse.io by nikk7007 */ 
+.nav-links .button {
+    --color: #ffffff;
+    padding: 12px 27px; 
+    background-color: transparent;
+    border-radius: 5px; 
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.5s;
+    border: 3px solid;
+    text-transform: uppercase;
+    color: var(--color);
+    z-index: 1;
+   }
+   
+   .nav-links .button::before, .button::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    border-radius: 50%;
+    z-index: -1;
+    background-color: var(--color);
+    transition: 1s ease;
+   }
+   
+   .nav-links .button::before {
+    top: -16px; 
+    left: -16px; 
+   }
+   
+   .nav-links .button::after {
+    left: calc(100% + 16px); 
+    top: calc(100% + 16px); 
+   }
+   
+   .nav-links .button:hover::before, .button:hover::after {
+    height: 410px;
+    width: 410px;
+   }
+   
+   .nav-links .button:hover {
+    color: rgb(0, 0, 0);
     font-weight: bold;
-    padding: 20px;
-    border: 2px solid transparent; /* 添加透明边框 */
-}
-
-.nav-links a:hover {
-    border-radius: 10%;
-    padding: 18px;
-    background-color: #fff;
-    color: #000;
-}
+   }
+   
+   .nav-links .button:active {
+    filter: brightness(.8);
+   }
+  /* From Uiverse.io */ 
 
 .container {
     display: flex;
@@ -92,8 +132,8 @@ body {
     flex-direction: column;
     align-items: center; 
     margin: 20px;
-    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.5);
-    transition: box-shadow 0.5s ease-in-out; /* 添加过渡效果 */
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.5s ease-in-out; 
     background-color: #fff;
     border-radius: 5%;
     padding: 10px;
@@ -129,6 +169,12 @@ body {
     margin-top: 10px;
     font-size: 18px  ;
     
+}
+.container .sidebar .introduce .sign {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 16px  ;
+    font-family: '楷体', STKaiti, sans-serif;
 }
 
 .container .blogs {
