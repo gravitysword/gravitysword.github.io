@@ -88,7 +88,7 @@ a {
     border-radius: 50%;
     z-index: -1;
     background-color: var(--color);
-    transition: 1s ease;
+    transition: 0.7s ease;
    }
    
    .nav-links .button::before {
@@ -102,8 +102,8 @@ a {
    }
    
    .nav-links .button:hover::before, .button:hover::after {
-    height: 410px;
-    width: 410px;
+    height: 145px;
+    width: 145px;
    }
    
    .nav-links .button:hover {
@@ -132,7 +132,7 @@ a {
     flex-direction: column;
     align-items: center; 
     margin: 20px;
-    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.5s ease-in-out; 
     background-color: #fff;
     border-radius: 5%;
@@ -140,7 +140,7 @@ a {
 }
 
 .container .sidebar .introduce:hover {
-    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0px 10px rgba(255, 0, 0, 0.2);
 }
 
 .container .sidebar .introduce p {
