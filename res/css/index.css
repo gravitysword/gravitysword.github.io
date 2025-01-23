@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #666;
+    background-color: #000000;
 }
 
 .top-1 {
@@ -29,20 +29,18 @@ body {
     color: white;
     font-size: 50px;
     font-weight: 900;
-    margin-top: -15%;
 }
 
 .top-background .sign-1 {
     color: #999;
     font-size: 18px;
-    margin-top: 15%;
+    margin-top: 45%;
 }
 
 .main {
-    background-color: #f9f9f9;
+    background-color: #fefefe;
     height: 1000px;
-    margin: 10%;
-    margin-top: -7%;
+    margin: 5%;
 }
 
 .nav {
@@ -81,61 +79,60 @@ body {
 .container {
     display: flex;
     align-items: center;
-    text-align: center;
-}
-.container div{
-    flex: 1;
 }
 
-.container .introduce {
-    flex: 1;
-    align-items: center;
-    padding: 20px; /* 添加内边距 */
-}
 
-.container .introduce img {
-    align-self: center;
-    max-width: 100%; /* 确保图片自适应容器宽度 */
-    height: auto; /* 保持图片宽高比 */
-}
-
-.container .introduce p {
-    color: #333; /* 设置文字颜色 */
-    font-family: 'Arial', sans-serif; /* 设置字体 */
-    font-size: 16px; /* 设置字体大小 */
-    line-height: 1.6; /* 设置行高 */
-    margin-top: 10px; /* 设置段落间距 */
-}
-
-.container .introduce .i-0 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding : 1px;
-}
-
-.container .introduce .i-0 img{
-    border-radius : 50%;
-}
-
-.container .introduce .i-0 .i-0-0 {
+.container .sidebar {
     flex-grow: 1;
-    margin-left: 5%;
+}
+
+
+.container .sidebar .introduce {
     display: flex;
     flex-direction: column;
-    text-align: left;
+    align-items: center; 
+    margin: 20px;
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 1s ease-in-out; /* 添加过渡效果 */
+    background-color: #fff;
+    border-radius: 5%;
+    padding: 10px;
 }
 
-.container .introduce .i-0 .i-0-0 .i-0-0-0{
-    font-size: 20px;
-    color: #fff;
-    font-weight: bold;
+.container .sidebar .introduce:hover {
+    box-shadow: 0 0px 100px rgba(0, 0, 0, 0.2);
 }
 
-.container .introduce .i-0 .i-0-0 .i-0-0-1{
-    margin-top: 3%;
+.container .sidebar .introduce p {
+    color: #000000; 
     font-size: 16px;
-    color: #fff;
+
+}
+
+.container .sidebar .introduce .logo {
+    padding: 10px;
+    margin: 10px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+.container .sidebar .introduce img {
+    text-align: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 100px;
+    margin-top: 10px;
+}
+
+.container .sidebar .introduce .name {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 18px  ;
+    
+}
+
+.container .blogs {
+    flex-grow: 15;
 }
 
 .container .blogs ul {
