@@ -118,7 +118,7 @@ a {
 
 .container {
     display: flex;
-    align-items: center;
+    align-items: stretch;
 }
 
 
@@ -176,6 +176,13 @@ a {
     font-size: 16px  ;
     font-family: '楷体', STKaiti, sans-serif;
 }
+
+.container .sidebar .introduce .social a img {
+    height: 30px;
+}
+
+
+
 
 .container .blogs {
     flex-grow: 15;
