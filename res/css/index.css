@@ -178,6 +178,9 @@ a {
 
 .container .sidebar .introduce .social a img {
     height: 30px;
+    border-radius: 0px;
+    margin: 10px;
+
 }
 
 .container .blogs {
