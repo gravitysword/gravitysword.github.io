@@ -44,8 +44,8 @@ a {
 
 .main {
     background-color: #fefefe;
-    height: 1000px;
     margin: 5%;
+    padding: 20px;
 }
 
 .nav {
@@ -62,6 +62,7 @@ a {
     display: flex;
     justify-content: center;
     gap: 20px;
+    flex-wrap: wrap; /* 允许换行 */
 }
 
 /* From Uiverse.io by nikk7007 */ 
@@ -121,13 +122,13 @@ a {
 .container {
     display: flex;
     align-items: stretch;
+    flex-wrap: wrap; /* 允许换行 */
 }
-
 
 .container .sidebar {
-    flex-grow: 1;
+    flex: 1 1 200px; /* 更小屏幕时变为单列 */
+    margin: 10px;
 }
-
 
 .container .sidebar > div {
     display: flex;
@@ -140,7 +141,6 @@ a {
     border-radius: 10px;
     padding: 10px;
 }
-
 
 .container .sidebar .introduce p {
     color: #000000; 
@@ -184,8 +184,8 @@ a {
 }
 
 .container .blogs {
-    flex-grow: 15;
-    margin: 20px;
+    flex: 3 1 400px; /* 更小屏幕时变为单列 */
+    margin: 10px;
     display: flex;
     flex-direction: column;
 }
@@ -207,8 +207,6 @@ a {
     box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
 }
 
-
-
 .container .blogs li .title {
     font-size: 20px;
     width: 70%;
@@ -224,7 +222,6 @@ a {
     color: #555555;
 }
 
-
 .container .blogs li .summary {
     margin-top: 10px;
     font-size: 16px;
@@ -234,7 +231,6 @@ a {
     line-height: 1.5;
     letter-spacing: 1px;
 }
-
 
 .container .blogs .pagination {
     display: inline-block;
@@ -260,4 +256,17 @@ a {
 
 .container .blogs .pagination a:hover:not(.active) {
     background-color: #ddd;
+}
+
+/* 媒体查询，调整不同屏幕尺寸下的布局 */
+@media (max-width: 768px) {
+    .container .sidebar, .container .blogs {
+        flex: 1 1 100%; /* 在平板及以下设备上变为单列 */
+    }
+}
+
+@media (max-width: 480px) {
+    .container .sidebar, .container .blogs {
+        flex: 1 1 100%; /* 在手机设备上变为单列 */
+    }
 }
