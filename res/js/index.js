@@ -1,17 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const signElement = document.querySelector('.sign-0');
+    const sidebarDivs = document.querySelectorAll('.container .sidebar > div');
 
-    signElement.addEventListener('mouseenter', () => {
-        signElement.style.animation = 'eraseText 1s forwards';
-        signElement.addEventListener('animationend', () => {
-            signElement.style.animation = 'revealText 1s forwards';
-        }, { once: true });
+    sidebarDivs.forEach(div => {
+        div.addEventListener('mouseenter', () => {
+            const randomColor = getRandomColor();
+            div.style.boxShadow = `0 0px 10px ${randomColor}`;
+        });
+
+        div.addEventListener('mouseleave', () => {
+            div.style.boxShadow = '0 0px 2px rgba(0, 0, 0, 0.2)';
+        });
     });
 
-    signElement.addEventListener('mouseleave', () => {
-        signElement.style.animation = 'revealText 1s reverse forwards';
-        signElement.addEventListener('animationend', () => {
-            signElement.style.animation = 'eraseText 1s reverse forwards';
-        }, { once: true });
+    const blogLis = document.querySelectorAll('.container .blogs ul li'); // 修改选择器
+
+    blogLis.forEach(li => {
+        li.addEventListener('mouseenter', () => {
+            const randomColor = getRandomColor();
+            li.style.boxShadow = `0 0px 10px ${randomColor}`;
+        });
+
+        li.addEventListener('mouseleave', () => {
+            li.style.boxShadow = '0 0px 2px rgba(0, 0, 0, 0.2)';
+        });
     });
+
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 });

@@ -134,16 +134,13 @@ a {
     flex-direction: column;
     align-items: center; 
     margin: 20px;
-    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.5s ease-in-out; 
     background-color: #fff;
     border-radius: 10px;
     padding: 10px;
 }
 
-.container .sidebar > div:hover {
-    box-shadow: 0 0px 5px rgba(255, 0, 0, 1);
-}
 
 .container .sidebar .introduce p {
     color: #000000; 
@@ -183,12 +180,11 @@ a {
     height: 30px;
 }
 
-
-
-
 .container .blogs {
     flex-grow: 15;
     margin: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .container .blogs ul {
@@ -204,19 +200,11 @@ a {
     display: flex;
     flex-direction: column; 
     align-items: stretch;
-    transition: box-shadow 0.3s ease-in-out; 
+    transition: box-shadow 0.5s ease-in-out; 
     box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
 }
 
-.container .blogs li:hover {
-    padding: 30px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column; 
-    align-items: stretch;
-}
+
 
 .container .blogs li .title {
     font-size: 20px;
@@ -242,4 +230,31 @@ a {
     word-wrap: break-word;
     line-height: 1.5;
     letter-spacing: 1px;
+}
+
+
+.container .blogs .pagination {
+    display: inline-block;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.container .blogs .pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+}
+
+.container .blogs .pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+.container .blogs .pagination a:hover:not(.active) {
+    background-color: #ddd;
 }
