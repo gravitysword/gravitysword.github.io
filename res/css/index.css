@@ -271,9 +271,10 @@ a {
 
 .content-container .blog-list .pagination {
     display: flex;
-    margin: 20px;
-    align-items: center;
+    
     justify-content: center;
+    margin: 20px;
+    margin-right: 40%;
     
 }
 
@@ -281,8 +282,7 @@ a {
     .content-container .blog-list .pagination {
         background-color: #ffffff;
         justify-content: center;
-        margin: 0px;
-        width: 70%;
+        margin-right: 0%;
     }
 }
 
