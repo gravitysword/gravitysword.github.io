@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const sidebarDivs = document.querySelectorAll('.container .sidebar > div');
+    const sidebarDivs = document.querySelectorAll('.content-container .sidebar > div');
 
     sidebarDivs.forEach(div => {
         div.addEventListener('mouseenter', () => {
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const blogLis = document.querySelectorAll('.container .blogs ul li'); // 修改选择器
+    const blogLis = document.querySelectorAll('.content-container .blog-list ul li'); // 修改选择器
 
     blogLis.forEach(li => {
         li.addEventListener('mouseenter', () => {

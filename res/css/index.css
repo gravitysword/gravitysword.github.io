@@ -3,13 +3,16 @@ body {
     padding: 0;
     background-color: #000000;
     font-family: 'Microsoft YaHei', sans-serif;
-    font-size:16px;
+    font-size: 16px;
+    height: 300vh; /* 设置 body 高度为视口高度 */
+    display: flex;
+    flex-direction:column;
 }
 a {
     text-decoration: none;
 }
 
-.top-1 {
+.top-section {
     background-color: #000;
     margin-top: 0%;
 }
@@ -30,31 +33,34 @@ a {
     align-items: center;
 }
 
-.top-background .sign-0 {
+.top-background .top-sign-0 {
     color: white;
     font-size: 50px;
     font-weight: 900;
 }
 
-.top-background .sign-1 {
+.top-background .top-sign-1 {
     color: #999;
     font-size: 18px;
     margin-top: 45%;
 }
 
-.main {
+.main-content {
     background-color: #fefefe;
     margin: 5%;
     padding: 20px;
+    flex-grow: 1;
+    border-radius: 10px;
 }
 
-.nav {
+.navigation {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #555;
-    padding: 10px 20px;
+    background-color: #000000;
+    padding: 0px 20px;
     list-style: none;
+    border-radius: 8px;
 }
 
 .nav-links {
@@ -66,22 +72,22 @@ a {
 }
 
 /* From Uiverse.io by nikk7007 */ 
-.nav-links .button {
+.nav-links .nav-button {
     --color: #ffffff;
     padding: 12px 27px; 
     background-color: transparent;
-    border-radius: 10px; 
     position: relative;
     overflow: hidden;
     cursor: pointer;
     transition: 0.5s;
-    border: 3px solid;
+    border: 2px solid;
     text-transform: uppercase;
     color: var(--color);
     z-index: 1;
+
    }
    
-   .nav-links .button::before, .button::after {
+   .nav-links .nav-button::before, .nav-button::after {
     content: '';
     display: block;
     width: 20px;
@@ -91,46 +97,51 @@ a {
     border-radius: 50%;
     z-index: -1;
     background-color: var(--color);
-    transition: 0.7s ease;
+    transition: 0.5s ease;
    }
    
-   .nav-links .button::before {
+   .nav-links .nav-button::before {
     top: -16px; 
     left: -16px; 
    }
    
-   .nav-links .button::after {
+   .nav-links .nav-button::after {
     left: calc(100% + 16px); 
     top: calc(100% + 16px); 
    }
    
-   .nav-links .button:hover::before, .button:hover::after {
+   .nav-links .nav-button:hover::before, .nav-button:hover::after {
     height: 145px;
     width: 145px;
    }
    
-   .nav-links .button:hover {
+   .nav-links .nav-button:hover {
     color: rgb(0, 0, 0);
     font-weight: bold;
+    border-radius: 8px;
    }
    
-   .nav-links .button:active {
-    filter: brightness(.8);
-   }
+
+.nav-links .nav-button:active::before, .nav-button:active::after {
+    background-color: rgb(0, 0, 0); 
+}
+.nav-links .nav-button:active {
+    color: rgb(255, 255, 255); 
+}
   /* From Uiverse.io */ 
 
-.container {
+.content-container {
     display: flex;
     align-items: stretch;
     flex-wrap: wrap; /* 允许换行 */
 }
 
-.container .sidebar {
+.content-container .sidebar {
     flex: 1 1 200px; /* 更小屏幕时变为单列 */
     margin: 10px;
 }
 
-.container .sidebar > div {
+.content-container .sidebar > div {
     display: flex;
     flex-direction: column;
     align-items: center; 
@@ -142,61 +153,62 @@ a {
     padding: 10px;
 }
 
-.container .sidebar .introduce p {
+.content-container .sidebar .sidebar-introduce p {
     color: #000000; 
     font-size: 16px;
 }
 
-.container .sidebar .introduce .logo {
+.content-container .sidebar .sidebar-introduce .sidebar-logo {
     display: flex; 
     justify-content: center; 
     align-items: center; 
 }
-.container .sidebar .introduce img {
+.content-container .sidebar .sidebar-introduce img {
     text-align: center;
     align-items: center;
     border-radius: 50%;
     margin-top: 10px;
 }
 
-.container .sidebar .introduce .name {
+.content-container .sidebar .sidebar-introduce .sidebar-name {
     font-weight: bold;
     margin-top: 10px;
     font-size: 18px  ;
     
 }
-.container .sidebar .introduce .sign {
+.content-container .sidebar .sidebar-introduce .sidebar-sign {
     font-weight: bold;
     margin-top: 10px;
     font-size: 16px  ;
     font-family: '楷体', STKaiti, sans-serif;
 }
 
-.container .sidebar .introduce .social  {
+.content-container .sidebar .sidebar-introduce .sidebar-social  {
     margin-top: 10px;
 }
 
-.container .sidebar .introduce .social a img {
+.content-container .sidebar .sidebar-introduce .sidebar-social a img {
     height: 30px;
     border-radius: 0px;
     margin: 10px;
 
 }
 
-.container .blogs {
+.content-container .blog-list {
     flex: 3 1 400px; /* 更小屏幕时变为单列 */
     margin: 10px;
     display: flex;
     flex-direction: column;
 }
 
-.container .blogs ul {
+.content-container .blog-list ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    margin-top: 20px;
 }
 
-.container .blogs li {
+.content-container .blog-list li {
     padding: 30px;
     border-radius: 10px;
     margin-bottom: 20px;
@@ -207,22 +219,42 @@ a {
     box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
 }
 
-.container .blogs li .title {
+.content-container .blog-list li .blog-title {
     font-size: 20px;
     width: 70%;
     color: #222;
     word-wrap: break-word;
 }
 
-.container .blogs li .introduce {
+.content-container .blog-list li .blog-introduce {
     margin-top: 10px;
     font-size: 14px;
     display: flex;
     flex-direction: row;
     color: #555555;
+    align-items: center; /* 添加垂直居中 */
 }
 
-.container .blogs li .summary {
+.content-container .blog-list li .blog-introduce .calendar {
+    width: 16px;
+    opacity: 0.8;
+    margin-right: 2px;
+    margin-bottom: 1px;
+}
+.content-container .blog-list li .blog-introduce .blog-time {
+    text-align: center;
+}
+
+.content-container .blog-list li .blog-introduce .blog-tag {
+    background-color: aqua;
+    border-radius: 5px;
+    padding:2px 5px;
+    text-align: center;
+    margin-left: 10px;
+    color: #333;
+}
+
+.content-container .blog-list li .blog-summary {
     margin-top: 10px;
     font-size: 16px;
     color: #333;
@@ -232,13 +264,13 @@ a {
     letter-spacing: 1px;
 }
 
-.container .blogs .pagination {
+.content-container .blog-list .pagination {
     display: inline-block;
     margin: 20px 0;
     text-align: center;
 }
 
-.container .blogs .pagination a {
+.content-container .blog-list .pagination a {
     color: black;
     float: left;
     padding: 8px 16px;
@@ -248,25 +280,25 @@ a {
     margin: 0 4px;
 }
 
-.container .blogs .pagination a.active {
+.content-container .blog-list .pagination a.pagination-active {
     background-color: #4CAF50;
     color: white;
     border: 1px solid #4CAF50;
 }
 
-.container .blogs .pagination a:hover:not(.active) {
+.content-container .blog-list .pagination a:hover:not(.pagination-active) {
     background-color: #ddd;
 }
 
 /* 媒体查询，调整不同屏幕尺寸下的布局 */
 @media (max-width: 768px) {
-    .container .sidebar, .container .blogs {
+    .content-container .sidebar, .content-container .blog-list {
         flex: 1 1 100%; /* 在平板及以下设备上变为单列 */
     }
 }
 
 @media (max-width: 480px) {
-    .container .sidebar, .container .blogs {
+    .content-container .sidebar, .content-container .blog-list {
         flex: 1 1 100%; /* 在手机设备上变为单列 */
     }
 }
