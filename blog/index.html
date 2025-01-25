@@ -1,22 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>Markdown解析示例</title>
+    <meta charset="UTF-8">
+    <title>泛舟游客的博客</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link href="../res/css/md.css" rel="stylesheet">
+    <link href="../res/css/blog-index.css" rel="stylesheet">
     <script>
         function loadMarkdownFile() {
-            fetch('../api/a.md')
+            const urlParams = new URLSearchParams(window.location.search);
+            const blogId = urlParams.get('id'); 
+
+            fetch(`../api/${blogId}.md`)
                 .then(response => response.text())
                 .then(markdown => {
                     const html = marked.parse(markdown);
                     document.getElementById('markdown-content').innerHTML = html;
                 });
         }
+        
     </script>
 </head>
-<body onload="loadMarkdownFile()">
-    <div id="markdown-content"></div>
+<body onload="loadMarkdownFile()" >
+    <div class="main-content" style="background-color: rgb(255, 255, 255); padding:30px">
+        <div class="introduce">
+            <h1 class="title">TEST</h1>
+            <span class="blog-introduce">
+                <img class="calendar" src="../res/media/svg/calendar.svg" alt="calendar" >
+                <span class="blog-time">2025-01-24</span>
+                <span class="blog-tag">生活</span>
+            </span>
+        </div>
+        <HR width="100%" color=#000 size="3px" >
+        <div class="content" style="background-color: rgb(255, 255, 255); ">
+            <div id="markdown-content" ></div>
+        </div>
+    </div>
 </body>
 </html>
-

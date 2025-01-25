@@ -20,29 +20,42 @@ a {
 .top-background {
     height: 45vh;
     background-color: #000;
-    margin-top: 0%;
     display: flex;
-    align-items: center;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    flex-direction: column;
     font-family: '楷体', STKaiti, sans-serif;
 }
 
-.top-background div {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.top-background .top-sign-0,
+.top-background .top-sign-1 {
+    width: 100%; /* 确保 span 拉伸 */
+    text-align: center; /* 确保文字在 span 内居中 */
 }
 
 .top-background .top-sign-0 {
     color: white;
     font-size: 50px;
     font-weight: 900;
+
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+
+    flex: 1;
+    margin-top: 2%;
 }
 
 .top-background .top-sign-1 {
     color: #999;
     font-size: 18px;
-    margin-top: 45%;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+
+    margin-left: 50%;
+    margin-bottom: 2%;
+
 }
 
 .main-content {
@@ -126,9 +139,11 @@ a {
 
 .nav-links .nav-button:active::before, .nav-button:active::after {
     background-color: rgb(0, 0, 0); 
+    transition: 0.1s ease;
 }
 .nav-links .nav-button:active {
     color: rgb(255, 255, 255); 
+    transition: 0.1s ease;
 }
   /* From Uiverse.io */ 
 

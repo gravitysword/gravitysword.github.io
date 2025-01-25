@@ -1,0 +1,35 @@
+.main-content {
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+
+.blog-introduce {
+    margin-top: 10px;
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    color: #555555;
+    align-items: center; /* 添加垂直居中 */
+}
+
+.blog-introduce .calendar {
+    width: 16px;
+    opacity: 0.8;
+    margin-right: 2px;
+    margin-bottom: 1px;
+}
+.blog-introduce .blog-time {
+    text-align: center;
+}
+
+.blog-introduce .blog-tag {
+    background-color: aqua;
+    border-radius: 5px;
+    padding:2px 5px;
+    text-align: center;
+    margin-left: 10px;
+    color: #333;
+}
