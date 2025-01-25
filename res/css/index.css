@@ -4,7 +4,7 @@ body {
     background-color: #000000;
     font-family: 'Microsoft YaHei', sans-serif;
     font-size: 16px;
-    height: 300vh; /* 设置 body 高度为视口高度 */
+    height: 200vh; 
     display: flex;
     flex-direction:column;
 }
@@ -51,6 +51,8 @@ a {
     padding: 20px;
     flex-grow: 1;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .navigation {
@@ -134,6 +136,7 @@ a {
     display: flex;
     align-items: stretch;
     flex-wrap: wrap; /* 允许换行 */
+    flex-grow: 1;
 }
 
 .content-container .sidebar {
@@ -199,6 +202,7 @@ a {
     margin: 10px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
 .content-container .blog-list ul {
@@ -206,6 +210,7 @@ a {
     padding: 0;
     margin: 0;
     margin-top: 20px;
+    flex-grow: 1;
 }
 
 .content-container .blog-list li {
@@ -265,9 +270,20 @@ a {
 }
 
 .content-container .blog-list .pagination {
-    display: inline-block;
-    margin: 20px 0;
-    text-align: center;
+    display: flex;
+    margin: 20px;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+@media (max-width: 768px) {
+    .content-container .blog-list .pagination {
+        background-color: #ffffff;
+        justify-content: center;
+        margin: 0px;
+        width: 70%;
+    }
 }
 
 .content-container .blog-list .pagination a {
@@ -281,13 +297,14 @@ a {
 }
 
 .content-container .blog-list .pagination a.pagination-active {
-    background-color: #4CAF50;
-    color: white;
-    border: 1px solid #4CAF50;
+    background-color: #000000;
+    color: #ffffff;
 }
 
+
 .content-container .blog-list .pagination a:hover:not(.pagination-active) {
-    background-color: #ddd;
+    background-color: #444;
+    color: #aaa;
 }
 
 /* 媒体查询，调整不同屏幕尺寸下的布局 */
