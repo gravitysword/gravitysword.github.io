@@ -238,6 +238,16 @@ a {
     transition: box-shadow 0.5s ease-in-out; 
     box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
 }
+.content-container .blog-list li {
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column; 
+    align-items: stretch;
+    transition: box-shadow 0.5s ease-in-out; 
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
+}
 
 .content-container .blog-list li .blog-title {
     font-size: 20px;
@@ -266,12 +276,12 @@ a {
 }
 
 .content-container .blog-list li .blog-introduce .blog-tag {
-    background-color: aqua;
+    border: #333  solid 1px;
     border-radius: 5px;
     padding:2px 5px;
     text-align: center;
     margin-left: 10px;
-    color: #333;
+    color: #444;
 }
 
 .content-container .blog-list li .blog-summary {

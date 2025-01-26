@@ -11,7 +11,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const blogId = urlParams.get('id'); 
 
-            fetch(`../api/${blogId}.md`)
+            fetch(`/blog/${blogId}.md`)
                 .then(response => response.text())
                 .then(markdown => {
                     const html = marked.parse(markdown);
