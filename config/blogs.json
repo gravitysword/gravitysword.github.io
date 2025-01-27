@@ -1,3 +1,7 @@
 {
-    "blogs": ["a","ab"]
+    "blogs": [
+        "a",
+        "ab",
+        "aboutme"
+    ]
 }
