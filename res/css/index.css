@@ -271,7 +271,7 @@ a {
     margin-right: 2px;
     margin-bottom: 1px;
 }
-.content-container .blog-list li .blog-introduce .blog-time {
+.content-container .blog-list li .blog-introduce .blog-date {
     text-align: center;
 }
 
@@ -284,7 +284,7 @@ a {
     color: #444;
 }
 
-.content-container .blog-list li .blog-summary {
+.content-container .blog-list li .blog-description {
     margin-top: 10px;
     font-size: 16px;
     color: #333;

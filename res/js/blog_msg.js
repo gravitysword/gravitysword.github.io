@@ -1,28 +1,29 @@
-export async function getBlogItems() {
+export async function BLOG_getBlogItems() {
     try {
         const response = await fetch("/config/blogs.json");
         let data = await response.text();
         data = JSON.parse(data)["blogs"];
         let blogsData = [];
         for (let i of data) {
-            blogsData.push(JSON.parse(await getBlog(i)));
+            blogsData.push(await BLOG_getBlog(i));
         }
-        return blogsData; 
+        return blogsData;
     } catch (error) {
         console.error('Error fetching blogs.json:', error);
         return null;
     }
 }
 
-export async function getBlog(blogId) {
+export async function BLOG_getBlog(blogId) {
     try {
         const response = await fetch(`/blog/${blogId}.md`);
         const data = await response.text();
-        
+        console.log(data);
+
         // 使用正确的正则表达式匹配 <div> 标签内容
-        const regex = /<div\s+display="none"\s+class="author">(.*?)<\/div>/s;
-        const match = data.match(regex);
-        return match[1] ? match[1] : "文章异常，请联系博主";
+        const regex = /<div style="display:none;" class="author">([^<]*(?:<(?!\/div>)[^<]*)*)<\/div>/i;
+const match = data.match(regex);
+        return match[1] ? JSON.parse(match[1]) : "文章异常，请联系博主";
     } catch (error) {
         console.error('Error fetching blog:', error);
         return "未找到文章";

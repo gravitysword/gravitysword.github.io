@@ -1,10 +1,11 @@
-<div display="none" class="author">
+<div style="display:none;" class="author">
 {
+    "id":"ab",
     "title": "Markdown文档",
     "date" : "2023-0dfgddg7-01",
     "description": "这是一个用于测试的Markdown文档，包含了多种Markdown元素。",
     "keywords": "Markdown,文档,测试",
-    "tag" : "Markdown,文档,测试"
+    "tag" : ["Markdown","文档","测试"]
 }
 </div>
 
