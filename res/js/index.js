@@ -1,17 +1,19 @@
 import { BLOG_getBlog, BLOG_getBlogItems } from '/res/js/blog_msg.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    //加载列表
+    
     {
         async function a1() {
-            const blogList_element = document.querySelector('.content-container .blog-list ul')
-            const bloglist = await BLOG_getBlogItems();
-            for (const item of bloglist) {
-                let tag = ""
-                for (const tag_item of item["tag"]) {
-                    tag += `<span class="blog-tag">${tag_item}</span>`
-                }
-                const lis = `
+            {
+                //加载列表
+                const blogList_element = document.querySelector('.content-container .blog-list ul')
+                const bloglist = await BLOG_getBlogItems();
+                for (const item of bloglist) {
+                    let tag = ""
+                    for (const tag_item of item["tag"]) {
+                        tag += `<span class="blog-tag">${tag_item}</span>`
+                    }
+                    const lis = `
                     <li>
                         <span class="blog-id" style="display: none;">${item["id"]}</span>
                         <span class="blog-title">${item["title"]}</span>
@@ -22,8 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         </span>
                         <span class="blog-description">${item["description"]}</span>
                     </li>`
-                blogList_element.innerHTML += lis;
+                    blogList_element.innerHTML += lis;
+                }
+
             }
+
 
             // 随机颜色的阴影
             {
@@ -71,6 +76,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
 
+            }
+            {
+            //翻页
+            const a = document.querySelectorAll('.pagination a');
+            for(const item of a){
+                item.addEventListener('click',()=>{
+                    alert("这是假的翻页栏，真的我还没做好 ^_^")
+                })
+            }
             }
         }
 
