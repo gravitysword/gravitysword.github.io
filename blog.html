@@ -6,7 +6,7 @@
     <link href="/res/css/md.css" rel="stylesheet">
     <link href="/res/css/blog.css" rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="res/js/marked.js"></script>
     <script src="/res/js/blog.js" type="module"></script>
     <meta name="referrer" content="no-referrer" />
 
@@ -14,18 +14,11 @@
     
 </head>
 <body>
-
-    <nav class="navbar">
-        <ul>
-            <li><a href="/index.html">首页</a></li>
-            <li><a href="/blog.html?id=aboutme">关于</a></li>
-        </ul>
-    </nav>
     <div class="main-content" >
         <div class="introduce">
             <h1 class="title"> </h1>
             <span class="blog-introduce">
-                <img class="calendar" src="../res/media/svg/calendar.svg" alt="calendar" >
+                <img class="calendar" src="/res/media/svg/calendar.svg" alt="calendar" >
                 <span class="blog-date"> </span>
             </span>
         </div>
@@ -33,6 +26,7 @@
         <div class="content" style="background-color: rgb(255, 255, 255); ">
             <div id="markdown-content" ></div>
         </div>
+        <div></div>
     </div>
 </body>
 </html>

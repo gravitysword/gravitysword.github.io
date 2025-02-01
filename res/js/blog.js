@@ -16,15 +16,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('markdown-content').innerHTML = html;
                 });
 
-            const blog_details = await BLOG_getBlog(blogId);
+            const blog_details = await BLOG_getBlog(blogId)
             console.log(blog_details);
-            document.querySelector('.title').textContent = blog_details["title"];
-            document.querySelector('.blog-date').textContent = blog_details["date"];
+            document.querySelector('.title').textContent = blog_details["title"]
+            document.querySelector('.blog-date').textContent = blog_details["date"]
             let tag = ""
             for (const tag_item of blog_details["tag"]) {
                 tag += `<span class="blog-tag">${tag_item}</span>`
             }
-            document.querySelector('.blog-introduce').innerHTML += tag;
+            document.querySelector('.blog-introduce').innerHTML += tag
+
+
+            document.querySelectorAll('p').forEach(p => {
+                const parts = p.innerHTML.split('<br>');
+                const modifiedParts = parts.map(part => `&emsp;&emsp;${part}`);
+                p.innerHTML = modifiedParts.join('<br>');
+            });
 
         }
 
