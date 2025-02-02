@@ -3,8 +3,8 @@
     "id":"ab",
     "title": "测试标题-3",
     "date" : "2025-01-27",
+    "weather" : "cloudy",
     "description": "这是一个用于测试的Markdown文档，包含了多种Markdown元素。",
-    "keywords": "Markdown,文档,测试",
     "tag" : ["Markdown","文档","测试"]
 }
 </div>
