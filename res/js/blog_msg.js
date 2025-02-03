@@ -30,3 +30,19 @@ const match = data.match(regex);
     }
 }
 
+export async function refreshSelf() {
+    try {
+        const response = await fetch("/all.txt");
+        let data = await response.text();
+        data = data.split("\n");
+        for (let i of data) {
+            await fetch(i)
+            console.log(i)
+            
+        }
+        return blogsData;
+    } catch (error) {
+        console.error('Error fetching blogs.json:', error);
+        return null;
+    }
+}

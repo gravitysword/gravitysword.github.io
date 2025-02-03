@@ -1,11 +1,12 @@
-import { BLOG_getBlog, BLOG_getBlogItems } from '/res/js/blog_msg.js';
+import { BLOG_getBlog, BLOG_getBlogItems,refreshSelf } from '/res/js/blog_msg.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     {
         async function a1() {
+            //加载列表
             {
-                //加载列表
+
                 const blogList_element = document.querySelector('.content-container .blog-list ul')
                 const bloglist = await BLOG_getBlogItems();
                 for (const item of bloglist) {
@@ -77,14 +78,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
             }
-            {
+
+
             //翻页
-            const a = document.querySelectorAll('.pagination a');
-            for(const item of a){
-                item.addEventListener('click',()=>{
-                    alert("这是假的翻页栏，真的我还没做好 ^_^")
-                })
+            {
+
+                const a = document.querySelectorAll('.pagination a');
+                for (const item of a) {
+                    item.addEventListener('click', () => {
+                        alert("这是假的翻页栏，真的我还没做好 ^_^")
+                    })
+                }
             }
+
+            //加载
+            {
+                refreshSelf();
+
             }
         }
 
