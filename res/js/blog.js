@@ -42,9 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('.blog-introduce').innerHTML += tag;
 
                 document.querySelectorAll('p').forEach(p => {
-                    const parts = p.innerHTML.split('<br>');
-                    const modifiedParts = parts.map(part => `&emsp;&emsp;${part}`);
-                    p.innerHTML = modifiedParts.join('<br>');
+                    if (p.parentElement.tagName.toLowerCase() !== 'li') {
+                        const parts = p.innerHTML.split('<br>');
+                        const modifiedParts = parts.map(part => `&emsp;&emsp;${part}`);
+                        p.innerHTML = modifiedParts.join('<br>');
+                    }
                 });
             } catch (error) {
                 console.error('Error loading blog:', error);

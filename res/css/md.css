@@ -184,8 +184,7 @@ ol p, ul p {
 	margin-bottom: 0px;
 }
 li {
-	margin-bottom: 0.75em;
-	margin-top: 0.75em;
+	margin-top: 5px;
 }
 ol#footnotes {
 	font-size: 0.95em;
