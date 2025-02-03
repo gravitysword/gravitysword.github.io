@@ -1,9 +1,9 @@
+https://gravitysword.github.io/all.txt
 https://gravitysword.github.io/blog/2025/1.md
 https://gravitysword.github.io/blog/2025/2.md
 https://gravitysword.github.io/blog/aboutme.md
 https://gravitysword.github.io/blog.html
 https://gravitysword.github.io/config/blogs.json
-https://gravitysword.github.io/file_paths.txt
 https://gravitysword.github.io/index.html
 https://gravitysword.github.io/listFiles.py
 https://gravitysword.github.io/res/css/blog.css

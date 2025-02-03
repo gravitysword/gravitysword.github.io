@@ -14,8 +14,8 @@ def list_files(directory):
     return file_paths
 
 if __name__ == "__main__":
-    directory = r''''''
+    directory = os.getcwd().replace("\\", "/")
     files = list_files(directory)
-    with open("file_paths.txt", "w") as f:
+    with open("all.txt", "w") as f:
         for file in files:
-            f.write(file.replace(directory, "https://gravitysword.github.io/") + "\n")
+            f.write(file.replace(directory, "https://gravitysword.github.io") + "\n")

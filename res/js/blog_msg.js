@@ -40,9 +40,9 @@ export async function refreshSelf() {
             console.log(i)
             
         }
-        return blogsData;
+        return ;
     } catch (error) {
-        console.error('Error fetching blogs.json:', error);
+        console.error(error);
         return null;
     }
 }
