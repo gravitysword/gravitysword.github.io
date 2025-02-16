@@ -5,7 +5,9 @@ export async function BLOG_getBlogItems() {
         data = JSON.parse(data)["blogs"];
         let blogsData = [];
         for (let i of data) {
-            blogsData.push(await BLOG_getBlog(i));
+            let j  = await BLOG_getBlog(i)
+            j.id = i
+            blogsData.push(j);
         }
         return blogsData;
     } catch (error) {
@@ -16,13 +18,12 @@ export async function BLOG_getBlogItems() {
 
 export async function BLOG_getBlog(blogId) {
     try {
-        const response = await fetch(`/blog/${blogId}.md`);
+        const response = await fetch(`/blog/${blogId}`);
         const data = await response.text();
-        console.log(data);
 
         // 使用正确的正则表达式匹配 <div> 标签内容
         const regex = /<div style="display:none;" class="author">([^<]*(?:<(?!\/div>)[^<]*)*)<\/div>/i;
-const match = data.match(regex);
+        const match = data.match(regex);
         return match[1] ? JSON.parse(match[1]) : "文章异常，请联系博主";
     } catch (error) {
         console.error('Error fetching blog:', error);
@@ -37,7 +38,6 @@ export async function refreshSelf() {
         data = data.split("\n");
         for (let i of data) {
             await fetch(i)
-            console.log(i)
             
         }
         return ;

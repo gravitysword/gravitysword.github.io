@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const blogId = urlParams.get('id');
                 console.log(`Blog ID: ${blogId}`);
 
-                const response = await fetch(`/blog/${blogId}.md`);
+                const response = await fetch(`/blog/${blogId}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }

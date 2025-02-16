@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const blogList_element = document.querySelector('.content-container .blog-list ul')
                 const bloglist = await BLOG_getBlogItems();
+                console.log('Blog List:', bloglist);
                 for (const item of bloglist) {
                     let tag = ""
                     for (const tag_item of item["tag"]) {

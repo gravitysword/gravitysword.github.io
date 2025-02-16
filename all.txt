@@ -1,11 +1,14 @@
 https://gravitysword.github.io/all.txt
 https://gravitysword.github.io/blog/2025/1.md
 https://gravitysword.github.io/blog/2025/2.md
+https://gravitysword.github.io/blog/2025/3.md
 https://gravitysword.github.io/blog/aboutme.md
 https://gravitysword.github.io/blog.html
+https://gravitysword.github.io/blogs.py
 https://gravitysword.github.io/config/blogs.json
 https://gravitysword.github.io/index.html
 https://gravitysword.github.io/listFiles.py
+https://gravitysword.github.io/README
 https://gravitysword.github.io/res/css/blog.css
 https://gravitysword.github.io/res/css/index.css
 https://gravitysword.github.io/res/css/md.css
@@ -18,4 +21,5 @@ https://gravitysword.github.io/res/media/svg/bili.svg
 https://gravitysword.github.io/res/media/svg/calendar.svg
 https://gravitysword.github.io/res/media/svg/github.svg
 https://gravitysword.github.io/res/media/svg/weather/cloudy.svg
+https://gravitysword.github.io/res/media/svg/weather/sunny.svg
 https://gravitysword.github.io/res/media/svg/weibo.svg
