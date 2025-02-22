@@ -1,9 +1,10 @@
 import { BLOG_getBlog, BLOG_getBlogItems } from '/res/js/blog_msg.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 加载列表
+
     {
         async function a1() {
+            // 加载数据
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const blogId = urlParams.get('id');
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const weatherElement = document.querySelector('.weather');
                 if (weatherElement) {
-                    if (blog_details["weather"] === ""){
+                    if (blog_details["weather"] === "") {
                         weatherElement.style.display = 'none';
                         console.log("天气信息为空，隐藏天气图标");
                     } else {
@@ -50,6 +51,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } catch (error) {
                 console.error('Error loading blog:', error);
+            }
+
+            //分享
+            {
+                const shareButton = document.getElementsByClassName('share-button')[0];
+                const articleTitle = document.querySelector('.title').textContent;
+                const articleUrl = window.location.href;
+                const articleTime = document.querySelector('.blog-date').textContent;
+                let shareContent = `泛舟游客的博客：《${articleTitle}》已于${articleTime}}发布，点击查看：${articleUrl}`
+                shareButton.addEventListener('click', () => {
+                    try {
+                        navigator.clipboard.writeText(shareContent)
+                            .then(() => {
+                                alert('URL 已成功复制到剪贴板');
+                            })
+                            .catch(err => {
+                                alert('无法复制 URL');
+                            });
+                    } catch (error) {
+                        alert('复制 URL 时出错');
+                    }
+                });
             }
         }
 

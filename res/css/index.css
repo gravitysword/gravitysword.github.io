@@ -276,7 +276,7 @@ a {
 }
 
 .content-container .blog-list li .blog-introduce .blog-tag {
-    border: #333  solid 1px;
+    border: #333  solid 2px;
     border-radius: 5px;
     padding:2px 5px;
     text-align: center;

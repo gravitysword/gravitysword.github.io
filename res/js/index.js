@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="blog-id" style="display: none;">${item["id"]}</span>
                         <span class="blog-title">${item["title"]}</span>
                         <span class="blog-introduce">
-                            <img class="calendar" src="./res/media/svg/calendar.svg" alt="logo">
+                            <img class="calendar" src="./res/media/svg/sys/calendar.svg" alt="logo">
                             <span class="blog-date">${item["date"]}</span>
                             ${tag}
                         </span>

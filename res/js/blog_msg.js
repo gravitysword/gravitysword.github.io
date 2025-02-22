@@ -7,9 +7,9 @@ export async function BLOG_getBlogItems() {
         for (let i of data) {
             let j  = await BLOG_getBlog(i)
             j.id = i
-            blogsData.push(j);
+            blogsData.push(j)
         }
-        return blogsData;
+        return blogsData
     } catch (error) {
         console.error('Error fetching blogs.json:', error);
         return null;
@@ -46,3 +46,7 @@ export async function refreshSelf() {
         return null;
     }
 }
+
+
+
+
