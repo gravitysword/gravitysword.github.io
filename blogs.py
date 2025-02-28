@@ -3,9 +3,21 @@ import json
 
 
 def cmp(x,y):
+    # 新增根目录判断逻辑
+    x_in_root = '/' not in x
+    y_in_root = '/' not in y
+    
+    # 根目录文件永远排最后
+    if x_in_root and not y_in_root:
+        return True  # 需要交换位置
+    elif not x_in_root and y_in_root:
+        return False  # 不需要交换
+    elif x_in_root and y_in_root:
+        return False  # 都根目录保持原序
+    
+    # 原有排序逻辑
     x_year = int(x.split("/")[-2])
     x_num = int(x.split("/")[-1].split(".")[0])
-    
     y_year = int(y.split("/")[-2])
     y_num = int(y.split("/")[-1].split(".")[0])
 
@@ -14,10 +26,7 @@ def cmp(x,y):
     elif x_year < y_year:
         return True
     else:
-        if x_num > y_num:
-            return False
-        else:
-            return True
+        return x_num < y_num  # 改为升序排列（可选）
     
 def sort_blog(blogs):
     for i in range(len(blogs)-1):

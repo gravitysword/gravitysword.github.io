@@ -1,0 +1,22 @@
+
+.bottom {
+    background-color: #000;
+    padding: 10px;
+    width: 70%;
+    height: 100px;
+    align-self:center;
+    border-radius: 10px 10px 0px 0px;
+    color: #fff;
+    margin:20px;
+}
+a.beian {
+    color: #fff;
+}
+
+
+/* 在blog.css中添加 */
+.bottom span, .bottom a {
+    display: inline-block; /* 关键样式 */
+    font-weight: bold;
+    margin:10px;
+}

@@ -109,7 +109,7 @@ body {
     margin-right: 10px;
   }
   
-  .share button:hover .svg-wrapper {
+  .share button:hover .share-svg {
     animation: fly-1 0.6s ease-in-out infinite alternate;
   }
   
@@ -135,6 +135,4 @@ body {
     }
   }
 
-
-
-  
+   

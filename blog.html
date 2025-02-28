@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>泛舟游客的博客</title>
-    <link href="/res/css/md.css" rel="stylesheet">
-    <link href="/res/css/blog.css" rel="stylesheet">
+    <link rel="stylesheet" href="/res/css/md.css" >
+    <link rel="stylesheet" href="/res/css/blog.css">
+    <link rel="stylesheet" href="/res/css/sharedLabels.css">
 
     <script src="res/js/marked.js"></script>
     <script src="/res/js/blog.js" type="module"></script>
@@ -22,26 +23,37 @@
                 <span class="blog-date"> </span>
                 <img class="weather" src="/" alt="weather">
             </div>
-            <hr width="100%" />
-            <div class="content" style="background-color: rgb(255, 255, 255); ">
-                <div id="markdown-content"></div>
+        </div>
+        <hr width="100%" />
+        <div class="content" style="background-color: rgb(255, 255, 255); ">
+            <div id="markdown-content"></div>
+        </div>
+        <hr width="100%" />
+        <div class="tool">
+            <div class="share">
+                <!-- From Uiverse.io by adamgiebl -->
+                <button class="share-button">
+                    <div>
+                        <div class="share-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                height="24">
+                                <path fill="none" d="M0 0h24v24H0z"></path>
+                                <path fill="currentColor"
+                                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
+                                </path>
+                            </svg></div>
+                    </div>
+                    <span>share</span>
+                </button>
             </div>
-            <hr width="100%" />
-            <div class="tool">
-                <div class="share">
-                    <!-- From Uiverse.io by adamgiebl -->
-                    <button class="share-button">
-                        <div class="svg-wrapper-1">
-                            <div class="svg-wrapper">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"> <path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path></svg>
-                            </div>
-                        </div>
-                        <span>share</span>
-                    </button>
+        </div>
 
-                </div>
-            </div>
-
+    </div>
+    <div class="bottom">
+        <div class="bottom-0">
+            <span class="copyright">Copyright ©2025-2025 泛舟游客  All Rights Reserved.</span>
+        </div>
+        <div class="bottom-0">
+            <a class="beian" href="https://beian.miit.gov.cn/">备案号：暂未备案</span>
         </div>
     </div>
 </body>

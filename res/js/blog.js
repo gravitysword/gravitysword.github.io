@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const articleTitle = document.querySelector('.title').textContent;
                 const articleUrl = window.location.href;
                 const articleTime = document.querySelector('.blog-date').textContent;
-                let shareContent = `泛舟游客的博客：《${articleTitle}》已于${articleTime}}发布，点击查看：${articleUrl}`
+                let shareContent = `泛舟游客的博客：《${articleTitle}》已于${articleTime}发布，点击查看：${articleUrl}`
                 shareButton.addEventListener('click', () => {
                     try {
                         navigator.clipboard.writeText(shareContent)
@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
+
         }
 
         a1();

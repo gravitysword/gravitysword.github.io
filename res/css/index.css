@@ -19,28 +19,26 @@ a {
 
 .top-background {
     height: 45vh;
-    background-color: #000;
     display: flex;
-    justify-content: center; /* 水平居中 */
-    align-items: center; /* 垂直居中 */
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     font-family: '楷体', STKaiti, sans-serif;
 }
 
 .top-background .top-sign-0,
 .top-background .top-sign-1 {
-    width: 100%; /* 确保 span 拉伸 */
-    text-align: center; /* 确保文字在 span 内居中 */
+    width: 100%; 
+    text-align: center; 
 }
 
 .top-background .top-sign-0 {
     color: white;
     font-size: 50px;
     font-weight: 900;
-
     display: flex;
-    justify-content: center; /* 水平居中 */
-    align-items: center; /* 垂直居中 */
+    justify-content: center; 
+    align-items: center;
 
     flex: 1;
     margin-top: 2%;
@@ -50,8 +48,8 @@ a {
     color: #999;
     font-size: 18px;
     display: flex;
-    justify-content: center; /* 水平居中 */
-    align-items: center; /* 垂直居中 */
+    justify-content: center; 
+    align-items: center; 
 
     margin-left: 50%;
     margin-bottom: 2%;
@@ -60,12 +58,12 @@ a {
 
 .main-content {
     background-color: #fefefe;
-    margin: 5%;
-    padding: 20px;
+    margin: 2% 10%; 
+    padding: 30px; 
     flex-grow: 1;
-    border-radius: 10px;
     display: flex;
     flex-direction: column;
+    border-radius: 5px;
 }
 
 .navigation {
@@ -83,26 +81,29 @@ a {
     display: flex;
     justify-content: center;
     gap: 20px;
-    flex-wrap: wrap; /* 允许换行 */
+    flex-wrap: wrap; 
 }
 
 /* From Uiverse.io by nikk7007 */ 
 .nav-links .nav-button {
     --color: #ffffff;
-    padding: 12px 27px; 
+    padding: 12px 27px;
     background-color: transparent;
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    transition: 0.5s;
+    transition: all 0.3s ease-in-out; /* 统一过渡效果 */
     border: 2px solid;
     text-transform: uppercase;
     color: var(--color);
     z-index: 1;
+}
 
-   }
-   
-   .nav-links .nav-button::before, .nav-button::after {
+.nav-links .nav-button:hover {
+    color: #000000; 
+}
+
+.nav-links .nav-button::before, .nav-button::after {
     content: '';
     display: block;
     width: 20px;
@@ -126,8 +127,8 @@ a {
    }
    
    .nav-links .nav-button:hover::before, .nav-button:hover::after {
-    height: 145px;
-    width: 145px;
+    height: 170px;
+    width: 170px;
    }
    
    .nav-links .nav-button:hover {
@@ -150,25 +151,29 @@ a {
 .content-container {
     display: flex;
     align-items: stretch;
-    flex-wrap: wrap; /* 允许换行 */
+    flex-wrap: wrap; 
     flex-grow: 1;
 }
 
 .content-container .sidebar {
-    flex: 1 1 200px; /* 更小屏幕时变为单列 */
+    flex: 1 1 200px; 
     margin: 10px;
 }
 
 .content-container .sidebar > div {
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     margin: 20px;
-    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.5s ease-in-out; 
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2); 
+    transition: all 0.3s ease-in-out; 
     background-color: #fff;
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 10px; 
+    padding: 20px; 
+}
+
+.content-container .sidebar > div:hover {
+    transform: translateY(-3px); 
 }
 
 .content-container .sidebar .sidebar-introduce p {
@@ -213,7 +218,7 @@ a {
 }
 
 .content-container .blog-list {
-    flex: 3 1 400px; /* 更小屏幕时变为单列 */
+    flex: 3 1 400px; 
     margin: 10px;
     display: flex;
     flex-direction: column;
@@ -230,23 +235,18 @@ a {
 
 .content-container .blog-list li {
     padding: 30px;
-    border-radius: 10px;
+    border-radius: 10px; 
     margin-bottom: 20px;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: stretch;
-    transition: box-shadow 0.5s ease-in-out; 
-    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out; 
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2); 
+    background-color: #fff;
 }
-.content-container .blog-list li {
-    padding: 30px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column; 
-    align-items: stretch;
-    transition: box-shadow 0.5s ease-in-out; 
-    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
+
+.content-container .blog-list li:hover {
+    transform: translateY(-3px); 
 }
 
 .content-container .blog-list li .blog-title {
@@ -262,7 +262,7 @@ a {
     display: flex;
     flex-direction: row;
     color: #555555;
-    align-items: center; /* 添加垂直居中 */
+    align-items: center; 
 }
 
 .content-container .blog-list li .blog-introduce .calendar {
@@ -276,9 +276,7 @@ a {
 }
 
 .content-container .blog-list li .blog-introduce .blog-tag {
-    border: #333  solid 2px;
-    border-radius: 5px;
-    padding:2px 5px;
+
     text-align: center;
     margin-left: 10px;
     color: #444;
@@ -332,16 +330,16 @@ a {
     color: #aaa;
 }
 
-/* 媒体查询，调整不同屏幕尺寸下的布局 */
+
 @media (max-width: 768px) {
     .content-container .sidebar, .content-container .blog-list {
-        flex: 1 1 100%; /* 在平板及以下设备上变为单列 */
+        flex: 1 1 100%; 
     }
 }
 
 @media (max-width: 480px) {
     .content-container .sidebar, .content-container .blog-list {
-        flex: 1 1 100%; /* 在手机设备上变为单列 */
+        flex: 1 1 100%; 
     }
 }
 

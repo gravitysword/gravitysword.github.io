@@ -4,6 +4,7 @@ https://gravitysword.github.io/blog/2025/2.md
 https://gravitysword.github.io/blog/2025/3.md
 https://gravitysword.github.io/blog/2025/4.md
 https://gravitysword.github.io/blog/aboutme.md
+https://gravitysword.github.io/blog/aboutsite.md
 https://gravitysword.github.io/blog.html
 https://gravitysword.github.io/blogs.py
 https://gravitysword.github.io/config/blogs.json
@@ -13,10 +14,12 @@ https://gravitysword.github.io/README
 https://gravitysword.github.io/res/css/blog.css
 https://gravitysword.github.io/res/css/index.css
 https://gravitysword.github.io/res/css/md.css
+https://gravitysword.github.io/res/css/sharedLabels.css
 https://gravitysword.github.io/res/js/blog.js
 https://gravitysword.github.io/res/js/blog_msg.js
 https://gravitysword.github.io/res/js/index.js
 https://gravitysword.github.io/res/js/marked.js
+https://gravitysword.github.io/res/js/sharedLabels.js
 https://gravitysword.github.io/res/media/img/logo.jpg
 https://gravitysword.github.io/res/media/svg/logo/bili.svg
 https://gravitysword.github.io/res/media/svg/logo/github.svg

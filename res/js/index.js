@@ -1,4 +1,4 @@
-import { BLOG_getBlog, BLOG_getBlogItems,refreshSelf } from '/res/js/blog_msg.js';
+import { BLOG_getBlog, BLOG_getBlogItems, refreshSelf } from '/res/js/blog_msg.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (const item of bloglist) {
                     let tag = ""
                     for (const tag_item of item["tag"]) {
-                        tag += `<span class="blog-tag">${tag_item}</span>`
+                        tag += `<span class="blog-tag">| ${tag_item}</span>`
                     }
                     const lis = `
                     <li>
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
 
-                // 移动 getRandomColor 函数定义到此处
+
                 function getRandomColor() {
                     const letters = '0123456789ABCDEF';
                     let color = '#';
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         li.style.boxShadow = '0 0px 2px rgba(0, 0, 0, 0.2)';
                     });
 
-                    // 添加点击事件监听器
+
                     li.addEventListener('click', () => {
                         const blogIdElement = li.querySelector('.blog-id');
                         if (blogIdElement) {
@@ -95,6 +95,21 @@ document.addEventListener('DOMContentLoaded', () => {
             //加载
             {
                 refreshSelf();
+
+            }
+            // 导航栏按钮加载
+            {
+                // 导航栏按钮加载
+                document.querySelectorAll('.nav-button').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const target = this.getAttribute('href');
+                        if (target.startsWith('http')) {
+                            window.open(target, '_blank'); // 外部链接新标签页打开
+                        } else {
+                            window.location.href = target; // 站内链接当前页跳转
+                        }
+                    });
+                });
 
             }
         }

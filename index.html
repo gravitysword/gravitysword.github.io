@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <title>泛舟游客的博客</title>
-    <link rel="stylesheet" href="./res/css/index.css">
-    <script type="module" src="./res/js/index.js"></script>
+    <link rel="stylesheet" href="/res/css/index.css">
+    <link rel="stylesheet" href="/res/css/sharedLabels.css">
+    <script type="module" src="/res/js/index.js"></script>
 </head>
+
 <body>
     <div class="top-section">
         <div class="top-background">
@@ -16,10 +19,11 @@
     <div class="main-content">
         <div class="navigation">
             <ul class="nav-links">
-                <li><button class="nav-button" href="#home">首页</button></li>
-                <li><button class="nav-button" href="#about">关于</button></li>
-                <li><button class="nav-button" href="#blog">博客</button></li>
-                <li><button class="nav-button" href="#contact">联系</button></li>
+                <li><button class="nav-button" href="#home">碎碎念</button></li>
+                <li><button class="nav-button" href="/config/blogs.json">归档</button></li>
+                <li><button class="nav-button" href="/blog.html?id=aboutsite.md">关于网站</button></li>
+                <li><button class="nav-button"
+                        href="https://message.bilibili.com/#/whisper/mid3546762656614479">联系作者</button></li>
             </ul>
         </div>
 
@@ -41,25 +45,25 @@
                         </a>
                     </div>
                 </div>
-                
+
 
                 <div class="sidebar-notice">
-                    <div class="notice-title">
-                        公告
-                        <br/>
-                        正在建设中...
 
-                    </div>
+                    <!-- 建议改为 -->
+                    <ol class="update-plan">
+                        <li>rss</li>
+                        <li>#话题标签</li>
+                    </ol>
 
                 </div>
             </div>
-            
+
             <div class="blog-list">
                 <ul>
                     <li>
                         <span class="blog-title">测试标题-1</span>
                         <span class="blog-introduce">
-                            <img class="calendar" src="./res/media/svg/sys/calendar.svg" alt="logo" >
+                            <img class="calendar" src="./res/media/svg/sys/calendar.svg" alt="logo">
                             <span class="blog-date">2025-01-24</span>
                             <span class="blog-tag">生活</span>
                         </span>
@@ -79,9 +83,21 @@
 
             </div>
 
-            
+
         </div>
-    </div>  
-    
+    </div>
+    <div class="bottom">
+        <div class="bottom-0">
+            <span class="copyright">Copyright ©2025-2025 泛舟游客 All Rights Reserved.</span>
+            <br />
+            <span class="attention-0">Website is built from scratch, without any frameworks. </span>
+
+        </div>
+        <div class="bottom-0">
+            <a class="beian" href="https://beian.miit.gov.cn/">备案号：暂未备案</span>
+        </div>
+    </div>
+
 </body>
+
 </html>
