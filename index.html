@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泛舟游客的博客</title>
     <link rel="stylesheet" href="/res/css/index.css">
     <link rel="stylesheet" href="/res/css/sharedLabels.css">
@@ -10,94 +11,75 @@
 </head>
 
 <body>
-    <div class="top-section">
-        <div class="top-background">
-            <span class="top-sign-0">像坟墓一样简洁</span>
-            <span class="top-sign-1">-- 《三体Ⅲ》</span>
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-quote">像坟墓一样简洁</h1>
+            <p class="hero-source">-- 《三体Ⅲ》</p>
         </div>
-    </div>
-    <div class="main-content">
-        <div class="navigation">
-            <ul class="nav-links">
-                <li><button class="nav-button" href="#home">碎碎念</button></li>
-                <li><button class="nav-button" href="/config/blogs.json">归档</button></li>
-                <li><button class="nav-button" href="/blog.html?id=aboutsite.md">关于网站</button></li>
-                <li><button class="nav-button"
-                        href="https://message.bilibili.com/#/whisper/mid3546762656614479">联系作者</button></li>
+    </header>
+    <main class="page-content">
+        <nav class="main-nav">
+            <ul class="nav-menu">
+                <li><button class="nav-item" data-href="#home">碎碎念</button></li>
+                <li><button class="nav-item" data-href="/config/blogs.json">归档</button></li>
+                <li><button class="nav-item" data-href="/blog.html?id=aboutsite.md">关于网站</button></li>
+                <li><button class="nav-item" data-href="https://message.bilibili.com/#/whisper/mid3546762656614479">联系作者</button></li>
             </ul>
-        </div>
-
-        <div class="content-container">
-            <div class="sidebar">
-                <div class="sidebar-introduce">
-                    <div class="sidebar-logo"><img src="./res/media/img/logo.jpg" alt="logo"></div>
-                    <div class="sidebar-name">泛舟游客</div>
-                    <div class="sidebar-sign">江心泛泛虚影，名曰泛舟游客</div>
-                    <div class="sidebar-social">
-                        <a href="https://www.weibo.com/u/0">
-                            <img src="./res/media/svg/logo/weibo.svg" alt="weibo">
+        </nav>
+        <div class="content-wrapper">
+            <aside class="profile-sidebar">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <img src="./res/media/img/logo.jpg" alt="作者头像" width="120" height="120">
+                    </div>
+                    <h2 class="profile-name">泛舟游客</h2>
+                    <p class="profile-bio">江心泛泛虚影，名曰泛舟游客</p>
+                    <div class="social-links">
+                        <a href="https://www.weibo.com/u/0" class="social-link" aria-label="微博">
+                            <img src="./res/media/svg/logo/weibo.svg" alt="微博">
                         </a>
-                        <a href="https://github.com/gravitysword">
-                            <img src="./res/media/svg/logo/github.svg" alt="github">
+                        <a href="https://github.com/gravitysword" class="social-link" aria-label="GitHub">
+                            <img src="./res/media/svg/logo/github.svg" alt="GitHub">
                         </a>
-                        <a href="https://space.bilibili.com/3546762656614479">
-                            <img src="./res/media/svg/logo/bili.svg" alt="bilibili">
+                        <a href="https://space.bilibili.com/3546762656614479" class="social-link" aria-label="哔哩哔哩">
+                            <img src="./res/media/svg/logo/bili.svg" alt="哔哩哔哩">
                         </a>
                     </div>
                 </div>
-
-
-                <div class="sidebar-notice">
-
-                    <!-- 建议改为 -->
-                    <ol class="update-plan">
-                        <li>rss</li>
-                        <li>#话题标签</li>
+                <div class="updates-card">
+                    <h3 class="updates-title">开发计划</h3>
+                    <ol class="updates-list">
+                        <li>RSS订阅功能</li>
+                        <li>话题标签系统</li>
                     </ol>
-
                 </div>
-            </div>
-
-            <div class="blog-list">
-                <ul>
-                    <li>
-                        <span class="blog-title">测试标题-1</span>
-                        <span class="blog-introduce">
-                            <img class="calendar" src="./res/media/svg/sys/calendar.svg" alt="logo">
-                            <span class="blog-date">2025-01-24</span>
-                            <span class="blog-tag">生活</span>
-                        </span>
-                        <span class="blog-summary">当你只看到这一条文博客时，这说明你的网络并未完全加载好，请耐心等待</span>
+            </aside>
+            <section class="posts-section">
+                <ul class="posts-list">
+                    <li class="post-item">
+                        <h3 class="post-title">测试标题-1</h3>
+                        <div class="post-meta">
+                            <time class="post-date">
+                                <img class="calendar-icon" src="./res/media/svg/sys/calendar.svg" alt="发布日期">
+                                <span>2025-01-24</span>
+                            </time>
+                            <span class="post-category">生活</span>
+                        </div>
+                        <p class="post-excerpt">当你只看到这一条博客时，这说明你的网络并未完全加载好，请耐心等待</p>
                     </li>
                 </ul>
-
-                <div class="pagination">
-                    <a href="">&laquo;</a>
-                    <a href="" class="pagination-active">1</a>
-                    <a href="">2</a>
-                    <a href="">3</a>
-                    <a href="">4</a>
-                    <a href="">5</a>
-                    <a href="">&raquo;</a>
-                </div>
-
-            </div>
-
-
+                <nav class="pagination" aria-label="文章分页">
+                    <!-- 分页内容将由JavaScript动态生成 -->
+                </nav>
+            </section>
         </div>
-    </div>
-    <div class="bottom">
-        <div class="bottom-0">
-            <span class="copyright">Copyright ©2025-2025 泛舟游客 All Rights Reserved.</span>
-            <br />
-            <span class="attention-0">Website is built from scratch, without any frameworks. </span>
-
-        </div>
-        <div class="bottom-0">
-            <a class="beian" href="https://beian.miit.gov.cn/">备案号：暂未备案</span>
-        </div>
-    </div>
-
+    </main>
+    <footer class="site-footer">
+        <p class="copyright">Copyright ©2025 泛舟游客 All Rights Reserved.</p>
+        <p class="icp-info">
+            <a href="https://beian.miit.gov.cn/" class="icp-link">备案号：暂未备案</a>
+        </p>
+    </footer>
 </body>
 
 </html>

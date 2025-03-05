@@ -224,7 +224,6 @@ a {
     flex-direction: column;
     justify-content: center;
 }
-
 .content-container .blog-list ul {
     list-style: none;
     padding: 0;
@@ -232,7 +231,6 @@ a {
     margin-top: 20px;
     flex-grow: 1;
 }
-
 .content-container .blog-list li {
     padding: 30px;
     border-radius: 10px; 
@@ -244,18 +242,15 @@ a {
     box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2); 
     background-color: #fff;
 }
-
 .content-container .blog-list li:hover {
     transform: translateY(-3px); 
 }
-
 .content-container .blog-list li .blog-title {
     font-size: 20px;
     width: 70%;
     color: #222;
     word-wrap: break-word;
 }
-
 .content-container .blog-list li .blog-introduce {
     margin-top: 10px;
     font-size: 14px;
@@ -264,7 +259,6 @@ a {
     color: #555555;
     align-items: center; 
 }
-
 .content-container .blog-list li .blog-introduce .calendar {
     width: 16px;
     opacity: 0.8;
@@ -274,14 +268,12 @@ a {
 .content-container .blog-list li .blog-introduce .blog-date {
     text-align: center;
 }
-
 .content-container .blog-list li .blog-introduce .blog-tag {
 
     text-align: center;
     margin-left: 10px;
     color: #444;
 }
-
 .content-container .blog-list li .blog-description {
     margin-top: 10px;
     font-size: 16px;
@@ -291,24 +283,92 @@ a {
     line-height: 1.5;
     letter-spacing: 1px;
 }
-
+/* 优化翻页栏样式 */
 .content-container .blog-list .pagination {
     display: flex;
-    
     justify-content: center;
-    margin: 20px;
-    margin-right: 40%;
-    
+    align-items: center;
+    margin: 20px 0 40px; /* 增加底部间距 */
+    padding: 15px;
+    width: 80%; /* 控制宽度 */
+    max-width: 500px; /* 最大宽度 */
+    margin-left: auto; /* 水平居中 */
+    margin-right: auto;
 }
 
+.content-container .blog-list .pagination .page-input-container {
+    display: flex;
+    align-items: center;
+    margin: 0 15px;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.content-container .blog-list .pagination .page-input {
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    border: none; /* 移除边框 */
+    border-radius: 4px;
+    margin-right: 5px;
+    font-weight: bold;
+}
+.content-container .blog-list .pagination .pagination-button {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 8px 16px;
+    margin: 0 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+.content-container .blog-list .pagination .pagination-button:hover:not(.disabled) {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+.content-container .blog-list .pagination .pagination-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f5f5f5;
+}
+.content-container .blog-list .pagination .page-info {
+    font-size: 14px;
+    color: #333;
+    padding: 8px 12px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+.content-container .blog-list .pagination .page-input-container {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+}
+.content-container .blog-list .pagination .page-input {
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+.content-container .blog-list .pagination .page-input:focus {
+    outline: none;
+    border-color: #000;
+}
 @media (max-width: 768px) {
     .content-container .blog-list .pagination {
-        background-color: #ffffff;
-        justify-content: center;
-        margin-right: 0%;
+        flex-direction: row;
+        margin-right: 0;
+    }
+    
+    .content-container .blog-list .pagination .pagination-button {
+        padding: 6px 12px;
+        margin: 0 5px;
     }
 }
-
 .content-container .blog-list .pagination a {
     color: black;
     float: left;
@@ -318,18 +378,15 @@ a {
     border: 1px solid #ddd;
     margin: 0 4px;
 }
-
 .content-container .blog-list .pagination a.pagination-active {
     background-color: #000000;
     color: #ffffff;
 }
 
-
 .content-container .blog-list .pagination a:hover:not(.pagination-active) {
     background-color: #444;
     color: #aaa;
 }
-
 
 @media (max-width: 768px) {
     .content-container .sidebar, .content-container .blog-list {

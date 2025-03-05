@@ -8,6 +8,7 @@
     border-radius: 10px 10px 0px 0px;
     color: #fff;
     margin:20px;
+    justify-items: center;
 }
 a.beian {
     color: #fff;
@@ -19,4 +20,6 @@ a.beian {
     display: inline-block; /* 关键样式 */
     font-weight: bold;
     margin:10px;
+    align-items: center;
+    justify-content: center;
 }
