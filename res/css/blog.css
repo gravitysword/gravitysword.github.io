@@ -1,0 +1,239 @@
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  scroll-behavior: smooth;
+  background-color: #000;
+}
+
+.main-content {
+  background-color: #fff;
+  flex-grow: 1;
+  margin: 8% auto;
+  padding: 40px 60px;
+  padding-top: 0px;
+  margin-top: 5%;
+  width: 50%;
+  min-width: 600px;
+  max-width: 900px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* 初始阴影 */
+  animation: breathe 4s infinite;
+  /* 应用动画 */
+  border-radius: 10px;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0px rgba(255, 255, 255, 0.8);
+  }
+
+  50% {
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.8)
+  }
+}
+
+/* 段落缩进样式 */
+.indented-paragraph {
+  text-indent: 2em;
+}
+
+/* 图片样式增强 */
+.zoomable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.zoomable.loaded {
+  opacity: 1;
+}
+
+.zoomable.zoomed {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+/* 代码块样式增强 */
+pre {
+  position: relative;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.code-language-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #f1f1f1;
+  color: #666;
+  padding: 2px 8px;
+  font-size: 12px;
+  border-radius: 0 0 0 4px;
+  z-index: 1;
+}
+
+.copy-code-button {
+  position: absolute;
+  top: 0;
+  right: 60px;
+  background: #f1f1f1;
+  color: #666;
+  border: none;
+  padding: 2px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 0 0 0 4px;
+  z-index: 1;
+  transition: all 0.2s ease;
+}
+
+.copy-code-button:hover {
+  background: #e0e0e0;
+}
+
+/* 表格样式增强 */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.styled-table th {
+  background-color: #f8f8f8;
+  color: #333;
+  font-weight: bold;
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 2px solid #ddd;
+}
+
+.styled-table td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.styled-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.styled-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+
+
+.blog-introduce {
+  margin-top: 20px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  color: #555555;
+  align-items: center;
+  justify-content: center;
+}
+
+.blog-introduce img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.65;
+  padding-bottom: 3px;
+  margin-right: 3px;
+}
+
+.blog-introduce .weather {
+  margin:0px 10px;
+  width: 20px;
+  height: 20px;
+}
+
+
+
+
+.blog-introduce .blog-time {
+  text-align: center;
+}
+
+.blog-introduce .blog-tag  {
+    border-radius: 10%;
+    text-align: center;
+    margin-left: 10px;
+    color: #555;
+    background-color: #f4f4f4;
+    padding :4px 6px;
+}
+
+.introduce .title {
+  text-align: center;
+}
+
+
+
+
+/* From Uiverse.io by adamgiebl */ 
+.share button {
+    font-size: 16px;
+    background: rgb(0, 0, 0);
+    color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  
+  .share  button span {
+    transition: all 0.3s ease-in-out;
+    font-size: 14px;
+  }
+  
+  .share button svg {
+    width: 70%;
+    display: block;
+    transform-origin: center center;
+    transition: transform 0.3s ease-in-out;
+    margin-right: 10px;
+  }
+  
+  .share button:hover .share-svg {
+    animation: fly-1 0.6s ease-in-out infinite alternate;
+  }
+  
+  .share button:hover svg {
+    transform: translateX(1.2em) rotate(45deg) scale(1.1);
+  }
+  
+  .share button:hover span {
+    transform: translateX(5em);
+  }
+  
+  .share button:active {
+    transform: scale(0.95);
+  }
+  
+  @keyframes fly-1 {
+    from {
+      transform: translateY(0.1em);
+    }
+  
+    to {
+      transform: translateY(-0.1em);
+    }
+  }
+
+
+
+   

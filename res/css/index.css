@@ -1,0 +1,860 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    font-family: 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    min-height: 100vh; /* 确保至少占满整个视口高度 */
+    display: flex;
+    flex-direction: column;
+}
+a {
+    text-decoration: none;
+}
+
+.top-section {
+    background-color: #000;
+    margin-top: 0%;
+}
+
+.top-background {
+    height: 45vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family:  '楷体','Microsoft YaHei', STKaiti, sans-serif;
+}
+
+.top-background .top-sign-0,
+.top-background .top-sign-1 {
+    width: 100%; 
+    text-align: center; 
+}
+
+.top-background .top-sign-0 {
+    color: white;
+    font-size: 50px;
+    font-weight: 900;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+
+    flex: 1;
+    margin-top: 2%;
+}
+
+.top-background .top-sign-1 {
+    color: #999;
+    font-size: 18px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+
+    margin-left: 50%;
+    margin-bottom: 2%;
+
+}
+
+.main-content {
+    background-color: #fefefe;
+    margin: 2% 10%; 
+    padding: 30px; 
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+}
+
+.navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000;
+    padding: 0px 20px;
+    list-style: none;
+    border-radius: 8px;
+    font-family: 'Microsoft YaHei', sans-serif;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; 
+}
+
+/* 现代化导航按钮样式 */ 
+.nav-links .nav-button {
+    --color: #ffffff;
+    padding: 12px 27px;
+    background-color: transparent;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border: 2px solid;
+    text-transform: uppercase;
+    color: var(--color);
+    z-index: 1;
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 1px;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+.nav-links .nav-button:hover {
+    color: #000000; 
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+}
+
+.nav-links .nav-button::before, .nav-links .nav-button::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    border-radius: 50%;
+    z-index: -1;
+    background-color: var(--color);
+    transition: 0.5s ease;
+}
+   
+.nav-links .nav-button::before {
+    top: -16px; 
+    left: -16px; 
+}
+   
+.nav-links .nav-button::after {
+    left: calc(100% + 20px); 
+    top: calc(100% + 20px); 
+}
+   
+.nav-links .nav-button:hover::before, .nav-links .nav-button:hover::after {
+    height: 200px;
+    width: 200px;
+}
+   
+.nav-links .nav-button:hover {
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    border-radius: 8px;
+}
+   
+.nav-links .nav-button:active::before, .nav-links .nav-button:active::after {
+    background-color: rgb(0, 0, 0); 
+    transition: 0.1s ease;
+}
+
+.nav-links .nav-button:active {
+    color: rgb(255, 255, 255); 
+    transition: 0.1s ease;
+    transform: translateY(0);
+}
+  /* From Uiverse.io */ 
+
+.content-container {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap; 
+    flex-grow: 1;
+}
+
+.content-container .sidebar {
+    flex: 1 1 200px; 
+    margin: 10px;
+}
+
+.content-container .sidebar > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2); 
+    transition: all 0.3s ease-in-out; 
+    background-color: #fff;
+    border-radius: 10px; 
+    padding: 20px; 
+}
+
+.sidebar-notice {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.sidebar-notice h3 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    color: #212529;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+}
+
+.sidebar-notice h3::before {
+    content: '\f0a1';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    margin-right: 10px;
+    color: #000000;
+}
+
+.sidebar-notice p {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #495057;
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+}
+
+.sidebar-notice a {
+    color: #000000;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.sidebar-notice a:hover {
+    color: #555555;
+    text-decoration: none;
+    padding-left: 3px;
+}
+
+@media (max-width: 768px) {
+    .sidebar-notice {
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    .notice-list li {
+        padding: 8px 10px;
+    }
+}
+
+.notice-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.notice-list li {
+    padding: 10px 12px;
+    color: #333;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #ffffff;
+}
+
+.notice-list li::before {
+    content: '•';
+    color: #000;
+    display: inline-block;
+    width: 1em;
+    margin-right: 5px;
+}
+.notice-list li {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: left center;
+}
+
+.notice-list li:hover {
+    transform: scale(1.02);
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.notice-list li::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #000000, transparent);
+    transition: width 0.3s ease;
+}
+
+.notice-list li:hover::after {
+    width: 100%;
+    color: #000;
+    font-weight: bolder;
+}
+
+@media (max-width: 768px) {
+    .sidebar-notice {
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    .notice-list li {
+        padding: 8px 10px;
+    }
+}
+
+
+
+.content-container .sidebar .sidebar-introduce p {
+    color: #000000; 
+    font-size: 16px;
+}
+
+.content-container .sidebar .sidebar-introduce .sidebar-logo {
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+.content-container .sidebar .sidebar-introduce img {
+    text-align: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-top: 10px;
+}
+
+.content-container .sidebar .sidebar-introduce .sidebar-name {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 18px  ;
+    
+}
+.content-container .sidebar .sidebar-introduce .sidebar-sign {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 16px  ;
+    font-family: '楷体','Microsoft YaHei',  STKaiti, sans-serif;
+}
+
+.content-container .sidebar .sidebar-introduce .sidebar-social  {
+    margin-top: 10px;
+}
+
+.content-container .sidebar .sidebar-introduce .sidebar-social a img {
+    height: 30px;
+    border-radius: 0px;
+    margin: 10px;
+
+}
+
+.content-container .blog-list {
+    flex: 3 1 400px; 
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content-container .blog-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 20px;
+    flex-grow: 1;
+}
+
+.content-container .blog-list li {
+    padding: 30px;
+    border-radius: 10px; 
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    transition: all 0.3s ease-in-out; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    background-color: #fff;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border-left: 3px solid transparent;
+}
+
+.content-container .blog-list li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-left: 3px solid #000;
+}
+
+.content-container .blog-list li .blog-title {
+    font-size: 22px;
+    width: 100%;
+    color: #222;
+    word-wrap: break-word;
+    font-weight: 600;
+    margin-bottom: 8px;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.content-container .blog-list li .blog-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background-color: #000;
+    transition: width 0.3s ease;
+}
+
+.content-container .blog-list li:hover .blog-title::after {
+    width: var(--title-width, 100%);
+}
+
+.content-container .blog-list li .blog-introduce {
+    margin-top: 10px;
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    color: #555555;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.content-container .blog-list li .blog-introduce .calendar {
+    width: 16px;
+    opacity: 0.8;
+    margin-right: 2px;
+}
+
+.content-container .blog-list li .blog-introduce .blog-date {
+    text-align: center;
+    font-weight: 500;
+}
+
+.content-container .blog-list li .blog-introduce .blog-tag {
+    border-radius: 5px;
+    text-align: center;
+    margin-left: 5px;
+    color: #555;
+    background-color: #f4f4f4;
+    padding: 4px 10px;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.content-container .blog-list li:hover .blog-introduce .blog-tag {
+    background-color: #000;
+    color: #fff;
+}
+
+.content-container .blog-list li .blog-description {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #555;
+    width: 100%;
+    max-width: 100%;
+    word-wrap: break-word;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+}
+
+/* 优化翻页栏样式 */
+.content-container .blog-list .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0 40px;
+    padding: 10px;
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-wrap: wrap;
+    gap: 8px;
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.content-container .blog-list .pagination .page-input-container {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 0 5px;
+    margin: 0 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 数字页码列表样式 */
+.content-container .blog-list .pagination .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 15px;
+}
+
+.content-container .blog-list .pagination .page-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    background-color: transparent;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 13px;
+    box-shadow: none;
+}
+
+.content-container .blog-list .pagination .page-number:hover {
+    background-color: #f0f0f0;
+    color: #000000;
+    transform: none;
+    box-shadow: none;
+}
+
+.content-container .blog-list .pagination .page-number.active {
+    background-color: #000000;
+    color: #ffffff;
+    box-shadow: none;
+    position: relative;
+}
+
+.content-container .blog-list .pagination .page-number.active::after {
+    display: none;
+}
+
+/* Go to 容器样式 */
+.content-container .blog-list .pagination .goto-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+    background-color: transparent;
+    padding: 3px 8px;
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+.content-container .blog-list .pagination .goto-text {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+.content-container .blog-list .pagination .page-input {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 14px;
+    color: #333;
+    padding: 0 3px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.content-container .blog-list .pagination .page-input:focus {
+    outline: none;
+    border-color: #000;
+    background-color: #fff;
+}
+
+.content-container .blog-list .pagination .page-input.editable {
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.content-container .blog-list .pagination .page-separator,
+.content-container .blog-list .pagination .total-pages {
+    font-size: 14px;
+    color: #333;
+    margin: 0 3px;
+    font-weight: 500;
+}
+
+.content-container .blog-list .pagination .edit-button {
+    padding: 4px 8px;
+    font-size: 12px;
+    margin-left: 5px;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.content-container .blog-list .pagination .edit-button:hover {
+    background-color: #000;
+    color: #fff;
+}
+/* 移除了跳转按钮样式 */
+/* 其他翻页按钮样式保持不变 */
+.content-container .blog-list .pagination .pagination-button {
+    background-color: transparent;
+    color: #000000;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    min-width: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ddd;
+}
+
+.content-container .blog-list .pagination .pagination-button:hover:not(.disabled) {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
+    transform: none;
+    box-shadow: none;
+}
+
+.content-container .blog-list .pagination .pagination-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.content-container .blog-list .pagination .page-info {
+    font-size: 14px;
+    color: #333;
+    padding: 8px 12px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+}
+
+.content-container .blog-list .pagination .page-input-container {
+    display: flex;
+    align-items: center;
+    margin: 0 5px;
+}
+
+.content-container .blog-list .pagination .page-input {
+    width: 60px;
+    height: 34px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    margin-right: 0;
+    padding: 0 8px;
+}
+
+.content-container .blog-list .pagination .jump-button {
+    border-radius: 0 4px 4px 0;
+    margin-left: 0;
+    border-left: none;
+}
+
+.content-container .blog-list .pagination .page-input:focus {
+    outline: none;
+    border-color: #000;
+}
+
+/* 响应式设计优化 */
+@media (max-width: 768px) {
+    .content-container .blog-list .pagination {
+        padding: 10px 5px;
+    }
+    
+    .content-container .blog-list .pagination .pagination-button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .content-container .blog-list .pagination .page-info {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
+    .content-container .blog-list .pagination .page-input {
+        width: 40px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-container .blog-list .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 5px;
+        gap: 3px;
+    }
+    
+    .content-container .blog-list .pagination > * {
+        margin: 5px;
+    }
+    
+    .content-container .blog-list .pagination .page-number {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .content-container .blog-list .pagination .pagination-button {
+        padding: 5px 8px;
+        font-size: 12px;
+        min-width: 28px;
+    }
+    
+    .content-container .blog-list .pagination .goto-container {
+        margin-top: 5px;
+        width: 100%;
+        justify-content: center;
+    }
+}
+.content-container .blog-list .pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+}
+.content-container .blog-list .pagination a.pagination-active {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.content-container .blog-list .pagination a:hover:not(.pagination-active) {
+    background-color: #444;
+    color: #aaa;
+}
+
+
+/* 增强的响应式设计 */
+@media (max-width: 1024px) {
+    .main-content {
+        margin: 2% 5%;
+        padding: 20px;
+    }
+    
+    .top-background .top-sign-0 {
+        font-size: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin: 2% 3%;
+        padding: 15px;
+    }
+    
+    .content-container .sidebar, .content-container .blog-list {
+        flex: 1 1 100%; 
+    }
+    
+    .navigation {
+        padding: 0 10px;
+    }
+    
+    .nav-links {
+        gap: 10px;
+    }
+    
+    .nav-links .nav-button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .top-background .top-sign-0 {
+        font-size: 32px;
+    }
+    
+    .top-background .top-sign-1 {
+        font-size: 16px;
+    }
+    
+    .content-container .blog-list li .blog-title {
+        font-size: 20px;
+    }
+    
+    .content-container .blog-list li .blog-description {
+        font-size: 15px;
+    }
+    
+    .bottom {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        margin: 2% 2%;
+        padding: 10px;
+    }
+    
+    .content-container .sidebar, .content-container .blog-list {
+        flex: 1 1 100%;
+        margin: 5px 0;
+    }
+    
+    .content-container .sidebar > div {
+        margin: 10px 5px;
+        padding: 15px;
+    }
+    
+    .content-container .blog-list li {
+        padding: 20px 15px;
+    }
+    
+    .nav-links {
+        gap: 5px;
+    }
+    
+    .nav-links .nav-button {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+    
+    .top-background {
+        height: 35vh;
+    }
+    
+    .top-background .top-sign-0 {
+        font-size: 28px;
+    }
+    
+    .top-background .top-sign-1 {
+        font-size: 14px;
+        margin-left: 40%;
+    }
+    
+    .content-container .blog-list .pagination {
+        padding: 10px;
+        gap: 5px;
+    }
+    
+    .content-container .blog-list .pagination .page-number {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+    
+    .content-container .blog-list .pagination .pagination-button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .bottom {
+        width: 95%;
+        height: auto;
+        padding: 10px 5px;
+    }
+}

@@ -1,0 +1,232 @@
+body {
+    min-height: 1024px;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.top-section {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.top-background {
+    width: 100%;
+    height: 100%;
+    background-color: #2a2a2a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.top-sign-0 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.top-sign-1 {
+    font-size: 1.2rem;
+    color: #cccccc;
+}
+
+.main-content {
+    padding: 20px 0;
+}
+
+.navigation {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.nav-button:hover {
+    color: #4a9eff;
+}
+
+.content-container {
+    width: 50%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.timeline-container {
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 35px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #E5E7EB;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: 36px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 2px solid #1a1a1a;
+    box-shadow: 0 0 0 2px #ffffff;
+    margin-top: 28px;
+    transform: translateX(-50%);
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.image-grid img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .timeline-container {
+        width: 100% !important;
+    }
+    
+    .image-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .image-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline-item-content {
+        margin-left: 12px !important;
+    }
+}
+
+/* 动画效果 */
+.timeline-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.timeline-item-content {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-left: 60px;
+    position: relative;
+    color: #000;
+}
+
+.text-black {
+    color: #000;
+}
+
+/* 标签样式 */
+.hashtag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    margin-right: 8px;
+    margin-top: 8px;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+/* 底部样式 */
+.bottom {
+    width: 100%;
+    background-color: #2a2a2a;
+    padding: 20px 0;
+    margin-top: 50px;
+}
+
+.bottom-content {
+    width: 50%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #cccccc;
+    font-size: 0.875rem;
+}
+
+.beian {
+    color: #cccccc;
+    text-decoration: none;
+}
+
+.beian:hover {
+    text-decoration: underline;
+}
+
+/* 天气图标样式 */
+.weather {
+    width: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* 加载动画 */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffffff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

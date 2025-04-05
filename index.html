@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>泛舟游客的博客</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/res/css/index.css">
+    <link rel="stylesheet" href="/res/css/sharedLabels.css">
+    <script type="module" src="/res/js/index.js"></script>
+</head>
+
+<body>
+    <div class="top-section">
+        <div class="top-background">
+            <span class="top-sign-0">像坟墓一样简洁</span>
+            <span class="top-sign-1">-- 《三体Ⅲ》</span>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="navigation">
+            <ul class="nav-links">
+                <li><a class="nav-button" href="/daily.html">碎碎念</a></li>
+                <li><a class="nav-button" href="/config/blogs.json">归档</a></li>
+                <li><a class="nav-button" href="/blog.html?id=aboutsite.md">关于网站</a></li>
+                <li><a class="nav-button" href="https://message.bilibili.com/#/whisper/mid3546762656614479">联系作者</a></li>
+            </ul>
+        </div>
+
+        <div class="content-container">
+            <div class="sidebar">
+                <div class="sidebar-introduce">
+                    <div class="sidebar-logo"><img src="./res/media/img/logo.jpg" alt="logo"></div>
+                    <div class="sidebar-name">泛舟游客</div>
+                    <div class="sidebar-sign">江心泛泛虚影，名曰泛舟游客</div>
+                    <div class="sidebar-social">
+                        <a href="https://www.weibo.com/u/0">
+                            <img src="./res/media/svg/logo/weibo.svg" alt="weibo">
+                        </a>
+                        <a href="https://github.com/gravitysword">
+                            <img src="./res/media/svg/logo/github.svg" alt="github">
+                        </a>
+                        <a href="https://space.bilibili.com/3546762656614479">
+                            <img src="./res/media/svg/logo/bili.svg" alt="bilibili">
+                        </a>
+                    </div>
+                </div>
+
+
+                <div class="sidebar-notice">
+                    <h3>网站公告</h3>
+                    <p>重要通知与最新动态：</p>
+                    <ol class="notice-list">
+                        <li>RSS订阅功能即将推出</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="blog-list">
+                <ul>
+                    <li>
+                        <span class="blog-title">测试标题-1</span>
+                        <span class="blog-introduce">
+                            <img class="calendar" src="./res/media/svg/sys/calendar.svg" alt="logo">
+                            <span class="blog-date">2025-01-24</span>
+                            <span class="blog-tag">生活</span>
+                        </span>
+                        <span class="blog-summary">当你只看到这一条文博客时，这说明你的网络并未完全加载好，请耐心等待</span>
+                    </li>
+                </ul>
+
+                <div class="pagination">
+                    <!-- 翻页栏将由JavaScript动态生成，但这里提供基本结构 -->
+                    <button class="pagination-button prev-button" title="上一页">&lt;</button>
+                    <div class="page-numbers">
+                        <a href="#" class="page-number active">1</a>
+                        <a href="#" class="page-number">2</a>
+                        <a href="#" class="page-number">3</a>
+                        <a href="#" class="page-number">4</a>
+                    </div>
+                    <button class="pagination-button next-button" title="下一页">&gt;</button>
+                    <div class="goto-container">
+                        <span class="goto-text">Go to</span>
+                        <input type="text" class="page-input" value="1">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 删除重复的底部区域，只保留footer部分 -->
+    <footer class="bottom">
+        <div class="bottom-content">
+            <div class="copyright-info">
+                <span class="copyright">Copyright ©2025-2025 泛舟游客 All Rights Reserved.</span>
+                <br />
+                <span class="attention-0">Website is built by AI </span>
+            </div>
+            <div class="beian-info">
+                <a class="beian" href="https://beian.miit.gov.cn/">备案号：暂未备案</a>
+            </div>
+            <div class="friend-links">
+                <span class="friend-links-title">友情链接：</span>
+                <a class="friend-link" href="https://example.com">Example</a>
+                <a class="friend-link" href="https://another-example.com">Another Example</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
