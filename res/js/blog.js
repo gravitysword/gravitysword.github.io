@@ -46,21 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
                 
-                // 添加图片点击放大功能
-                document.querySelectorAll('#markdown-content img').forEach(img => {
-                    img.classList.add('zoomable');
-                    img.addEventListener('click', function() {
-                        this.classList.toggle('zoomed');
-                    });
-                    // 添加加载动画
-                    img.addEventListener('load', function() {
-                        this.classList.add('loaded');
-                    });
-                    // 如果图片已经加载完成
-                    if (img.complete) {
-                        img.classList.add('loaded');
-                    }
-                });
+                
 
                 const blog_details = await BLOG_getBlog(blogId);
                 console.log('Blog Details:', blog_details);

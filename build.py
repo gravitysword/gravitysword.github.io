@@ -197,17 +197,24 @@ def parse_blog_metadata(content):
         print(f"解析元数据失败: {str(e)}")
         return None
 
-def generate_rss():
-    """生成RSS feed"""
+def generate_rss(is_cloud=False):
+    """生成RSS feed
+    
+    Args:
+        is_cloud (bool): 是否为云端模式，True为云端模式使用GitHub Pages链接，False为本地模式
+    """
     # 创建RSS根元素
     rss = ET.Element('rss', version='2.0')
     channel = ET.SubElement(rss, 'channel')
+    
+    # 设置基础URL
+    base_url = "https://gravitysword.github.io" if is_cloud else "http://localhost:8000"
     
     # 设置频道基本信息
     title = ET.SubElement(channel, 'title')
     title.text = '泛舟游客的博客'
     link = ET.SubElement(channel, 'link')
-    link.text = 'http://localhost:8000'  # 本地开发URL
+    link.text = base_url
     description = ET.SubElement(channel, 'description')
     description.text = '欢迎来到泛舟游客的博客'
     
@@ -246,7 +253,7 @@ def generate_rss():
         # 添加链接
         item_link = ET.SubElement(item, 'link')
         rel_path = os.path.relpath(file_path, blog_dir).replace('\\', '/')
-        item_link.text = f'http://localhost:8000/blog/{rel_path}'  # 本地开发URL
+        item_link.text = f'{base_url}/blog/{rel_path}'
         
         # 添加描述
         item_description = ET.SubElement(item, 'description')
@@ -270,11 +277,16 @@ def generate_rss():
             
     return rss  # 返回生成的RSS元素
 
-def save_rss(rss_path='rss.xml'):
-    """生成RSS feed并保存到文件"""
+def save_rss(rss_path='rss.xml', is_cloud=False):
+    """生成RSS feed并保存到文件
+    
+    Args:
+        rss_path (str): RSS文件保存路径
+        is_cloud (bool): 是否为云端模式，True为云端模式使用GitHub Pages链接，False为本地模式
+    """
     try:
         # 生成RSS内容
-        rss = generate_rss()
+        rss = generate_rss(is_cloud)
         
         # 格式化XML输出
         xml_str = minidom.parseString(ET.tostring(rss)).toprettyxml(indent='  ')
@@ -283,7 +295,8 @@ def save_rss(rss_path='rss.xml'):
         with open(rss_path, 'w', encoding='utf-8') as f:
             f.write(xml_str)
             
-        print(f'RSS feed已生成: {rss_path}')
+        mode_str = "云端" if is_cloud else "本地"
+        print(f'{mode_str}模式 RSS feed已生成: {rss_path}')
     except Exception as e:
         print(f'生成RSS feed失败: {str(e)}')
 
@@ -315,7 +328,8 @@ def blog_menu():
     while True:
         print("\n=== 博客管理 ===")
         print("1. 更新博客和动态列表")
-        print("2. 生成RSS订阅文件")
+        print("2. 生成本地RSS订阅文件")
+        print("3. 生成云端RSS订阅文件")
         print("0. 返回主菜单")
         
         choice = input("请选择操作: ")
@@ -323,7 +337,9 @@ def blog_menu():
         if choice == "1":
             update_blogs()
         elif choice == "2":
-            save_rss()
+            save_rss(is_cloud=False)
+        elif choice == "3":
+            save_rss(is_cloud=True)
         elif choice == "0":
             break
         else:

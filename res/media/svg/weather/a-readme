@@ -1,0 +1,14 @@
+# 天气图标说明 (Weather Icons Description)
+
+sunny - 晴天
+cloudy - 多云
+overcast - 阴天
+drizzle-rain - 毛毛雨
+shower-rain - 阵雨
+light-rain - 小雨
+
+# 使用方法
+在博客或日记的元数据中设置 "weather" 属性为上述英文值之一，系统将自动显示对应的天气图标。
+
+# 图标来源
+天气图标来源：https://icons.qweather.com/

@@ -18,12 +18,13 @@ a {
 }
 
 .top-background {
-    height: 45vh;
+    height: 40vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     font-family:  '楷体','Microsoft YaHei', STKaiti, sans-serif;
+    margin-top: 10px;
 }
 
 .top-background .top-sign-0,
@@ -68,94 +69,77 @@ a {
 
 .navigation {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
-    background-color: #000000;
-    padding: 0px 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 12px 25px;
     list-style: none;
-    border-radius: 8px;
     font-family: 'Microsoft YaHei', sans-serif;
+    position: relative;
+    z-index: 10;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     gap: 20px;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
 }
 
 /* 现代化导航按钮样式 */ 
 .nav-links .nav-button {
-    --color: #ffffff;
-    padding: 12px 27px;
-    background-color: transparent;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    border: 2px solid;
+    color: #eee;
+    padding: 10px 18px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     text-transform: uppercase;
-    color: var(--color);
-    z-index: 1;
     text-decoration: none;
-    font-weight: 500;
-    letter-spacing: 1px;
     display: inline-block;
+    position: relative;
+    font-weight: 500;
+    letter-spacing: 0.8px;
     border-radius: 4px;
+    overflow: hidden;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-links .nav-button:hover {
-    color: #000000; 
+    color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.nav-links .nav-button::before, .nav-links .nav-button::after {
-    content: '';
-    display: block;
-    width: 20px;
-    height: 20px;
-    transform: translate(-50%, -50%);
-    position: absolute;
-    border-radius: 50%;
-    z-index: -1;
-    background-color: var(--color);
-    transition: 0.5s ease;
-}
-   
-.nav-links .nav-button::before {
-    top: -16px; 
-    left: -16px; 
-}
-   
 .nav-links .nav-button::after {
-    left: calc(100% + 20px); 
-    top: calc(100% + 20px); 
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #ffffff;
+    transition: width 0.3s ease;
+    transform: translateX(-50%);
 }
-   
-.nav-links .nav-button:hover::before, .nav-links .nav-button:hover::after {
-    height: 200px;
-    width: 200px;
-}
-   
-.nav-links .nav-button:hover {
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    border-radius: 8px;
-}
-   
-.nav-links .nav-button:active::before, .nav-links .nav-button:active::after {
-    background-color: rgb(0, 0, 0); 
-    transition: 0.1s ease;
+
+.nav-links .nav-button:hover::after {
+    width: 100%;
 }
 
 .nav-links .nav-button:active {
-    color: rgb(255, 255, 255); 
-    transition: 0.1s ease;
     transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-  /* From Uiverse.io */ 
+
+
 
 .content-container {
     display: flex;
@@ -181,6 +165,7 @@ a {
     padding: 20px; 
 }
 
+ .sidebar-introduce,
 .sidebar-notice {
     margin-top: 30px;
     padding: 20px;
@@ -191,7 +176,8 @@ a {
     transition: all 0.3s ease;
 }
 
-.sidebar-notice h3 {
+.sidebar-notice h3,
+.sidebar-introduce h3 {
     margin: 0 0 15px 0;
     font-size: 18px;
     color: #212529;
@@ -210,7 +196,16 @@ a {
     color: #000000;
 }
 
-.sidebar-notice p {
+.sidebar-introduce h3::before {
+    content: '\f007';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    margin-right: 10px;
+    color: #000000;
+}
+
+.sidebar-notice p,
+.sidebar-introduce p {
     margin: 10px 0;
     font-size: 14px;
     color: #495057;
@@ -218,31 +213,36 @@ a {
     letter-spacing: 0.3px;
 }
 
-.sidebar-notice a {
+.sidebar-notice a,
+.sidebar-introduce a {
     color: #000000;
     text-decoration: none;
     transition: all 0.2s ease;
     font-weight: 500;
 }
 
-.sidebar-notice a:hover {
+.sidebar-notice a:hover,
+.sidebar-introduce a:hover {
     color: #555555;
     text-decoration: none;
     padding-left: 3px;
 }
 
 @media (max-width: 768px) {
-    .sidebar-notice {
+    .sidebar-notice,
+    .sidebar-introduce {
         padding: 15px;
         margin-top: 20px;
     }
     
-    .notice-list li {
+    .notice-list li,
+    .introduce-list li {
         padding: 8px 10px;
     }
 }
 
-.notice-list {
+.notice-list,
+.introduce-list {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -251,7 +251,8 @@ a {
     gap: 8px;
 }
 
-.notice-list li {
+.notice-list li,
+.introduce-list li {
     padding: 10px 12px;
     color: #333;
     font-size: 14px;
@@ -259,25 +260,29 @@ a {
     background-color: #ffffff;
 }
 
-.notice-list li::before {
+.notice-list li::before,
+.introduce-list li::before {
     content: '•';
     color: #000;
     display: inline-block;
     width: 1em;
     margin-right: 5px;
 }
-.notice-list li {
+.notice-list li,
+.introduce-list li {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     transform-origin: left center;
 }
 
-.notice-list li:hover {
+.notice-list li:hover,
+.introduce-list li:hover {
     transform: scale(1.02);
     background-color: #f8f9fa;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.notice-list li::after {
+.notice-list li::after,
+.introduce-list li::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -288,60 +293,63 @@ a {
     transition: width 0.3s ease;
 }
 
-.notice-list li:hover::after {
+.notice-list li:hover::after,
+.introduce-list li:hover::after {
     width: 100%;
     color: #000;
     font-weight: bolder;
 }
 
 @media (max-width: 768px) {
-    .sidebar-notice {
+    .sidebar-notice,
+    .sidebar-introduce {
         padding: 15px;
         margin-top: 20px;
     }
     
-    .notice-list li {
+    .notice-list li,
+    .introduce-list li {
         padding: 8px 10px;
     }
 }
 
 
 
-.content-container .sidebar .sidebar-introduce p {
+.content-container .sidebar .sidebar-sign p {
     color: #000000; 
     font-size: 16px;
 }
 
-.content-container .sidebar .sidebar-introduce .sidebar-logo {
+.content-container .sidebar .sidebar-sign .sidebar-logo {
     display: flex; 
     justify-content: center; 
     align-items: center; 
 }
-.content-container .sidebar .sidebar-introduce img {
+.content-container .sidebar .sidebar-sign img {
     text-align: center;
     align-items: center;
     border-radius: 50%;
     margin-top: 10px;
 }
 
-.content-container .sidebar .sidebar-introduce .sidebar-name {
+.content-container .sidebar .sidebar-sign .sidebar-name {
     font-weight: bold;
     margin-top: 10px;
     font-size: 18px  ;
     
 }
-.content-container .sidebar .sidebar-introduce .sidebar-sign {
+.content-container .sidebar .sidebar-sign .sidebar-sign {
     font-weight: bold;
     margin-top: 10px;
     font-size: 16px  ;
     font-family: '楷体','Microsoft YaHei',  STKaiti, sans-serif;
 }
 
-.content-container .sidebar .sidebar-introduce .sidebar-social  {
+.content-container .sidebar .sidebar-sign .sidebar-social  {
     margin-top: 10px;
 }
 
-.content-container .sidebar .sidebar-introduce .sidebar-social a img {
+.content-container .sidebar .sidebar-sign .sidebar-social a img {
     height: 30px;
     border-radius: 0px;
     margin: 10px;
@@ -467,14 +475,14 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 30px 0 40px;
-    padding: 10px;
+    margin: 20px 0 30px;
+    padding: 6px;
     width: 100%;
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 4px;
     background-color: transparent;
     border-radius: 0;
     box-shadow: none;
@@ -494,23 +502,23 @@ a {
 .content-container .blog-list .pagination .page-numbers {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin: 0 15px;
+    gap: 4px;
+    margin: 0 8px;
 }
 
 .content-container .blog-list .pagination .page-number {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border-radius: 4px;
     background-color: transparent;
     color: #333;
     text-decoration: none;
     transition: all 0.2s ease;
     font-weight: 500;
-    font-size: 13px;
+    font-size: 14px;
     box-shadow: none;
 }
 
@@ -536,10 +544,10 @@ a {
 .content-container .blog-list .pagination .goto-container {
     display: flex;
     align-items: center;
-    gap: 5px;
-    margin-left: 10px;
+    gap: 3px;
+    margin-left: 6px;
     background-color: transparent;
-    padding: 3px 8px;
+    padding: 2px 5px;
     border-radius: 4px;
     box-shadow: none;
 }
@@ -551,16 +559,17 @@ a {
 }
 
 .content-container .blog-list .pagination .page-input {
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     text-align: center;
     border: 1px solid #ddd;
     background-color: #fff;
     font-size: 14px;
     color: #333;
-    padding: 0 3px;
+    padding: 0 2px;
     border-radius: 3px;
     transition: all 0.2s ease;
+    margin-left: 10px;
 }
 
 .content-container .blog-list .pagination .page-input:focus {
@@ -602,12 +611,12 @@ a {
 .content-container .blog-list .pagination .pagination-button {
     background-color: transparent;
     color: #000000;
-    padding: 6px 12px;
+    padding: 4px 8px;
     cursor: pointer;
     border-radius: 3px;
     transition: all 0.2s ease;
     font-size: 14px;
-    min-width: 32px;
+    min-width: 28px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -646,13 +655,13 @@ a {
 }
 
 .content-container .blog-list .pagination .page-input {
-    width: 60px;
-    height: 34px;
+    width: 40px;
+    height: 28px;
     text-align: center;
     border: 1px solid #ddd;
     border-radius: 4px 0 0 4px;
     margin-right: 0;
-    padding: 0 8px;
+    padding: 0 5px;
 }
 
 .content-container .blog-list .pagination .jump-button {
@@ -683,8 +692,9 @@ a {
     }
     
     .content-container .blog-list .pagination .page-input {
-        width: 40px;
-        height: 30px;
+        width: 35px;
+        height: 25px;
+        font-size: 12px;
     }
 }
 
@@ -692,18 +702,18 @@ a {
     .content-container .blog-list .pagination {
         flex-wrap: wrap;
         justify-content: center;
-        padding: 5px;
-        gap: 3px;
+        padding: 3px;
+        gap: 2px;
     }
     
     .content-container .blog-list .pagination > * {
-        margin: 5px;
+        margin: 3px;
     }
     
     .content-container .blog-list .pagination .page-number {
         width: 28px;
         height: 28px;
-        font-size: 12px;
+        font-size: 14px;
     }
     
     .content-container .blog-list .pagination .pagination-button {
@@ -721,11 +731,11 @@ a {
 .content-container .blog-list .pagination a {
     color: black;
     float: left;
-    padding: 8px 16px;
+    padding: 6px 12px;
     text-decoration: none;
     transition: background-color .3s;
     border: 1px solid #ddd;
-    margin: 0 4px;
+    margin: 0 2px;
 }
 .content-container .blog-list .pagination a.pagination-active {
     background-color: #000000;
@@ -761,16 +771,18 @@ a {
     }
     
     .navigation {
-        padding: 0 10px;
+        padding: 5px 10px;
+        justify-content: center;
     }
     
     .nav-links {
-        gap: 10px;
+        gap: 8px;
+        justify-content: center;
     }
     
     .nav-links .nav-button {
-        padding: 10px 20px;
-        font-size: 14px;
+        padding: 6px 12px;
+        font-size: 12px;
     }
     
     .top-background .top-sign-0 {
@@ -815,12 +827,13 @@ a {
     }
     
     .nav-links {
-        gap: 5px;
+        gap: 3px;
     }
     
     .nav-links .nav-button {
-        padding: 8px 15px;
-        font-size: 12px;
+        padding: 5px 10px;
+        font-size: 11px;
+        border-width: 1px;
     }
     
     .top-background {
@@ -844,7 +857,7 @@ a {
     .content-container .blog-list .pagination .page-number {
         width: 30px;
         height: 30px;
-        font-size: 12px;
+        font-size: 14px;
     }
     
     .content-container .blog-list .pagination .pagination-button {
