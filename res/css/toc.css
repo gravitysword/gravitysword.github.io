@@ -1,42 +1,39 @@
 .toc-container {
     position: fixed;
     left: 40px;
-    top: 150px; /* 固定的top值 */
+    top: 200px; /* 固定的top值 */
     width: 220px;
     max-height: 80vh;
     overflow-y: auto;
-    background-color: rgba(34, 34, 34, 0.95);
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
-    padding: 18px;
+    background-color: transparent;
+    padding: 10px;
     font-size: 14px;
     z-index: 1000;
     transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
     /* 添加滚动条平滑效果 */
     scroll-behavior: smooth;
 }
 
-/* 添加目录标题 */
-.toc-container::before {
-    content: "文章目录";
-    display: block;
-    color: #ffffff;
-    font-size: 17px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #555;
-    text-align: center;
-    letter-spacing: 1px;
+/* 默认所有标题可见，JavaScript会控制隐藏 */
+.toc-container li {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
+/* 当鼠标悬停在目录上时，显示所有标题 */
+.toc-container:hover li {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+
 .toc-container::-webkit-scrollbar {
-    width: 6px;
+    width: 3px;
 }
 
 .toc-container::-webkit-scrollbar-thumb {
-    background-color: #666;
+    background-color: #444;
     border-radius: 3px;
 }
 
@@ -49,7 +46,7 @@
 }
 
 .toc-container li {
-    margin: 8px 0;
+    margin: -1px 0;
     padding-left: 15px;
     position: relative;
 }
@@ -65,30 +62,41 @@
     text-decoration: none;
     display: block;
     text-align: left;
-    padding: 6px 0 6px 12px; /* 增加内边距 */
-    transition: all 0.3s ease;
+    padding: 4px 0 4px 8px; /* 减少内边距 */
+    transition: all 0.4s ease;
     font-size: 13px;
-    border-radius: 4px;
-    margin: 2px 0;
+    margin: 1px 0;
 }
 
 .toc-container a:hover {
     color: #ffffff;
-    transform: translateX(5px);
-    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(3px);
 }
 
 .toc-container a.active {
-    color: #ff7e79;
+    color: #ffffff;
     font-weight: bold;
-    background-color: rgba(255, 126, 121, 0.15);
 }
 
 /* 添加章节编号 */
 .toc-container a::before {
     content: "";
-    margin-right: 0;
+    display: inline-block;
+    height: 8px;
+    border-radius: 4px;
+    background-color: #ff7e79;
+    margin-right: 8px;
+    vertical-align: middle;
+    transition: all 0.2s ease;
 }
+
+/* 根据标题层级设置矩形长度 */
+.toc-container li.h1 a::before { width: 50px; }
+.toc-container li.h2 a::before { width: 40px; }
+.toc-container li.h3 a::before { width: 30px; }
+.toc-container li.h4 a::before { width: 20px; }
+.toc-container li.h5 a::before { width: 15px; }
+.toc-container li.h6 a::before { width: 10px; }
 
 /* 缩进不同级别的标题 */
 .toc-container li.h2 { padding-left: 0; }
@@ -97,15 +105,9 @@
 .toc-container li.h5 { padding-left: 60px; }
 .toc-container li.h6 { padding-left: 80px; }
 
-/* 添加左侧垂直线 - 只保留一条主垂直线 */
+/* 移除左侧垂直线，保持简约风格 */
 .toc-container::after {
-    content: "";
-    position: absolute;
-    top: 50px; /* 标题下方开始 */
-    bottom: 15px;
-    left: 15px;
-    width: 1px;
-    background-color: #555;
+    display: none;
 }
 
 /* 目录切换按钮样式 */
@@ -113,10 +115,10 @@
     position: fixed;
     top: 20px;
     left: 20px;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background-color: rgba(34, 34, 34, 0.9);
+    background-color: rgba(0, 0, 0, 0.5);
     border: none;
     color: white;
     display: flex;
@@ -124,8 +126,7 @@
     justify-content: center;
     cursor: pointer;
     z-index: 1001;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     opacity: 0;
     transform: translateY(-20px);
 }
@@ -136,8 +137,8 @@
 }
 
 .toc-toggle-button:hover {
-    background-color: #ff7e79;
-    transform: scale(1.1);
+    background-color: rgba(50, 50, 50, 0.8);
+    transform: scale(1.05);
 }
 
 .toc-toggle-button svg {
@@ -154,28 +155,19 @@
 /* 在小屏幕上默认隐藏目录 */
 @media (max-width: 1200px) {
     .toc-container {
-        transform: translateX(-250px);
+        transform: translateX(-200px);
         opacity: 0;
     }
-
 }
 
-/* 为每个目录项添加圆点 */
+/* 移除目录项的圆点，保持简约风格 */
 .toc-container li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 10px;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: #444;
-    z-index: 2;
+    display: none;
 }
 
-/* 为活动项添加高亮圆点 */
+/* 移除活动项的高亮圆点 */
 .toc-container li a.active + li::before {
-    background-color: #95c37c;
+    display: none;
 }
 
 /* 响应式设计 */
@@ -226,4 +218,15 @@
 .toc-toggle-button svg {
     width: 24px;
     height: 24px;
+}
+.text-hidden {
+    color: rgba(0, 0, 0, 0) !important;
+    transition: color 0.5s ease !important;
+}
+
+/* 确保.text-hidden类不影响横条（::before伪元素）的可见性 */
+.toc-container a.text-hidden::before {
+    /* 保持横条可见，不受文本透明度影响 */
+    opacity: 1;
+    background-color: #ff7e79; /* 保持与原始颜色一致 */
 }

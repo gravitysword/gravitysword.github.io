@@ -2,7 +2,7 @@
  * 时间轴动态功能
  */
 
-// 从blogs.json获取动态数据
+// 从blogs.json获取并解析动态数据
 async function fetchDailyData() {
     try {
         const response = await fetch('/config/blogs.json');
@@ -14,30 +14,24 @@ async function fetchDailyData() {
             try {
                 const response = await fetch(`/daily/${filePath}`);
                 const content = await response.text();
-                // 使用更健壮的正则表达式匹配 <div> 标签内容，参考blog_msg.js的实现
                 const regex = /<div style="display:none;" class="author">([^<]*(?:<(?!\/div>)[^<]*)*)<\/div>([\s\S]*)/i;
                 const match = content.match(regex);
-                console.log('匹配结果:', match);
+                
                 if (match && match[1] && match[2]) {
                     try {
-                        // 尝试修复JSON中的尾随逗号问题
-                        let metadataStr = match[1].trim();
-                        metadataStr = metadataStr.replace(/,\s*}/g, '}');
-                        metadataStr = metadataStr.replace(/,\s*\n\s*}/g, '}');
-                        console.log('处理后的元数据:', metadataStr);
+                        const metadataStr = match[1].trim().replace(/,\s*[\n\s]*}/g, '}');
                         const metadata = JSON.parse(metadataStr);
-                        let textContent = match[2].trim();
-                        if (textContent.length === 0) {
-                            textContent = metadata.description || '';
-                        }
+                        const textContent = match[2].trim() || metadata.description || '';
+                        
                         dailyItems.push({
                             date: metadata.date,
                             content: textContent,
                             hashtags: metadata.hashtag ? (Array.isArray(metadata.hashtag) ? metadata.hashtag : [metadata.hashtag]) : [],
-                            weather: metadata.weather
+                            weather: metadata.weather,
+                            pictures: metadata.picture ? (Array.isArray(metadata.picture) ? metadata.picture : [metadata.picture]) : []
                         });
                     } catch (jsonError) {
-                        console.error(`JSON解析错误 ${filePath}:`, jsonError, '原始数据:', match[1]);
+                        console.error(`JSON解析错误 ${filePath}:`, jsonError);
                     }
                 }
             } catch (err) {
@@ -45,7 +39,6 @@ async function fetchDailyData() {
             }
         }
         
-        // 按时间倒序排序
         return dailyItems.sort((a, b) => new Date(b.date) - new Date(a.date));
     } catch (error) {
         console.error('Error fetching daily data:', error);
@@ -53,7 +46,7 @@ async function fetchDailyData() {
     }
 }
 
-// 格式化日期
+// 格式化日期为中文显示格式
 function formatDate(dateString) {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -65,25 +58,21 @@ function formatDate(dateString) {
     return `${year} 年 ${month} 月 ${day} 日 ${hours}:${minutes}`;
 }
 
-// 创建单个动态项
+// 创建单个动态项的DOM元素
 function createDailyItem(item, index) {
     const date = formatDate(item.date);
     
-    // 创建容器
     const itemElement = document.createElement('div');
     itemElement.className = 'relative mb-16 timeline-item';
     itemElement.dataset.index = index;
     
-    // 创建时间轴点
     const dot = document.createElement('div');
     dot.className = 'timeline-dot';
     itemElement.appendChild(dot);
     
-    // 创建内容容器
     const content = document.createElement('div');
     content.className = 'ml-16 bg-white rounded-md p-6 shadow-lg timeline-item-content';
     
-    // 添加日期和天气
     const dateElement = document.createElement('div');
     dateElement.className = 'flex items-center mb-3';
     let dateHtml = `<div class="text-sm text-gray-500">${date}`;
@@ -94,14 +83,37 @@ function createDailyItem(item, index) {
     dateElement.innerHTML = dateHtml;
     content.appendChild(dateElement);
     
-    // 添加文本内容
     const paragraph = document.createElement('p');
     paragraph.className = 'text-gray-500 mb-4';
-    // 将换行符转换为HTML的<br>标签
     paragraph.innerHTML = item.content.replace(/\n/g, '<br>');
     content.appendChild(paragraph);
     
-    // 添加标签
+    if (item.pictures && item.pictures.length > 0) {
+        const picturesContainer = document.createElement('div');
+        picturesContainer.className = 'pictures-grid mb-4';
+        
+        item.pictures.forEach(picUrl => {
+            const pictureWrapper = document.createElement('div');
+            pictureWrapper.className = 'picture-wrapper';
+            
+            const picture = document.createElement('img');
+            picture.src = picUrl;
+            picture.alt = 'Timeline Image';
+            picture.className = 'timeline-image';
+            picture.referrerPolicy = 'no-referrer';
+            picture.crossOrigin = 'anonymous';
+            picture.onerror = function() {
+                this.src = '/res/media/svg/image-error.svg';
+                this.onerror = null;
+            };
+            
+            pictureWrapper.appendChild(picture);
+            picturesContainer.appendChild(pictureWrapper);
+        });
+        
+        content.appendChild(picturesContainer);
+    }
+
     if (item.hashtags && item.hashtags.length > 0) {
         const hashtagsContainer = document.createElement('div');
         hashtagsContainer.className = 'flex flex-wrap';
@@ -120,31 +132,25 @@ function createDailyItem(item, index) {
     return itemElement;
 }
 
-// 初始化时间轴
+// 初始化时间轴并添加动画效果
 async function initTimeline() {
     const timelineContainer = document.getElementById('timeline-container');
     if (!timelineContainer) return;
     
-    // 显示加载动画
     timelineContainer.innerHTML = `
         <div class="loading">
             <div class="loading-spinner"></div>
         </div>
     `;
     
-    // 获取数据
     const dailyItems = await fetchDailyData();
-    
-    // 清空容器
     timelineContainer.innerHTML = '';
     
-    // 添加时间轴线
     const timelineLine = document.createElement('div');
     timelineLine.className = 'timeline-line';
     timelineContainer.appendChild(timelineLine);
     
     if (dailyItems.length === 0) {
-        // 没有数据时显示提示
         const emptyMessage = document.createElement('div');
         emptyMessage.className = 'text-center text-white py-8';
         emptyMessage.textContent = '暂无动态内容';
@@ -152,13 +158,11 @@ async function initTimeline() {
         return;
     }
     
-    // 添加所有动态项
     dailyItems.forEach((item, index) => {
         const dailyItem = createDailyItem(item, index);
         timelineContainer.appendChild(dailyItem);
     });
     
-    // 添加动画效果
     setTimeout(() => {
         document.querySelectorAll('.timeline-item').forEach((item, index) => {
             setTimeout(() => {
@@ -168,5 +172,46 @@ async function initTimeline() {
     }, 100);
 }
 
-// 页面加载完成后初始化
+// 图片放大功能
+const initImageZoom = () => {
+  const images = document.querySelectorAll('.timeline-image');
+  const modal = document.createElement('div');
+  modal.className = 'image-modal';
+  
+  const modalImg = document.createElement('img');
+  modalImg.className = 'modal-image';
+  
+  const closeBtn = document.createElement('div');
+  closeBtn.className = 'modal-close';
+  closeBtn.innerHTML = '×';
+  
+  modal.appendChild(modalImg);
+  modal.appendChild(closeBtn);
+  document.body.appendChild(modal);
+
+  const showImage = (src) => {
+    modal.style.display = 'flex';
+    modalImg.src = src.replace('_thumb', '');
+    setTimeout(() => modalImg.classList.add('active'), 10);
+  };
+
+  const closeModal = () => {
+    modalImg.classList.remove('active');
+    setTimeout(() => {
+      modal.style.display = 'none';
+      modalImg.src = '';
+    }, 300);
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', () => showImage(img.src));
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => e.target === modal && closeModal());
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && closeModal());
+};
+
+// 初始化时调用
+window.addEventListener('DOMContentLoaded', initImageZoom);
 document.addEventListener('DOMContentLoaded', initTimeline);
