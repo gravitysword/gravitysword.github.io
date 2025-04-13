@@ -174,12 +174,18 @@ async function initTimeline() {
 
 // 图片放大功能
 const initImageZoom = () => {
-  const images = document.querySelectorAll('.timeline-image');
   const modal = document.createElement('div');
   modal.className = 'image-modal';
+  modal.style.display = 'none';
   
   const modalImg = document.createElement('img');
   modalImg.className = 'modal-image';
+  modalImg.crossOrigin = 'anonymous';
+  modalImg.referrerPolicy = 'no-referrer';
+  modalImg.onerror = function() {
+    this.src = '/res/media/svg/sys/image-error.svg';
+    this.onerror = null;
+  };
   
   const closeBtn = document.createElement('div');
   closeBtn.className = 'modal-close';
@@ -190,9 +196,12 @@ const initImageZoom = () => {
   document.body.appendChild(modal);
 
   const showImage = (src) => {
+    modalImg.classList.remove('active');
     modal.style.display = 'flex';
-    modalImg.src = src.replace('_thumb', '');
-    setTimeout(() => modalImg.classList.add('active'), 10);
+    modalImg.src = src;
+    requestAnimationFrame(() => {
+      modalImg.classList.add('active');
+    });
   };
 
   const closeModal = () => {
@@ -203,13 +212,25 @@ const initImageZoom = () => {
     }, 300);
   };
 
-  images.forEach(img => {
-    img.addEventListener('click', () => showImage(img.src));
-  });
+  const handleImageClick = (e) => {
+    if (e.target.classList.contains('timeline-image')) {
+      const originalSrc = e.target.src;
+      showImage(originalSrc);
+    }
+  };
 
+  document.addEventListener('click', handleImageClick);
   closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => e.target === modal && closeModal());
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && closeModal());
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
 };
 
 // 初始化时调用

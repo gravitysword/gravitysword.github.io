@@ -673,6 +673,7 @@ a {
 .content-container .blog-list .pagination .page-input:focus {
     outline: none;
     border-color: #000;
+    border-right: none;
 }
 
 /* 响应式设计优化 */

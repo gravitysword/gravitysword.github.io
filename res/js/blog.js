@@ -20,8 +20,87 @@ const markedOptions = {
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+// 图片放大功能
+const initImageZoom = () => {
+  const modal = document.createElement('div');
+  modal.className = 'image-modal';
+  modal.style.display = 'none';
+  
+  const modalImg = document.createElement('img');
+  modalImg.className = 'modal-image';
+  modalImg.crossOrigin = 'anonymous';
+  modalImg.referrerPolicy = 'no-referrer';
+  modalImg.onerror = function() {
+    this.src = '/res/media/svg/sys/image-error.svg';
+    this.onerror = null;
+  };
+  
+  const closeBtn = document.createElement('div');
+  closeBtn.className = 'modal-close';
+  closeBtn.innerHTML = '×';
+  
+  modal.appendChild(modalImg);
+  modal.appendChild(closeBtn);
+  document.body.appendChild(modal);
 
+  const showImage = (src) => {
+    modalImg.classList.remove('active');
+    modal.style.display = 'flex';
+    modalImg.src = src;
+    // 禁用目录功能
+    const tocContainer = document.querySelector('.toc-container');
+    const tocToggleButton = document.querySelector('.toc-toggle-button');
+    if (tocContainer) {
+      tocContainer.style.display = 'none';
+    }
+    if (tocToggleButton) {
+      tocToggleButton.style.display = 'none';
+    }
+    requestAnimationFrame(() => {
+      modalImg.classList.add('active');
+    });
+  };
+
+  const closeModal = () => {
+    modalImg.classList.remove('active');
+    setTimeout(() => {
+      modal.style.display = 'none';
+      modalImg.src = '';
+      // 重新启用目录功能
+      const tocContainer = document.querySelector('.toc-container');
+      const tocToggleButton = document.querySelector('.toc-toggle-button');
+      if (tocContainer) {
+        tocContainer.style.display = '';
+      }
+      if (tocToggleButton) {
+        tocToggleButton.style.display = window.innerWidth <= 1200 ? 'flex' : 'none';
+      }
+    }, 300);
+  };
+
+  const handleImageClick = (e) => {
+    if (e.target.tagName === 'IMG' && !e.target.classList.contains('weather')) {
+      const originalSrc = e.target.src;
+      showImage(originalSrc);
+    }
+  };
+
+  document.addEventListener('click', handleImageClick);
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    initImageZoom();
     {
         async function a1() {
             // 加载数据
@@ -40,11 +119,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('markdown-content').innerHTML = html;
                 
                 // 初始化MathJax渲染LaTeX公式
-                if (window.MathJax) {
-                    MathJax.typesetPromise().catch(err => {
-                        console.error('MathJax渲染错误:', err);
-                    });
-                }
+                const maxRetries = 5;
+                const retryInterval = 1000; // 1秒
+                let retryCount = 0;
+
+                const tryTypeset = async () => {
+                    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+                        try {
+                            await window.MathJax.typesetPromise();
+                            console.log('MathJax渲染成功');
+                        } catch (err) {
+                            console.error('MathJax渲染错误:', err);
+                        }
+                    } else if (retryCount < maxRetries) {
+                        console.log(`等待MathJax加载，重试次数: ${retryCount + 1}/${maxRetries}`);
+                        retryCount++;
+                        setTimeout(tryTypeset, retryInterval);
+                    } else {
+                        console.error('MathJax加载失败，已达到最大重试次数');
+                    }
+                };
+
+                await tryTypeset();
                 
                 
 
@@ -72,13 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 document.querySelector('.blog-introduce').innerHTML += tag;
 
-                // 改进段落缩进方式，使用CSS类而不是直接修改HTML
-                document.querySelectorAll('p').forEach(p => {
-                    if (p.parentElement.tagName.toLowerCase() !== 'li' && 
-                        p.parentElement.tagName.toLowerCase() !== 'blockquote') {
-                        p.classList.add('indented-paragraph');
-                    }
-                });
+                
                 
                 // 为代码块添加语言标签显示
                 document.querySelectorAll('pre code').forEach(codeBlock => {

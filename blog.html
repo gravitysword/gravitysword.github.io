@@ -9,30 +9,35 @@
     <link rel="stylesheet" href="/res/css/blog.css">
     <link rel="stylesheet" href="/res/css/sharedLabels.css">
     <link rel="stylesheet" href="/res/css/toc.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="/res/js/math/math-1.css">
 
-    <script>
-    MathJax = {
-        tex: {
-            inlineMath: [['$', '$'], ['\\(', '\\)']],
-            displayMath: [['$$', '$$'], ['\\[', '\\]']]
-        },
-        chtml: {
-    scale: 1,                    // 全局缩放因子
-    minScale: .5,                  // 最小缩放因子
-    mtextFont: "STIX-Web",         // 文本的字体
-    merrorFont: "STIX-Web",        // 错误信息的字体
-    mathmlSpacing: false,          // 使用 MathML 间距规则
-    exFactor: .5,                  // 默认 ex 高度因子
-}
-    };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    
+
+    <script id="MathJax-script" async src="/res/js/math/math-2.js"></script>
+    <script src="/res/js/math/math-1.js"></script>
+
     <script src="res/js/marked.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+
     <script src="/res/js/blog.js" type="module"></script>
     <script src="/res/js/toc.js"></script>
+
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            chtml: {
+        scale: 1,                    // 全局缩放因子
+        minScale: .5,                  // 最小缩放因子
+        mtextFont: "STIX-Web",         // 文本的字体
+        merrorFont: "STIX-Web",        // 错误信息的字体
+        mathmlSpacing: false,          // 使用 MathML 间距规则
+        exFactor: .5,                  // 默认 ex 高度因子
+    }
+        };
+        </script>
 
     <meta name="referrer" content="no-referrer" />
 

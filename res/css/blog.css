@@ -177,8 +177,64 @@ pre {
   text-align: center;
 }
 
+/* 图片放大功能样式 */
+.image-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
 
+.modal-image {
+    max-width: 90%;
+    max-height: 90vh;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
 
+.modal-image.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.modal-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 图片点击效果 */
+img:not(.weather) {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+img:not(.weather):hover {
+    transform: scale(1.01);
+}
 
 /* From Uiverse.io by adamgiebl */ 
 .share button {
