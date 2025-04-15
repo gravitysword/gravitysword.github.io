@@ -66,8 +66,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
 
+                // 为所有按钮添加点击事件
                 paginationElement.querySelectorAll('button').forEach(btn => {
                     btn.onclick = handlePaginationAction;
+                });
+
+                // 为页码链接添加点击事件
+                paginationElement.querySelectorAll('.page-number').forEach(link => {
+                    link.onclick = (e) => {
+                        e.preventDefault();
+                        currentPage = parseInt(link.textContent);
+                        displayBlogItems(currentPage);
+                        updatePagination();
+                    };
                 });
             }
 
