@@ -28,7 +28,8 @@ async function fetchDailyData() {
                             content: textContent,
                             hashtags: metadata.hashtag ? (Array.isArray(metadata.hashtag) ? metadata.hashtag : [metadata.hashtag]) : [],
                             weather: metadata.weather,
-                            pictures: metadata.picture ? (Array.isArray(metadata.picture) ? metadata.picture : [metadata.picture]) : []
+                            pictures: metadata.picture ? (Array.isArray(metadata.picture) ? metadata.picture : [metadata.picture]) : [],
+                            videos: metadata.video ? (Array.isArray(metadata.video) ? metadata.video : [metadata.video]) : []
                         });
                     } catch (jsonError) {
                         console.error(`JSON解析错误 ${filePath}:`, jsonError);
@@ -114,6 +115,22 @@ function createDailyItem(item, index) {
         content.appendChild(picturesContainer);
     }
 
+    if (item.videos && item.videos.length > 0) {
+        const videosContainer = document.createElement('div');
+        videosContainer.className = 'videos-grid mb-4';
+        
+        item.videos.forEach(videoUrl => {
+            const iframe = document.createElement('iframe');
+            iframe.src = '/res/tags/video.html?url='+videoUrl;
+            iframe.className = 'timeline-video';
+            iframe.setAttribute('frameborder', '0');
+            
+            videosContainer.appendChild(iframe);
+        });
+        
+        content.appendChild(videosContainer);
+    }
+
     if (item.hashtags && item.hashtags.length > 0) {
         const hashtagsContainer = document.createElement('div');
         hashtagsContainer.className = 'flex flex-wrap';
@@ -172,8 +189,8 @@ async function initTimeline() {
     }, 100);
 }
 
-// 图片放大功能
-const initImageZoom = () => {
+// 图片放大和视频播放功能
+const initMediaViewer = () => {
   const modal = document.createElement('div');
   modal.className = 'image-modal';
   modal.style.display = 'none';
@@ -234,5 +251,5 @@ const initImageZoom = () => {
 };
 
 // 初始化时调用
-window.addEventListener('DOMContentLoaded', initImageZoom);
+window.addEventListener('DOMContentLoaded', initMediaViewer);
 document.addEventListener('DOMContentLoaded', initTimeline);

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="referrer" content="no-referrer" />
+    <style>
+        video {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <video src="https://sns-video-default.xhscdn.com/stream/79/110/258/01e7fe53860d57424f037001963977f94f_258.mp4" controls></video>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoElement = document.querySelector('video');
+            const urlParams = new URLSearchParams(window.location.search);
+            let videoUrl = urlParams.get('url');
+            
+            try {
+                if (videoUrl) {
+                    videoElement.src = decodeURIComponent(videoUrl);
+                }
+                videoElement.onerror = function() {
+                    console.error('视频加载失败');
+                    this.src = 'https://sns-video-default.xhscdn.com/stream/79/110/258/01e7fe53860d57424f037001963977f94f_258.mp4';
+                };
+            } catch (error) {
+                console.error('视频初始化错误:', error);
+            }
+        });
+    </script>
+</body>
+</html>

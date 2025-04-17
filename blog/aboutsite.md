@@ -8,16 +8,19 @@
 }
 </div>
 
-
-
-
-# 网站标签
+# 网站相关
 ## 文章标签
 1. 生活
     1. 随笔
     2. 故事
-
 2. 技术
+
+## 网站技术
+天气图标网站：https://icons.qweather.com/
+CSS动效：https://uiverse.io/
+图片与视频托管：https://www.xiaohongshu.com/explore
+文件托管：
+
 # 时间轴
 ## 2025
 ### 2025-01-21

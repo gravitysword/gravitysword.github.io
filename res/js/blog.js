@@ -7,6 +7,8 @@ const markedOptions = {
     pedantic: false, // 尽可能地兼容markdown.pl
     smartLists: true, // 使用比原生markdown更时髦的列表
     smartypants: true, // 使用更为时髦的标点
+    xhtml: true, // 使用xhtml闭合标签
+    html: true, // 允许HTML标签
     highlight: function(code, lang) {
         // 如果有语言标识且有hljs库，则进行高亮
         if (lang && window.hljs) {
@@ -99,6 +101,23 @@ const initImageZoom = () => {
   });
 };
 
+// 添加视频错误处理
+const handleVideoError = () => {
+    document.querySelectorAll('video').forEach(video => {
+        if (!video.hasAttribute('onerror')) {
+            video.crossOrigin = 'anonymous';
+            video.onerror = function() {
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'video-error';
+                errorMsg.textContent = '视频加载失败';
+                this.parentNode.insertBefore(errorMsg, this);
+                this.style.display = 'none';
+            };
+            video.setAttribute('onerror', 'true');
+        }
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     initImageZoom();
     {
@@ -117,6 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 使用配置的选项解析markdown
                 const html = marked.parse(markdown, markedOptions);
                 document.getElementById('markdown-content').innerHTML = html;
+                // 为所有视频元素添加跨域属性
+                document.querySelectorAll('video').forEach(video => {
+                    video.crossOrigin = 'anonymous';
+                });
+                
+                // 处理视频错误
+                handleVideoError();
                 
                 // 初始化MathJax渲染LaTeX公式
                 const maxRetries = 5;

@@ -173,10 +173,13 @@ pre {
     padding :4px 6px;
 }
 
-.introduce .title {
-  text-align: center;
-}
 
+iframe{
+  width: 100%;
+  aspect-ratio: 16/10;
+  align-items: center;
+  padding:2%;
+}
 /* 图片放大功能样式 */
 .image-modal {
     display: none;

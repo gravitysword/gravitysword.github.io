@@ -72,6 +72,7 @@ body {
     width: 45%;
     margin: 0 auto;
     position: relative;
+    height: 80vh; /* 新增固定高度 */
 }
 
 .timeline-container {
@@ -107,6 +108,13 @@ body {
     height: auto;
     border-radius: 4px;
 }
+
+iframe{
+    width: 100%;
+    aspect-ratio: 16/10;
+    align-items: center;
+    margin : 20px 0;
+  }
 
 .image-grid {
     display: grid;
