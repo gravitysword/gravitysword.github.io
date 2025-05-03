@@ -1,4 +1,4 @@
-import { BLOG_getBlog, BLOG_getBlogItems } from '/res/js/blog_msg.js';
+import { BLOG_getContent } from '/res/js/blog_msg.js';
 
 // 配置marked解析器选项
 const markedOptions = {
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const blogId = urlParams.get('id');
                 console.log(`Blog ID: ${blogId}`);
 
-                const response = await fetch(`/blog/${blogId}`);
+                const response = await fetch(`${blogId}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -144,33 +144,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 处理视频错误
                 handleVideoError();
                 
-                // 初始化MathJax渲染LaTeX公式
-                const maxRetries = 5;
-                const retryInterval = 1000; // 1秒
-                let retryCount = 0;
-
-                const tryTypeset = async () => {
-                    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
-                        try {
-                            await window.MathJax.typesetPromise();
-                            console.log('MathJax渲染成功');
-                        } catch (err) {
-                            console.error('MathJax渲染错误:', err);
-                        }
-                    } else if (retryCount < maxRetries) {
-                        console.log(`等待MathJax加载，重试次数: ${retryCount + 1}/${maxRetries}`);
-                        retryCount++;
-                        setTimeout(tryTypeset, retryInterval);
-                    } else {
-                        console.error('MathJax加载失败，已达到最大重试次数');
-                    }
-                };
-
-                await tryTypeset();
+               
                 
                 
 
-                const blog_details = await BLOG_getBlog(blogId);
+                const blog_details = await BLOG_getContent(blogId);
                 console.log('Blog Details:', blog_details);
 
                 document.querySelector('.title').textContent = blog_details["title"];

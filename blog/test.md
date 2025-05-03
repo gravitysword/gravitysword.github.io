@@ -15,9 +15,7 @@
 
 [测试文件](https://sfile.chatglm.cn/chatglm4/fe2087d0-6644-4282-8b5a-be2eecd5567d.pdf)
 
-
-
-
+$$ \left\\{\begin{matrix} 1 &2   & 3\\\\ 1 & 2 &3\end{matrix}\right. $$
 
 
      

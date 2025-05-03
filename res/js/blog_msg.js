@@ -5,7 +5,8 @@ export async function BLOG_getBlogItems() {
         data = JSON.parse(data)["blogs"];
         let blogsData = [];
         for (let i of data) {
-            let j  = await BLOG_getBlog(i)
+            i = "/blog/"+i
+            let j  = await BLOG_getContent(i)
             j.id = i
             blogsData.push(j)
         }
@@ -16,9 +17,9 @@ export async function BLOG_getBlogItems() {
     }
 }
 
-export async function BLOG_getBlog(blogId) {
+export async function BLOG_getContent(blogId) {
     try {
-        const response = await fetch(`/blog/${blogId}`);
+        const response = await fetch(`${blogId}`);
         const data = await response.text();
 
         // 使用正确的正则表达式匹配 <div> 标签内容
@@ -32,6 +33,24 @@ export async function BLOG_getBlog(blogId) {
 }
 
 
-
+export async function BLOG_getKnowledgeItems() {
+    try {
+        const response = await fetch("/config/blogs.json");
+        let data = await response.text();
+        data = JSON.parse(data)["knowledge"]["article"];
+        let blogsData = [];
+        for (let i of data) {
+            i = "/knowledge/"+i
+            console.log(i)
+            let j  = await BLOG_getContent(i)
+            j.id = i
+            blogsData.push(j)
+        }
+        return blogsData
+    } catch (error) {
+        console.error('Error fetching blogs.json:', error);
+        return null;
+    }
+}
 
 

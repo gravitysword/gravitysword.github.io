@@ -1,4 +1,4 @@
-import { BLOG_getBlog, BLOG_getBlogItems } from '/res/js/blog_msg.js';
+import {  BLOG_getBlogItems } from '/res/js/blog_msg.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
