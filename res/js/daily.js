@@ -53,10 +53,8 @@ function formatDate(dateString) {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
     
-    return `${year} 年 ${month} 月 ${day} 日 ${hours}:${minutes}`;
+    return `${year} 年 ${month} 月 ${day} 日 `;
 }
 
 // 创建单个动态项的DOM元素

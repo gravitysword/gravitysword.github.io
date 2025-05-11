@@ -144,6 +144,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 处理视频错误
                 handleVideoError();
                 
+                // 添加视频时间跳转功能
+                document.querySelectorAll('.video-time-jump').forEach(span => {
+                    span.addEventListener('click', function() {
+                        const timeStr = this.textContent.trim();
+                        const bindId = this.getAttribute('bind-id');
+                        const video = document.querySelector(`video[video-id="${bindId}"]`);
+                        console.log(`Video ID: ${bindId}`);
+                        if (video) {
+                            const timeParts = timeStr.split(':').map(Number);
+                            let seconds = 0;
+                            
+                            if (timeParts.length === 3) {
+                                // 格式为 HH:MM:SS
+                                seconds = timeParts[0] * 3600 + timeParts[1] * 60 + timeParts[2];
+                            } else if (timeParts.length === 2) {
+                                // 格式为 MM:SS
+                                seconds = timeParts[0] * 60 + timeParts[1];
+                            }
+                            
+                            video.currentTime = seconds;
+                            video.play();
+                        }
+                    });
+                });
+                
                
                 
                 
@@ -156,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const weatherElement = document.querySelector('.weather');
                 if (weatherElement) {
-                    if (blog_details["weather"] === "") {
+                    if (blog_details["weather"] === "" || blog_details["weather"] === undefined) {
                         weatherElement.style.display = 'none';
                         console.log("天气信息为空，隐藏天气图标");
                     } else {

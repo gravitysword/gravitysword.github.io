@@ -239,6 +239,14 @@ img:not(.weather):hover {
     transform: scale(1.01);
 }
 
+.content video{
+    width: 100%;
+    margin: auto auto;
+}
+.content .video-time-jump{
+    color: #ff7e79;
+}
+
 /* From Uiverse.io by adamgiebl */ 
 .share button {
     font-size: 16px;

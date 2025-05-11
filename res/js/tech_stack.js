@@ -12,7 +12,7 @@ async function initializeTags() {
     try {
         const response = await fetch("/config/blogs.json");
         const data = await response.json();
-        const tags = ["全部", ...data.knowledge.tag];
+        const tags = ["全部", ...data.tech_stack.tag];
         
         // 更新标签容器
         const tagsContainer = document.querySelector('.tags-container');

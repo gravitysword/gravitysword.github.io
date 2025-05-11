@@ -37,10 +37,10 @@ export async function BLOG_getKnowledgeItems() {
     try {
         const response = await fetch("/config/blogs.json");
         let data = await response.text();
-        data = JSON.parse(data)["knowledge"]["article"];
+        data = JSON.parse(data)["tech_stack"]["article"];
         let blogsData = [];
         for (let i of data) {
-            i = "/knowledge/"+i
+            i = "/tech_stack/"+i
             console.log(i)
             let j  = await BLOG_getContent(i)
             j.id = i

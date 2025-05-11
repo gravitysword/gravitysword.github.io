@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF 下载</title>
+</head>
+<body>
+    <button id="downloadPdfButton">下载 PDF</button>
+
+    <script>
+        document.getElementById('downloadPdfButton').addEventListener('click', function() {
+            const pdfUrl = 'https://sns-na-i1.xhscdn.com/spectrum/1040g34o31hbigm3jj40g5pgi0nb1om97k837nko';
+            const fileName = "downloaded_file.png"; // 您可以根据需要更改默认下载的文件名
+
+            fetch(pdfUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应错误 ' + response.statusText);
+                    }
+                    return response.blob(); // 将响应体转换为 Blob 对象
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob); // 为 Blob 创建一个 URL
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.style.display = 'none';
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url); // 释放创建的 URL 对象
+                })
+                .catch(error => {
+                    console.error('下载文件时发生错误:', error);
+                    alert('下载文件失败，请查看控制台获取更多信息。');
+                });
+        });
+    </script>
+</body>
+</html>

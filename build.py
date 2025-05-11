@@ -104,28 +104,28 @@ def update_blogs():
     print(f"已更新博客列表，共 {len(blog_files)} 篇文章")
     print(f"已更新动态列表，共 {len(daily_files)} 条动态")
 
-def update_knowledge():
-    """更新知识库文件列表及元数据"""
-    # 获取知识库目录路径
-    knowledge_dir = os.path.join(os.getcwd(), 'knowledge').replace("\\", "/")
+def update_tech_stack():
+    """更新技术栈文件列表及元数据"""
+    # 获取技术栈目录路径
+    tech_stack_dir = os.path.join(os.getcwd(), 'tech_stack').replace("\\", "/")
     
     # 获取所有.md文件
-    knowledge_files = list_files(knowledge_dir)
-    for i in range(len(knowledge_files)):
-        knowledge_files[i] = knowledge_files[i].replace(knowledge_dir + "/", "")
+    tech_stack_files = list_files(tech_stack_dir)
+    for i in range(len(tech_stack_files)):
+        tech_stack_files[i] = tech_stack_files[i].replace(tech_stack_dir + "/", "")
     
     # 加载现有配置
     config = load_config()
-    if "knowledge" not in config:
-        config["knowledge"] = {"tag": [], "article": []}
+    if "tech_stack" not in config:
+        config["tech_stack"] = {"tag": [], "article": []}
     
     # 清空现有列表
-    config["knowledge"]["tag"] = []
-    config["knowledge"]["article"] = knowledge_files
+    config["tech_stack"]["tag"] = []
+    config["tech_stack"]["article"] = tech_stack_files
     
     # 遍历每个文件解析元数据
-    for file_path in knowledge_files:
-        full_path = os.path.join(knowledge_dir, file_path)
+    for file_path in tech_stack_files:
+        full_path = os.path.join(tech_stack_dir, file_path)
         try:
             with open(full_path, 'r', encoding='utf-8') as f:
                 content = f.read()
@@ -135,15 +135,15 @@ def update_knowledge():
                     # 更新标签列表（不重复添加）
                     if "tag" in metadata:
                         for tag in metadata["tag"]:
-                            if tag not in config["knowledge"]["tag"]:
-                                config["knowledge"]["tag"].append(tag)
+                            if tag not in config["tech_stack"]["tag"]:
+                                config["tech_stack"]["tag"].append(tag)
         except Exception as e:
             print(f"处理文件 {file_path} 时出错: {str(e)}")
     
     # 保存更新后的配置
     save_config(config)
-    print(f"已更新知识库列表，共 {len(knowledge_files)} 篇文章")
-    print(f"标签列表：{config['knowledge']['tag']}")
+    print(f"已更新技术栈列表，共 {len(tech_stack_files)} 篇文章")
+    print(f"标签列表：{config['tech_stack']['tag']}")
 
 # ===== 动态管理函数 =====
 def add_daily_item():
@@ -369,7 +369,7 @@ def blog_menu():
     while True:
         print("\n=== 博客管理 ===")
         print("1. 更新博客和动态列表")
-        print("2. 更新知识库列表")
+        print("2. 更新技术栈列表")
         print("3. 生成本地RSS订阅文件")
         print("4. 生成云端RSS订阅文件")
         print("0. 返回主菜单")
@@ -379,7 +379,7 @@ def blog_menu():
         if choice == "1":
             update_blogs()
         elif choice == "2":
-            update_knowledge()
+            update_tech_stack()
         elif choice == "3":
             save_rss(is_cloud=False)
         elif choice == "4":
@@ -393,16 +393,22 @@ def main():
     """主函数"""
     while True:
         print("\n=== 博客站点管理系统 ===")
-        print("1. 博客管理")
-        print("2. 动态管理")
+        print("1. 更新博客和动态列表")
+        print("2. 更新技术栈列表")
+        print("3. 生成本地RSS订阅文件")
+        print("4. 生成云端RSS订阅文件")
         print("0. 退出")
         
         choice = input("请选择操作: ")
         
         if choice == "1":
-            blog_menu()
+            update_blogs()
         elif choice == "2":
-            daily_menu()
+            update_tech_stack()
+        elif choice == "3":
+            save_rss(is_cloud=False)
+        elif choice == "4":
+            save_rss(is_cloud=True)
         elif choice == "0":
             print("感谢使用，再见！")
             break
