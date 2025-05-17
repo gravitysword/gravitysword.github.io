@@ -22,6 +22,18 @@
     <script src="/res/js/katex/katex.min.js"></script>
     <script src="/res/js/katex/contrib/auto-render.min.js"></script>
 
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.getElementById("markdown-content"), {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ],
+                throwOnError: false
+            });
+        });
+    </script>
+
     
 </head>
 
