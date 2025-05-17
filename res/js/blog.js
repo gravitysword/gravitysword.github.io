@@ -242,6 +242,44 @@ document.addEventListener('DOMContentLoaded', () => {
                     table.parentNode.insertBefore(wrapper, table);
                     wrapper.appendChild(table);
                 });
+
+                // 添加文件链接跳转功能
+                document.querySelectorAll('files').forEach(fileElement => {
+                    fileElement.style.cursor = 'pointer'; // 添加指针样式，提示用户可点击
+                    fileElement.addEventListener('click', async function() {
+                        const fileId = this.getAttribute('id');
+                        if (!fileId) {
+                            console.error('File element is missing an id attribute.');
+                            alert('文件元素缺少ID属性。');
+                            return;
+                        }
+                        try {
+                            // 获取files.json配置
+                            const response = await fetch('/config/files.json');
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! Status: ${response.status} when fetching files.json`);
+                            }
+                            const config = await response.json();
+                            const fileData = config.file[fileId];
+
+                            if (fileData && fileData.id) {
+                                const host = config.host;
+                                const Url = host + fileData.id;
+
+                                window.open(Url, '_blank');
+                                
+                            } else {
+                                console.error(`File with id "${fileId}" not found or has no ID in files.json.`);
+                                alert(`未能找到文件 "${this.textContent.trim()}" 的链接信息。`);
+                            }
+                        } catch (error) {
+                            console.error('Error processing file link:', error);
+                            alert('处理文件链接时出错，请检查控制台获取更多信息。');
+                        }
+                    });
+                });
+            
+
             } catch (error) {
                 console.error('Error loading blog:', error);
             }

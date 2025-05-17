@@ -21,7 +21,7 @@
 <span class="video-time-jump" bind-id="0">08:00</span>
 
 ### 测试文件
-[测试文件](https://sfile.chatglm.cn/chatglm4/fe2087d0-6644-4282-8b5a-be2eecd5567d.pdf)
+<files id="1">测试文件</files>
 
 ### 测试latex公式
 $$ \left\\{\begin{matrix} 1 &2   & 3\\\\ 1 & 2 &3\end{matrix}\right. $$
