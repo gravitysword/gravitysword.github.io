@@ -26,19 +26,17 @@
                 displayMath: [['$$', '$$'], ['\\[', '\\]']]
             },
             chtml: {
-        scale: 1,                    // 全局缩放因子
-        minScale: .5,                  // 最小缩放因子
-        mtextFont: "STIX-Web",         // 文本的字体
-        merrorFont: "STIX-Web",        // 错误信息的字体
-        mathmlSpacing: false,          // 使用 MathML 间距规则
-        exFactor: .5,                  // 默认 ex 高度因子
-    }
+                scale: 1,
+                minScale: .5,
+                mtextFont: "STIX-Web",
+                merrorFont: "STIX-Web",
+                mathmlSpacing: false,
+                exFactor: .5
+            }
         };
-        </script>
-
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
