@@ -306,6 +306,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
+            // 在markdown内容渲染完成后执行KaTeX渲染
+            renderMathInElement(document.getElementById("markdown-content"), {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ],
+                throwOnError: false
+            });
+
         }
 
         a1();

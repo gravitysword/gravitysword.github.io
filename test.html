@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>test</title>
+    <!-- 使用本地 KaTeX 文件 -->
+    <link rel="stylesheet" href="/res/js/katex/katex.min.css">
+    <script src="/res/js/katex/katex.min.js"></script>
+    <script src="/res/js/katex/contrib/auto-render.min.js"></script>
+</head>
+<body>
+    <div id="math-container">
+        这是一个行内公式：$c = \pm\sqrt{a^2 + b^2}$
+        <p>
+            这是一个显示公式：
+            $$
+            \frac{-b \pm \sqrt{b^2-4ac}}{2a}
+            $$
+        </p>
+        <p>
+            再来一个公式：$E = mc^2$
+        </p>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.getElementById("math-container"), {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ],
+                throwOnError: false
+            });
+        });
+    </script>
+</body>
+</html>
