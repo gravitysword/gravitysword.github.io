@@ -265,8 +265,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (fileData && fileData.id) {
                                 const host = config.host;
                                 const Url = host + fileData.id;
+                                window.location.href = Url;
 
-                                window.open(Url, '_blank');
+        
                                 
                             } else {
                                 console.error(`File with id "${fileId}" not found or has no ID in files.json.`);

@@ -1,0 +1,92 @@
+/* 页脚整体样式 */
+.bottom {
+    width: 100%;
+    background: #000000;
+    color: #fff;
+    padding: 32px 0 16px 0;
+    margin-top: 50px;
+    margin-bottom: 100px;
+    
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 -2px 16px rgba(0,0,0,0.12);
+}
+
+.bottom-content {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.copyright-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.copyright {
+    font-weight: 500;
+    font-size: 15px;
+    color: #fff;
+}
+
+.attention-0 {
+    font-size: 13px;
+    color: #bbb;
+    font-style: italic;
+}
+
+.beian-info {
+    margin: 0 12px;
+}
+
+.beian {
+    color: #888;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+}
+.beian:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.friend-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.friend-links-title {
+    font-weight: 600;
+    color: #fff;
+    font-size: 14px;
+}
+
+.friend-link {
+    color: #bbb;
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 4px;
+    transition: color 0.2s;
+}
+.friend-link:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .bottom-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .friend-links {
+        flex-wrap: wrap;
+    }
+}

@@ -6,7 +6,7 @@
     <title>泛舟游客的博客</title>
     <link rel="stylesheet" href="/res/css/md.css" >
     <link rel="stylesheet" href="/res/css/blog.css">
-    <link rel="stylesheet" href="/res/css/sharedLabels.css">
+    <link rel="stylesheet" href="/res/tag/footer.css">
     <link rel="stylesheet" href="/res/css/toc.css">
     
 
@@ -72,22 +72,14 @@
         </div>
 
     </div>
-    <footer class="bottom">
-        <div class="bottom-content">
-            <div class="copyright-info">
-                <span class="copyright">Copyright ©2025-2025 泛舟游客 All Rights Reserved.</span>
-                <br />
-                <span class="attention-0">Website is built by AI </span>
-            </div>
-            <div class="beian-info">
-                <a class="beian" href="https://beian.miit.gov.cn/">备案号：暂未备案</a>
-            </div>
-            <div class="friend-links">
-                <span class="friend-links-title">邻居：</span>
-                <a class="friend-link" href="https://helloyutao.top:36993/">Hello YuTao</a>
-            </div>
-        </div>
-    </footer>
+    <div id="footer"></div>
+    <script>
+        (async () => {
+            const response = await fetch('/res/tag/footer.html');
+            const data = await response.text();
+            document.getElementById('footer').innerHTML = data;
+        })();
+    </script>
 </body>
 
 </html>
