@@ -9,19 +9,31 @@
     <script type="module" src="/res/js/index.js"></script>
 
     <link rel="stylesheet" href="/res/tag/footer.css">
+    <link rel="stylesheet" href="/res/tag/nav.css">
+    <script  src="/res/tag/nav.js" defer></script>
 </head>
 
 <body>
-    <div class="top-section">
-        <div class="navigation">
-            <ul class="nav-links">
-                <li><a class="nav-button" href="/daily.html">碎碎念</a></li>
-                <li><a class="nav-button" href="/tech_stack.html">技术栈</a></li>
-                <li><a class="nav-button" href="/config/blogs.json">归档</a></li>
-                <li><a class="nav-button" href="/blog.html?id=/blog/aboutsite.md">关于网站</a></li>
-                <li><a class="nav-button" href="/blog.html?id=/blog/aboutme.md">联系作者</a></li>
-            </ul>
+    <div class="navigation">
+        <div class="nav-brand">
+            <a href="/">泛舟游客</a>
         </div>
+        <ul class="nav-links">
+            <li><a class="nav-button" href="/">首页</a></li>
+            <li><a class="nav-button" href="/daily.html">碎碎念</a></li>
+            <li><a class="nav-button" href="/tech_stack.html">技术栈</a></li>
+            <li><a class="nav-button" href="/config/json.html">归档</a></li>
+            <li><a class="nav-button" href="/blog.html?id=/blog/aboutsite.md">关于网站</a></li>
+            <li><a class="nav-button" href="/blog.html?id=/blog/aboutme.md">联系作者</a></li>
+            <li class="nav-search-item">
+                <img class="nav-search-icon" src="/res/media/svg/sys/search.svg" alt="Search">
+            </li>
+        </ul>
+    </div>
+    
+    <div class="top-section">
+        <!-- 修改后的导航栏结构 -->
+        
         <div class="top-background">
             <span class="top-sign-0">像坟墓一样简洁</span>
             <span class="top-sign-1">-- 《三体Ⅲ》</span>
@@ -52,7 +64,7 @@
                     <h3>个人介绍</h3>
                     <p>西南某普通一本的在读大学生</p>
                     <p>喜欢研究ai技术，王者n年牢玩家</p>
-                    
+
                 </div>
 
                 <div class="sidebar-notice">
@@ -105,4 +117,5 @@
         })();
     </script>
 </body>
+
 </html>

@@ -1,11 +1,17 @@
+@font-face {
+    font-family: 'AlibabaPuHuiTi';
+    src: url('/res/font/AlibabaPuHuiTi.woff2') format('woff2');
+  }
+
+
 body {
     background-color: #000000;
+    font-family: 'AlibabaPuHuiTi', sans-serif;
 }
 
 /* 技术栈页面特定样式 */
 .top-background {
-    height: 35vh;
-    background-color: #111;
+    height: 45vh;
     display: flex;
     flex-direction: column;
     justify-content: center;

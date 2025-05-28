@@ -1,10 +1,23 @@
+@font-face {
+    font-family: 'AlibabaPuHuiTi';
+    src: url('/res/font/AlibabaPuHuiTi.woff2') format('woff2');
+  }
+
 body {
     background-color: #000000;
     color: #ffffff;
-    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    font-family: 'AlibabaPuHuiTi', Arial, sans-serif;
+    font-size:18px;
     margin: 0;
     padding: 0;
     line-height: 1.6;
+}
+p {
+
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    font-size: 16px;
+    color: #000;
 }
 
 .top-section {
@@ -27,7 +40,7 @@ body {
 }
 
 .top-sign-0 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     color: #ffffff;
     margin-bottom: 15px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -70,35 +83,6 @@ body {
     min-height: calc(100vh - 300px); /* 减去顶部的高度 */
     display: flex;
     flex-direction: column;
-}
-
-.navigation {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 30px;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.nav-button {
-    background: none;
-    border: none;
-    color: #ffffff;
-    padding: 10px 20px;
-    margin: 0 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: color 0.3s;
-}
-
-.nav-button:hover {
-    color:  #ff8a86;
 }
 
 .content-container {
@@ -167,6 +151,14 @@ iframe{
     height: 150px; /* 限制固定高度以统一显示 */
     object-fit: cover;
     border-radius: 4px;
+}
+
+video{
+    width: 100%;
+    margin: auto auto;
+}
+.video-time-jump{
+    color: #ff7e79;
 }
 
 /* 响应式布局 */

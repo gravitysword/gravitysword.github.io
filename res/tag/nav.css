@@ -1,0 +1,124 @@
+
+.navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 90%;
+    background: rgba(0, 0, 0, 1);
+    backdrop-filter: blur(20px);
+    padding: 24px 5%;
+    transition: all 0.4s cubic-bezier(0, 0, 0, 1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-brand a {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed;
+        top: 72px;
+        right: -100%;
+        flex-direction: column;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        width: 70%;
+        height: calc(100vh - 72px);
+        padding: 2rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 8px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+    }
+
+    .hamburger span {
+        width: 24px;
+        height: 2px;
+        background: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(4px, 4px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(4px, -4px);
+    }
+}
+
+.nav-links .nav-button {
+    color: #ffffff;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    position: relative;
+    background: transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-links .nav-button:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.navigation.scrolled {
+    background: rgba(0,0,0, 0.8);
+    backdrop-filter: blur(8px);
+    padding: 16px 5%;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Search Icon Styles */
+.nav-links .nav-search-item {
+    margin-left: auto; /* Pushes search icon to the right */
+    display: flex;
+    align-items: center;
+}
+
+.nav-links .nav-search-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    filter: invert(1) brightness(1.5); /* Make black SVG white for dark nav */
+}
+
+.navigation.scrolled .nav-links .nav-search-icon {
+    filter: none; /* Revert to original (black) for white nav */
+}

@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
+
             await loadBlogList();
         }
         a1();

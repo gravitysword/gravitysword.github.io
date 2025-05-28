@@ -1,16 +1,25 @@
 /* Sspai Web Theme A theme to [sspai](ssp.ai) default theme. Developed by Codegass(wchweichenhao@gmial.com) & Yves(yves@sspai.com) Download Cuto on the App Store and Google Play! */
+@font-face {
+    font-family: 'AlibabaPuHuiTi';
+    src: url('/res/font/AlibabaPuHuiTi.woff2') format('woff2');
+  }
 
+@font-face {
+    font-family: 'SourceHanSerifSC';
+    src: url('/res/font/SourceHanSerifSC.otf') format('opentype');
+  
+}
 body {
-	font-size: 16px;
+	font-size: 18px;
 	background: #000000;
 	margin: 0px;
 	padding: 0px;
-	font-family: "Microsoft YaHei", 微软雅黑;
+	font-family: "AlibabaPuHuiTi";
 	line-height: 1.6;
-	color: #eee;
+	color: #ffffff;
 }
 .content h1 {
-	font-size: 2.2em;
+	font-size: 2em;
 	font-weight: 700;
 	line-height: 1.2;
 	padding-top: 16px;
@@ -20,12 +29,12 @@ body {
 	text-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
 }
 .content h2, .content h3, .content h4, .content h5, .content h6 {
-	line-height: 1.5em;
+	line-height: 1.4em;
 	margin-top: 2.2em;
 	margin-bottom: 4px;
 }
 .content h2 {
-	font-size: 1.5em;
+	font-size: 1.3em;
 	margin: 40px 10px 20px 0;
 	padding-left: 12px;
 	border-left: 6px solid #ff7e79;
@@ -75,12 +84,15 @@ body {
 	padding-left: 5%;
 	line-height: 1.8;
 }
+
+/* 定义自定义字体 */
+
 .content p {
 	margin: 0 0 20px;
-	padding: 0;
-	line-height: 1.8;
-	text-align: justify;
-	text-justify: inter-word;
+	line-height: 1.6;
+    font-weight: 500;
+    letter-spacing: 0.3px; 
+    font-family: 'SourceHanSerifSC';
 }
 .content a {
 	color: #ff6b66;
@@ -201,6 +213,9 @@ body {
 }
 .content li {
 	margin-top: 5px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    font-family: 'SourceHanSerifSC';
 }
 .content ol#footnotes {
 	font-size: 0.95em;

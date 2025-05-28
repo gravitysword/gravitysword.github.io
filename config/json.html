@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>归档</title>
+    <style>
+        .json-container {
+            display: flex;
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .json-column {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .json-viewer {
+            font-family: Consolas, monospace;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            height: 80vh;
+            overflow: auto;
+        }
+
+        @media (max-width: 768px) {
+            .json-container {
+                flex-direction: column;
+            }
+        }
+        .json-node {
+            margin-left: 20px;
+        }
+        .toggle {
+            cursor: pointer;
+            color: #007bff;
+            margin-right: 8px;
+            transform-origin: center center;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .json-node > .toggle svg {
+            transform: rotate(0deg);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .collapsed > .toggle svg {
+            transform: rotate(-90deg) !important;
+        }
+        .collapsed .children {
+            display: none;
+        }
+        .key {
+            color: #d73a49;
+        }
+        .string {
+            color: #22863a;
+        }
+        .number {
+            color: #005cc5;
+        }
+    </style>
+</head>
+<body>
+    <div class="json-container">
+    <div class="json-column">
+        <h3>博客归档</h3>
+        <div id="json-viewer-left" class="json-viewer"></div>
+    </div>
+    <div class="json-column">
+        <h3>文件归档</h3>
+        <div id="json-viewer-right" class="json-viewer"></div>
+    </div>
+</div>
+
+    <script>
+        function createJSONViewer(data, container) {
+            function createNode(key, value) {
+                const node = document.createElement('div');
+                node.className = 'json-node';
+
+                if (typeof value === 'object' && value !== null) {
+                    const toggle = document.createElement('span');
+                    toggle.className = 'toggle';
+                    toggle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" style="transition: transform 0.2s ease-in-out"><path d="M7 10l5 5 5-5z" fill="#007bff"/></svg>';
+                    toggle.addEventListener('click', () => {
+                        node.classList.toggle('collapsed');
+                    });
+
+                    const keySpan = document.createElement('span');
+                    keySpan.className = 'key';
+                    keySpan.textContent = key ? `${key}: ` : '';
+
+                    const typeSpan = document.createElement('span');
+                    typeSpan.textContent = Array.isArray(value) 
+                        ? `[${value.length}]` 
+                        : `{${Object.keys(value).length}}`;
+
+                    const children = document.createElement('div');
+                    children.className = 'children';
+                    Object.entries(value).forEach(([childKey, childValue]) => {
+                        children.appendChild(createNode(childKey, childValue));
+                    });
+
+                    node.append(toggle, keySpan, typeSpan, children);
+                } else {
+                    const keySpan = document.createElement('span');
+                    keySpan.className = 'key';
+                    keySpan.textContent = key ? `${key}: ` : '';
+
+                    const valueSpan = document.createElement('span');
+                    valueSpan.className = typeof value;
+                    valueSpan.textContent = typeof value === 'string' 
+                        ? `"${value}"` 
+                        : value;
+
+                    node.append(keySpan, valueSpan);
+                }
+
+                return node;
+            }
+
+            Promise.all([
+            fetch('/config/blogs.json'),
+            fetch('/config/files.json')
+        ])
+        .then(responses => Promise.all(responses.map(r => r.json())))
+        .then(([blogsData, filesData]) => {
+            document.querySelector('#json-viewer-left').appendChild(createNode(null, blogsData));
+            document.querySelector('#json-viewer-right').appendChild(createNode(null, filesData));
+        })
+        .catch(error => {
+            console.error('Error loading JSON:', error);
+        });
+        }
+
+        // 初始化查看器
+        createJSONViewer({}, document.getElementById('json-viewer'));
+    </script>
+</body>
+</html>
