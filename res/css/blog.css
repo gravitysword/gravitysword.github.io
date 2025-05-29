@@ -1,10 +1,4 @@
-body {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  scroll-behavior: smooth;
-  background-color: #000;
-}
+
 
 .main-content {
   background-color: #000000;

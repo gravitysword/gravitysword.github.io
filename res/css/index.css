@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'AlibabaPuHuiTi';
     src: url('/res/font/AlibabaPuHuiTi.woff2') format('woff2');
-  }
+}
 
 body {
     margin: 0;
@@ -100,7 +100,8 @@ a {
     flex-direction: column;
     align-items: center;
     margin: 20px;
-    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2); 
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
     transition: all 0.3s ease-in-out; 
     background-color: #fff;
     border-radius: 10px; 
@@ -114,7 +115,7 @@ a {
     background-color: #f8f9fa;
     border-radius: 10px;
     border: 1px solid #e9ecef;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
@@ -195,9 +196,12 @@ a {
 
 .notice-list li,
 .introduce-list li {
-    padding: 10px 12px;
+    padding: 18px 24px;
     color: #333;
-    font-size: 14px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     line-height: 1.5;
     background-color: #ffffff;
 }
@@ -289,13 +293,30 @@ a {
 
 .content-container .sidebar .sidebar-sign .sidebar-social  {
     margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.content-container .sidebar .sidebar-sign .sidebar-social a {
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    margin: 5px 0;
+    transition: transform 0.2s ease;
+}
+
+.content-container .sidebar .sidebar-sign .sidebar-social a:hover {
+    transform: scale(1.1);
 }
 
 .content-container .sidebar .sidebar-sign .sidebar-social a img {
+    width: 30px;
     height: 30px;
     border-radius: 0px;
-    margin: 10px;
-
 }
 
 .content-container .blog-list {
@@ -304,6 +325,7 @@ a {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    object-fit: cover;
 }
 
 .content-container .blog-list ul {
@@ -813,4 +835,53 @@ a {
         height: auto;
         padding: 10px 5px;
     }
+}
+
+/* 整合重复的媒体查询 */
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column;
+  }
+  .sidebar, .blog-list {
+    flex: 1 1 100%;
+    margin: 10px 0;
+  }
+  .blog-list li {
+    padding: 20px;
+  }
+}
+
+/* 优化侧边栏动画 */
+.sidebar > div {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.sidebar > div:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* 增强博客卡片交互 */
+.blog-list li {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.blog-list li:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.blog-list li::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.blog-list li:hover::after {
+  opacity: 1;
 }
