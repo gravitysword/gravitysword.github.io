@@ -83,14 +83,14 @@ def list_files(directory):
 def update_blogs():
     """更新博客文件列表"""
     # 更新博客列表
-    blog_directory = os.getcwd().replace("\\", "/")+"/blog/"
+    blog_directory = os.getcwd().replace("\\", "/")+"/article/blog/"
     blog_files = list_files(blog_directory)
     for i in range(len(blog_files)):
         blog_files[i] = blog_files[i].replace(blog_directory, "")
     sort_blog(blog_files)
     
     # 更新动态列表
-    daily_directory = os.getcwd().replace("\\", "/")+"/daily/"
+    daily_directory = os.getcwd().replace("\\", "/")+"/article/daily/"
     daily_files = list_files(daily_directory)
     for i in range(len(daily_files)):
         daily_files[i] = daily_files[i].replace(daily_directory, "")
@@ -107,7 +107,7 @@ def update_blogs():
 def update_tech_stack():
     """更新技术栈文件列表及元数据"""
     # 获取技术栈目录路径
-    tech_stack_dir = os.path.join(os.getcwd(), 'tech_stack').replace("\\", "/")
+    tech_stack_dir = os.path.join(os.getcwd(), 'article/tech_stack').replace("\\", "/")
     
     # 获取所有.md文件
     tech_stack_files = list_files(tech_stack_dir)

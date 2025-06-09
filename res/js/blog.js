@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const blog_details = await BLOG_getContent(blogId);
                 console.log('Blog Details:', blog_details);
 
-                document.querySelector('.title').textContent = blog_details["title"];
+                document.querySelector('.title').textContent = blog_details["subtitle"] ? blog_details["subtitle"] : blog_details["title"];
                 document.querySelector('.blog-date').textContent = blog_details["date"];
 
                 const weatherElement = document.querySelector('.weather');

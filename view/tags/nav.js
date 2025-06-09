@@ -61,7 +61,7 @@ function initializeNavInteractions() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('/res/tag/nav.html')
+    fetch('/view/tags/nav.html')
         .then(response => response.text())
         .then(data => {
             const parser = new DOMParser();

@@ -5,7 +5,7 @@ export async function BLOG_getBlogItems() {
         data = JSON.parse(data)["blogs"];
         let blogsData = [];
         for (let i of data) {
-            i = "/blog/"+i
+            i = "/article/blog/"+i
             let j  = await BLOG_getContent(i)
             j.id = i
             blogsData.push(j)
@@ -40,7 +40,7 @@ export async function BLOG_getKnowledgeItems() {
         data = JSON.parse(data)["tech_stack"]["article"];
         let blogsData = [];
         for (let i of data) {
-            i = "/tech_stack/"+i
+            i = "/article/tech_stack/"+i
             console.log(i)
             let j  = await BLOG_getContent(i)
             j.id = i

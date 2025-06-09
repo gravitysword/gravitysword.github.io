@@ -28,10 +28,17 @@ body {
 	letter-spacing: -0.5px;
 	text-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
 }
+
 .content h2, .content h3, .content h4, .content h5, .content h6 {
 	line-height: 1.4em;
 	margin-top: 2.2em;
-	margin-bottom: 4px;
+	margin-bottom: 4px;;
+
+}
+.content h3{
+    display: inline;
+    background: linear-gradient(180deg, transparent 80%, #ff7e79 80%);
+
 }
 .content h2 {
 	font-size: 1.3em;
@@ -89,9 +96,9 @@ body {
 
 .content p {
 	margin: 0 0 20px;
-	line-height: 1.6;
+	line-height: 1.8;
     font-weight: 500;
-    letter-spacing: 0.3px; 
+    letter-spacing: 0.5px; 
     font-family: 'SourceHanSerifSC';
 }
 .content a {

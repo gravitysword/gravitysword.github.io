@@ -1,14 +1,13 @@
 /* 页脚整体样式 */
 .bottom {
     width: 100%;
-    background: #000000;
-    color: #fff;
-    padding: 32px 0 16px 0;
-    margin-top: 50px;
-    margin-bottom: 100px;
+    background-color: #000; /* 纯黑色背景 */
+    color: #fff; /* 白色文字 */
+    padding: 32px 0 16px;
+    margin: 50px 0 100px;
     font-size: 15px;
     letter-spacing: 0.5px;
-    box-shadow: 0 -2px 16px rgba(0,0,0,0.12);
+    box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.12);
 }
 
 .bottom-content {
@@ -29,13 +28,12 @@
 
 .copyright {
     font-weight: 500;
-    font-size: 15px;
-    color: #fff;
+    color: inherit; /* 继承父元素颜色，保持简洁 */
 }
 
 .attention-0 {
     font-size: 13px;
-    color: #bbb;
+    color: #bbb; /* 浅灰色次要文字 */
     font-style: italic;
 }
 
@@ -44,13 +42,14 @@
 }
 
 .beian {
-    color: #888;
+    color: #888; /* 灰色链接 */
     text-decoration: none;
     font-size: 13px;
     transition: color 0.2s;
 }
+
 .beian:hover {
-    color: #fff;
+    color: #fff; /* 悬停变白色 */
     text-decoration: underline;
 }
 
@@ -62,22 +61,24 @@
 
 .friend-links-title {
     font-weight: 600;
-    color: #fff;
+    color: inherit; /* 继承父元素颜色 */
     font-size: 14px;
 }
 
 .friend-link {
-    color: #bbb;
+    color: #bbb; /* 浅灰色链接 */
     text-decoration: none;
     font-size: 14px;
     margin-left: 4px;
     transition: color 0.2s;
 }
+
 .friend-link:hover {
-    color: #fff;
+    color: #fff; /* 悬停变白色 */
     text-decoration: underline;
 }
 
+/* 小屏幕适配 */
 @media (max-width: 600px) {
     .bottom-content {
         flex-direction: column;

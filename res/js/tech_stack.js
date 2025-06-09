@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const subtitle = item.querySelector('.blog-title').textContent;
                 const article = knowledgeList.find(a => a.subtitle === subtitle);
                 if (article && article.id) {
-                    window.location.href = `/blog.html?id=${article.id}`;
+                    window.location.href = `/view/blog.html?id=${article.id}`;
                 }
             });
         });
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 <span class="blog-title">${item.subtitle}</span>
                 <span class="blog-subtitle">${item.title}</span>
                 <span class="blog-introduce">
-                    <img class="calendar" src="./res/media/svg/sys/calendar.svg" alt="logo">
+                    <img class="calendar" src="/res/media/svg/sys/calendar.svg" alt="logo">
                     <span class="blog-date">${item.date}</span>
                     ${item.tag.map(t => `<span class="blog-tag">#${t}</span>`).join('')}
                 </span>

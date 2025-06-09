@@ -12,7 +12,7 @@ async function fetchDailyData() {
         const dailyItems = [];
         for (const filePath of dailyFiles) {
             try {
-                const response = await fetch(`/daily/${filePath}`);
+                const response = await fetch(`/article/daily/${filePath}`);
                 const content = await response.text();
                 const regex = /<div style="display:none;" class="author">([^<]*(?:<(?!\/div>)[^<]*)*)<\/div>([\s\S]*)/i;
                 const match = content.match(regex);

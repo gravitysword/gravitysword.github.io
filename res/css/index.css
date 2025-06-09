@@ -44,9 +44,13 @@ a {
     display: flex;
     justify-content: center; 
     align-items: center;
-
     flex: 1;
     margin-top: 2%;
+    /* 新增动画效果 */
+    opacity: 0;
+    transform: translateY(30px);
+    animation: signAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: 0.1s;
 }
 
 .top-background .top-sign-1 {
@@ -55,10 +59,13 @@ a {
     display: flex;
     justify-content: center; 
     align-items: center; 
-
     margin-left: 50%;
     margin-bottom: 2%;
-
+    /* 新增动画效果 */
+    opacity: 0;
+    transform: translateX(30px);
+    animation: signAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: 0.2s;
 }
 
 .main-content {
@@ -199,9 +206,6 @@ a {
     padding: 18px 24px;
     color: #333;
     font-size: 15px;
-    border-radius: 8px;
-    border: 1px solid rgba(0,0,0,0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     line-height: 1.5;
     background-color: #ffffff;
 }
@@ -220,31 +224,9 @@ a {
     transform-origin: left center;
 }
 
-.notice-list li:hover,
-.introduce-list li:hover {
-    transform: scale(1.02);
-    background-color: #f8f9fa;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
 
-.notice-list li::after,
-.introduce-list li::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #000000, transparent);
-    transition: width 0.3s ease;
-}
 
-.notice-list li:hover::after,
-.introduce-list li:hover::after {
-    width: 100%;
-    color: #000;
-    font-weight: bolder;
-}
+
 
 @media (max-width: 768px) {
     .sidebar-notice,
@@ -884,4 +866,33 @@ a {
 
 .blog-list li:hover::after {
   opacity: 1;
+}
+
+/* 新增关键帧动画 */
+@keyframes signAppear {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 添加鼠标悬停效果 */
+.top-background:hover .top-sign-0 {
+    transform: scale(1.03);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.top-background:hover .top-sign-1 {
+    transform: translateX(10px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 768px) {
+    .top-background:hover .top-sign-0 {
+        transform: none; /* 移动端取消悬停效果 */
+    }
 }

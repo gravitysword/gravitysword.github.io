@@ -195,7 +195,7 @@ body {
 .blog-list li {
     border: none;
     border-radius: 12px;
-    padding: 40px;
+    padding: 20px 30px;
     display: flex;
     flex-direction: column;
     background-color: #fff;

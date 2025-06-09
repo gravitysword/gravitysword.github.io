@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            background-color: #121212;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .left-panel {
+            flex: 1;
+            padding: 40px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .registration-modes {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+        }
+
+        .mode-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .mode-tab.active {
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .form-section {
+            display: none;
+            min-height: 350px; /* 设置最小高度，确保切换时高度不变 */
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .welcome-message {
+            margin-bottom: 30px;
+        }
+
+        .welcome-message h2 {
+            margin-bottom: 15px;
+            font-size: 28px;
+            color: #fff;
+        }
+
+        .welcome-message p {
+            color: #bdbdbd;
+            line-height: 1.6;
+        }
+
+        .terms-list {
+            list-style-type: none;
+        }
+
+        .terms-list li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+            color: #bdbdbd;
+        }
+
+        .terms-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-size: 20px;
+        }
+
+        .terms-title {
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .form-section {
+                min-height: auto; /* 在移动设备上不强制最小高度 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="welcome-message">
+                <h2>欢迎注册</h2>
+            </div>
+            <h3 class="terms-title">注册须知</h3>
+            <ul class="terms-list">
+                <li>注册后不能再网页端修改个人信息</li>
+                <li>如需修改信息，比如密码，邮箱等，请联系我</li>
+            </ul>
+        </div>
+        <div class="right-panel">
+            <div class="registration-modes">
+                <div class="mode-tab active" data-mode="basic">熟人注册</div>
+                <div class="mode-tab" data-mode="advanced">网友注册</div>
+            </div>
+            
+            <div id="success-message" class="success-message">注册成功！我将会在1个月内审核，如需立刻注册，请发邮箱催促</div>
+            
+            <div class="form-section active" id="basic-mode">
+                <form id="basic-form">
+                    <div class="form-group">
+                        <label for="basic-username">用户名 <span style="color: #f44336;">*</span></label>
+                        <input type="text" id="basic-username" required>
+                        <div class="error-message" id="basic-username-error">请输入用户名</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="basic-password">密码 <span style="color: #f44336;">*</span></label>
+                        <input type="password" id="basic-password" required>
+                        <div class="error-message" id="basic-password-error">请输入密码</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="basic-realname">真实姓名 <span style="color: #f44336;">*</span></label>
+                        <input type="text" id="basic-realname" required>
+                        <div class="error-message" id="basic-realname-error">请输入真实姓名</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="basic-email">邮箱（可选）</label>
+                        <input type="email" id="basic-email" placeholder="选填">
+                        <div class="error-message" id="basic-email-error">请输入有效的邮箱地址</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="basic-blog">博客地址（可选）</label>
+                        <input type="url" id="basic-blog" placeholder="选填">
+                        <div class="error-message" id="basic-blog-error">请输入有效的URL地址</div>
+                    </div>
+                    <button type="button" onclick="submitBasicForm()">注册</button>
+                </form>
+            </div>
+            
+            <div class="form-section" id="advanced-mode">
+                <form id="advanced-form">
+                    <div class="form-group">
+                        <label for="advanced-username">用户名 <span style="color: #f44336;">*</span></label>
+                        <input type="text" id="advanced-username" required>
+                        <div class="error-message" id="advanced-username-error">请输入用户名</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="advanced-password">密码 <span style="color: #f44336;">*</span></label>
+                        <input type="password" id="advanced-password" required>
+                        <div class="error-message" id="advanced-password-error">请输入密码</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="advanced-email">邮箱（可选）</label>
+                        <input type="email" id="advanced-email" placeholder="选填">
+                        <div class="error-message" id="advanced-email-error">请输入有效的邮箱地址</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="advanced-blog">博客地址（可选）</label>
+                        <input type="url" id="advanced-blog" placeholder="选填">
+                        <div class="error-message" id="advanced-blog-error">请输入有效的URL地址</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="advanced-contact">其他联系方式（可选）</label>
+                        <input type="text" id="advanced-contact" placeholder="微信/QQ/电话等">
+                        <div class="error-message" id="advanced-contact-error">请输入有效的联系方式</div>
+                    </div>
+                    <div class="error-message" id="advanced-at-least-one">至少填写一项可选信息</div>
+                    <button type="button" onclick="submitAdvancedForm()">注册</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 切换注册模式
+        document.querySelectorAll('.mode-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有活动状态
+                document.querySelectorAll('.mode-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                document.querySelectorAll('.form-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // 添加当前活动状态
+                tab.classList.add('active');
+                const mode = tab.getAttribute('data-mode');
+                document.getElementById(`${mode}-mode`).classList.add('active');
+                
+                // 隐藏成功消息和错误消息
+                document.getElementById('success-message').style.display = 'none';
+                hideAllErrors();
+            });
+        });
+
+        // 隐藏所有错误消息
+        function hideAllErrors() {
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.style.display = 'none';
+            });
+        }
+
+        // 显示错误消息
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        // 发送注册请求
+        async function sendRegistrationData(url, data) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data) // 将数据放入请求体
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return "1";
+            } catch (error) {
+                console.error('注册请求失败:', error);
+                throw error;
+            }
+        }
+
+        // 熟人注册表单提交
+        async function submitBasicForm() {
+            hideAllErrors();
+            let isValid = true;
+            
+            const username = document.getElementById('basic-username').value;
+            const password = document.getElementById('basic-password').value;
+            const realname = document.getElementById('basic-realname').value;
+            const email = document.getElementById('basic-email').value;
+            const blog = document.getElementById('basic-blog').value;
+            
+            if (username.trim() === '') {
+                showError('basic-username-error', '请输入用户名');
+                isValid = false;
+            }
+            
+            if (password.trim() === '') {
+                showError('basic-password-error', '请输入密码');
+                isValid = false;
+            }
+            
+            if (realname.trim() === '') {
+                showError('basic-realname-error', '请输入真实姓名');
+                isValid = false;
+            }
+            
+            // 邮箱验证（如果填写了）
+            if (email.trim() !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('basic-email-error', '请输入有效的邮箱地址');
+                isValid = false;
+            }
+            
+            // 博客地址验证（如果填写了）
+            if (blog.trim() !== '' && !/^https?:\/\/.+/.test(blog)) {
+                showError('basic-blog-error', '请输入有效的URL地址');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                try {
+                    // 准备发送的数据
+                    const formData = {
+                        mode: 'basic',
+                        username,
+                        password,
+                        realname,
+                        email: email || null,
+                        blog: blog || null
+                    };
+                    
+                    // 发送注册请求，改为标准的POST请求
+                    const result = await sendRegistrationData('http://192.168.3.128:10001/register', formData);
+                    
+                    // 处理响应
+                    if (result == "1") {
+                        document.getElementById('success-message').style.display = 'block';
+                        // 注册成功后不清空表单
+                        // document.getElementById('basic-form').reset();
+                    } else {
+                        showError('basic-username-error', result.message || '注册失败，请重试');
+                    }
+                } catch (error) {
+                    showError('basic-username-error', '网络错误，请稍后重试');
+                }
+            }
+        }
+
+        // 网友注册表单提交
+        async function submitAdvancedForm() {
+            hideAllErrors();
+            let isValid = true;
+            
+            const username = document.getElementById('advanced-username').value;
+            const password = document.getElementById('advanced-password').value;
+            const email = document.getElementById('advanced-email').value;
+            const blog = document.getElementById('advanced-blog').value;
+            const contact = document.getElementById('advanced-contact').value;
+            
+            if (username.trim() === '') {
+                showError('advanced-username-error', '请输入用户名');
+                isValid = false;
+            }
+            
+            if (password.trim() === '') {
+                showError('advanced-password-error', '请输入密码');
+                isValid = false;
+            }
+            
+            // 邮箱验证（如果填写了）
+            if (email.trim() !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('advanced-email-error', '请输入有效的邮箱地址');
+                isValid = false;
+            }
+            
+            // 博客地址验证（如果填写了）
+            if (blog.trim() !== '' && !/^https?:\/\/.+/.test(blog)) {
+                showError('advanced-blog-error', '请输入有效的URL地址');
+                isValid = false;
+            }
+            
+            // 其他联系方式验证（如果填写了）
+            if (contact.trim() !== '' && contact.length < 3) {
+                showError('advanced-contact-error', '请输入有效的联系方式');
+                isValid = false;
+            }
+            
+            // 至少填写一项可选信息
+            if (!email.trim() && !blog.trim() && !contact.trim()) {
+                showError('advanced-at-least-one', '至少填写一项可选信息');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                try {
+                    // 准备发送的数据
+                    const formData = {
+                        mode: 'advanced',
+                        username,
+                        password,
+                        email: email || null,
+                        blog: blog || null,
+                        contact: contact || null
+                    };
+                    
+                    // 发送注册请求，改为标准的POST请求
+                    const result = await sendRegistrationData('http://192.168.3.128:10001/register', formData);
+                    
+                    // 处理响应
+                    if (result == "1") {
+                        document.getElementById('success-message').style.display = 'block';
+                        // 注册成功后不清空表单
+                        // document.getElementById('advanced-form').reset();
+                    } else {
+                        showError('advanced-username-error', result.message || '注册失败，请重试');
+                    }
+                } catch (error) {
+                    showError('advanced-username-error', '网络错误，请稍后重试');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
