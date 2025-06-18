@@ -1,4 +1,4 @@
-import { BLOG_getContent } from '/res/js/blog_msg.js';
+import { BLOG_getContent,backend } from '/res/js/blog_msg.js';
 
 // 配置marked解析器选项
 const markedOptions = {
@@ -255,24 +255,34 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         try {
                             // 获取files.json配置
-                            const response = await fetch('/config/files.json');
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! Status: ${response.status} when fetching files.json`);
-                            }
-                            const config = await response.json();
-                            const fileData = config.file[fileId];
+                            const config = await backend()
 
-                            if (fileData && fileData.id) {
+                            console.log(await config)
+
+
                                 const host = config.host;
-                                const Url = host + fileData.id;
-                                window.location.href = Url;
+                                fetch(host+"/file_url", {
+                                  method: 'POST',
+                                  headers: {
+                                    'Content-Type': 'application/json',
+                                  },
+                                  body: JSON.stringify({file_id:fileId}),
+                                })
+                                .then(response => response.json())
+                                .then(response => {
+                                    if (response.file_url === "e") {
+                                        alert(`服务器异常`);
+                                    }
+                                    else {
+                                        const link = document.createElement('a');
+                                    link.href =response.file_url;
+                                    link.style.display = 'none';
+                                    link.click();
 
-        
+                                    }
+                                    
+                                })
                                 
-                            } else {
-                                console.error(`File with id "${fileId}" not found or has no ID in files.json.`);
-                                alert(`未能找到文件 "${this.textContent.trim()}" 的链接信息。`);
-                            }
                         } catch (error) {
                             console.error('Error processing file link:', error);
                             alert('处理文件链接时出错，请检查控制台获取更多信息。');

@@ -227,12 +227,12 @@ iframe{
 }
 
 /* 图片点击效果 */
-img:not(.weather) {
+.content img:not(.weather) {
     cursor: pointer;
     transition: transform 0.2s ease;
 }
 
-img:not(.weather):hover {
+.content img:not(.weather):hover {
     transform: scale(1.01);
 }
 

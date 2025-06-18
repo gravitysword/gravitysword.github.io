@@ -123,7 +123,7 @@
 
             Promise.all([
             fetch('/config/blogs.json'),
-            fetch('/config/files.json')
+            fetch('/config/backend.json')
         ])
         .then(responses => Promise.all(responses.map(r => r.json())))
         .then(([blogsData, filesData]) => {

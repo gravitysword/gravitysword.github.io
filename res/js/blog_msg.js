@@ -54,3 +54,20 @@ export async function BLOG_getKnowledgeItems() {
 }
 
 
+export async function backend() {
+    try {
+        const response = await fetch("/config/backend.json");
+        const { test_host, work_host } = await response.json();
+        
+        const config = {
+            test_host,
+            work_host,
+            host: window.location.hostname === "127.0.0.1" ? test_host : work_host
+        };
+        
+        return config;
+    } catch (error) {
+        console.error('Error fetching backend.json:', error);
+        return null;
+    }
+}

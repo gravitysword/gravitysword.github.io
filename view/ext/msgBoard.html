@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>极简博客 | 留言板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FFFFFF',
+                        secondary: '#AAAAAA',
+                        dark: '#0A0A0A',
+                        light: '#1E1E1E',
+                        accent: '#FF6B6B',
+                        accent2: '#6B8EFF',
+                        card: '#151515',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'custom': '0 4px 20px rgba(0, 0, 0, 0.3)',
+                        'hover': '0 8px 30px rgba(255, 255, 255, 0.1)',
+                        'input': '0 0 0 3px rgba(107, 142, 255, 0.3)',
+                    },
+                    animation: {
+                        'fadeIn': 'fadeIn 0.5s ease-in-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce-slow 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            'from': { opacity: 0, transform: 'translateY(10px)' },
+                            'to': { opacity: 1, transform: 'translateY(0)' }
+                        },
+                        'bounce-slow': {
+                            '0%, 100%': { transform: 'translateY(-5%)', animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)' },
+                            '50%': { transform: 'translateY(0)', animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .bg-gradient {
+                background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+            }
+            .bg-card-gradient {
+                background: linear-gradient(145deg, #1a1a1a 0%, #121212 100%);
+            }
+            .input-focus {
+                @apply border-accent2 shadow-input;
+            }
+            .smooth-transition {
+                @apply transition-all duration-300 ease-in-out;
+            }
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        body {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-dark to-[#050505] text-primary min-h-screen flex flex-col overflow-x-hidden">
+    <!-- 导航栏 -->
+    <header class="py-4 px-6 md:px-12 border-b border-light/20 sticky top-0 z-50 bg-dark/95 backdrop-blur-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold tracking-tight flex items-center group">
+                <span class="mr-2 text-accent2 group-hover:text-primary smooth-transition">✦</span>
+                <span class="bg-gradient-to-r from-accent2 to-accent bg-clip-text text-transparent">极简博客</span>
+            </a>
+            <nav class="hidden md:flex">
+                <ul class="flex space-x-8">
+                    <li><a href="#" class="hover:text-accent2 smooth-transition py-2 inline-block">首页</a></li>
+                    <li><a href="#" class="hover:text-accent2 smooth-transition py-2 inline-block">文章</a></li>
+                    <li><a href="#" class="hover:text-accent2 smooth-transition py-2 inline-block">关于</a></li>
+                    <li><a href="#" class="text-accent2 border-b-2 border-accent2 pb-1 py-2 inline-block">留言</a></li>
+                </ul>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button class="relative group" aria-label="搜索">
+                    <i class="fa fa-search text-secondary group-hover:text-primary smooth-transition"></i>
+                </button>
+                <button class="md:hidden text-primary hover:text-accent2 smooth-transition" id="menu-toggle">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden border-t border-light/20 mt-4 pt-4 pb-2">
+            <ul class="space-y-3">
+                <li><a href="#" class="hover:text-accent2 smooth-transition block py-2 px-4 rounded-lg hover:bg-light/10">首页</a></li>
+                <li><a href="#" class="hover:text-accent2 smooth-transition block py-2 px-4 rounded-lg hover:bg-light/10">文章</a></li>
+                <li><a href="#" class="hover:text-accent2 smooth-transition block py-2 px-4 rounded-lg hover:bg-light/10">关于</a></li>
+                <li><a href="#" class="text-accent2 bg-light/10 block py-2 px-4 rounded-lg">留言</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- 装饰背景元素 -->
+    <div class="fixed -top-40 -right-40 w-80 h-80 bg-accent2/5 rounded-full blur-3xl"></div>
+    <div class="fixed -bottom-60 -left-60 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+
+    <!-- 主内容区 -->
+    <main class="flex-grow container mx-auto px-6 md:px-12 py-12 max-w-6xl relative z-10">
+        <section class="mb-16 text-center md:text-left">
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6 flex flex-col md:flex-row items-center justify-center md:justify-start">
+                <span class="text-accent2 mr-3">#</span>
+                <span class="mt-2 md:mt-0">留言板</span>
+                <span class="hidden md:inline-block w-16 h-1 bg-gradient-to-r from-accent2 to-accent ml-4 mt-4"></span>
+            </h1>
+            <p class="text-secondary mb-8 max-w-3xl mx-auto md:mx-0 leading-relaxed text-lg text-center md:text-left">
+                分享你的想法和建议，与其他读者一起交流。每一条留言都是思想的火花，期待听到你的声音。
+            </p>
+        </section>
+
+        <!-- 留言展示区 -->
+        <section class="mb-16">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <h2 class="text-2xl font-semibold flex items-center">
+                    <i class="fa fa-comments mr-3 text-accent2"></i>留言区
+                    <span id="comment-count" class="text-secondary text-base ml-2 bg-light/20 px-2 py-1 rounded-md">0</span>
+                </h2>
+                
+                <div class="flex flex-wrap gap-3 w-full md:w-auto">
+                    <div class="relative flex-1 md:flex-none">
+                        <input type="text" id="search-comments" placeholder="搜索留言..." 
+                            class="w-full bg-light/10 border border-light/20 rounded-lg px-4 py-2 pl-10 text-primary placeholder-secondary/60 focus:outline-none focus:ring-2 focus:ring-accent2/50 focus:border-transparent smooth-transition">
+                        <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary"></i>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button id="sort-btn" class="text-sm bg-light/10 hover:bg-light/20 border border-light/20 rounded-lg px-4 py-2 text-primary smooth-transition flex items-center">
+                            <i class="fa fa-sort mr-2"></i>
+                            <span id="sort-direction">最新</span>
+                        </button>
+                        
+                        <div class="relative group">
+                            <button class="text-sm bg-light/10 hover:bg-light/20 border border-light/20 rounded-lg px-4 py-2 text-primary smooth-transition flex items-center">
+                                <i class="fa fa-filter mr-2"></i>筛选
+                            </button>
+                            <div class="absolute right-0 mt-2 w-48 bg-card rounded-lg shadow-lg p-2 hidden group-hover:block z-20">
+                                <div class="text-xs text-secondary px-3 py-2">按状态筛选</div>
+                                <button class="w-full text-left px-3 py-2 hover:bg-light/10 rounded-md smooth-transition" data-filter="all">全部留言</button>
+                                <button class="w-full text-left px-3 py-2 hover:bg-light/10 rounded-md smooth-transition" data-filter="recent">最近7天</button>
+                                <button class="w-full text-left px-3 py-2 hover:bg-light/10 rounded-md smooth-transition" data-filter="popular">热门留言</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="comments-container" class="space-y-6">
+                <!-- 留言会动态添加到这里 -->
+                <div class="text-secondary text-center py-16 animate-pulse-slow">
+                    <i class="fa fa-comments text-4xl mb-4 block opacity-50"></i>
+                    <p class="text-lg">留言区空空如也</p>
+                    <p class="text-sm mt-2">成为第一个留言的人吧</p>
+                    <div class="mt-6 flex justify-center">
+                        <button class="flex items-center px-4 py-2 bg-accent2 text-dark rounded-lg hover:bg-accent2/90 smooth-transition animate-bounce-slow">
+                            <i class="fa fa-pencil mr-2"></i>立即留言
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 分页控制 -->
+            <div class="mt-12 flex justify-center items-center space-x-2">
+                <button class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-light/20 smooth-transition disabled:opacity-30" disabled>
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <div class="flex space-x-1">
+                    <button class="w-10 h-10 rounded-full bg-accent2 text-dark flex items-center justify-center">1</button>
+                    <button class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-light/20 smooth-transition">2</button>
+                    <button class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-light/20 smooth-transition">3</button>
+                </div>
+                <button class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center hover:bg-light/20 smooth-transition">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- 留言表单 -->
+        <section class="bg-card-gradient rounded-2xl p-6 md:p-8 border border-light/20 shadow-custom hover:shadow-hover smooth-transition" id="comment-form-section">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                <i class="fa fa-pencil mr-3 text-accent2"></i> 发表留言
+                <span class="ml-auto text-sm text-secondary flex items-center">
+                    <i class="fa fa-info-circle mr-1"></i> 所有字段均为必填
+                </span>
+            </h2>
+            <form id="comment-form" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium mb-2 flex items-center">
+                            <i class="fa fa-user mr-2 text-accent2"></i> 昵称 <span class="text-accent ml-1">*</span>
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="name" name="name" required maxlength="20"
+                                class="w-full bg-light/10 border border-light/20 rounded-lg px-4 py-3 text-primary placeholder-secondary/60 focus:outline-none focus:ring-2 focus:ring-accent2/50 focus:border-transparent smooth-transition">
+                            <div class="absolute right-3 top-3 text-xs text-secondary/60">
+                                <span id="name-length">0</span>/20
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium mb-2 flex items-center">
+                            <i class="fa fa-envelope mr-2 text-accent2"></i> 邮箱 <span class="text-accent ml-1">*</span>
+                        </label>
+                        <input type="email" id="email" name="email" required
+                            class="w-full bg-light/10 border border-light/20 rounded-lg px-4 py-3 text-primary placeholder-secondary/60 focus:outline-none focus:ring-2 focus:ring-accent2/50 focus:border-transparent smooth-transition">
+                    </div>
+                </div>
+                <div>
+                    <label for="message" class="block text-sm font-medium mb-2 flex items-center">
+                        <i class="fa fa-comment mr-2 text-accent2"></i> 留言内容 <span class="text-accent ml-1">*</span>
+                    </label>
+                    <div class="relative">
+                        <textarea id="message" name="message" rows="5" required maxlength="500"
+                            class="w-full bg-light/10 border border-light/20 rounded-lg px-4 py-3 text-primary placeholder-secondary/60 focus:outline-none focus:ring-2 focus:ring-accent2/50 focus:border-transparent smooth-transition resize-none"></textarea>
+                        <div class="absolute right-3 bottom-3 text-xs text-secondary/60">
+                            <span id="message-length">0</span>/500
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <input type="checkbox" id="terms" name="terms" required
+                        class="mr-2 h-5 w-5 text-accent2 focus:ring-accent2 border-light/30 rounded mt-1 bg-light/10 border-light/20">
+                    <label for="terms" class="text-sm text-secondary/90">
+                        我同意网站的<a href="#" class="text-accent2 hover:underline">隐私政策</a>和<a href="#" class="text-accent2 hover:underline">使用条款</a>。
+                        我确认所提供的信息真实有效。
+                    </label>
+                </div>
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 pt-4">
+                    <div class="text-xs text-secondary/70 w-full md:w-auto">
+                        <i class="fa fa-lock mr-1"></i> 你的个人信息将受到保护，不会被公开显示
+                    </div>
+                    <button type="submit" id="submit-btn"
+                        class="px-8 py-3 bg-gradient-to-r from-accent2 to-accent text-dark font-medium rounded-lg hover:opacity-90 smooth-transition transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent2/50 focus:ring-offset-2 focus:ring-offset-dark flex items-center w-full md:w-auto justify-center">
+                        <i class="fa fa-paper-plane mr-2"></i> 提交留言
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="py-12 px-6 md:px-12 border-t border-light/20 mt-20">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+                <div>
+                    <h3 class="text-xl font-bold mb-6 text-accent2">极简博客</h3>
+                    <p class="text-secondary/80 text-sm leading-relaxed">
+                        一个专注于分享知识和见解的极简主义博客。在这里，你可以找到关于技术、设计和生活的思考。
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">快速链接</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-secondary/80 hover:text-accent2 smooth-transition flex items-center"><i class="fa fa-angle-right mr-2 text-xs"></i>首页</a></li>
+                        <li><a href="#" class="text-secondary/80 hover:text-accent2 smooth-transition flex items-center"><i class="fa fa-angle-right mr-2 text-xs"></i>热门文章</a></li>
+                        <li><a href="#" class="text-secondary/80 hover:text-accent2 smooth-transition flex items-center"><i class="fa fa-angle-right mr-2 text-xs"></i>关于我们</a></li>
+                        <li><a href="#" class="text-secondary/80 hover:text-accent2 smooth-transition flex items-center"><i class="fa fa-angle-right mr-2 text-xs"></i>留言板</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">文章分类</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-secondary/80 hover:text-accent2 smooth-transition flex items-center"><i class="fa fa-angle-right mr-2 text-xs"></i>前端开发</a></li>
+                        <li><a href="#" class="text-secondary/80 hover:text-accent2 smooth-transition flex items-center"><i class="fa fa-angle-right mr-2 text-xs"></i>UI/UX设计</a></li>
+                        <li><a href="#" class="text-secondary/80 hover:text-accent2 smooth-transition flex items-center"><i class="fa fa-angle-right mr-2 text-xs"></i>技术思考</a></li>
+                        <li><a href="#" class="text-secondary/80 hover:text-accent2 smooth-transition flex items-center"><i class="fa fa-angle-right mr-2 text-xs"></i>生活随笔</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">关注我们</h3>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center text-secondary hover:text-accent2 hover:bg-light/20 smooth-transition">
+                            <i class="fa fa-github"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center text-secondary hover:text-accent2 hover:bg-light/20 smooth-transition">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center text-secondary hover:text-accent2 hover:bg-light/20 smooth-transition">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-light/10 flex items-center justify-center text-secondary hover:text-accent2 hover:bg-light/20 smooth-transition">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </div>
+                    <div class="mt-6">
+                        <p class="text-secondary/80 text-sm mb-2">订阅更新</p>
+                        <div class="flex">
+                            <input type="email" placeholder="你的邮箱" class="bg-light/10 border border-light/20 rounded-l-lg px-4 py-2 text-primary placeholder-secondary/60 text-sm w-full focus:outline-none">
+                            <button class="bg-accent2 text-dark px-4 rounded-r-lg text-sm hover:bg-accent2/90 smooth-transition">订阅</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-light/20 pt-8 text-center text-secondary/60 text-sm">
+                <p>© 2025 极简博客. 保留所有权利.</p>
+                <p class="mt-2">本站点采用<a href="#" class="text-accent2 hover:underline">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast 通知 -->
+    <div id="toast" class="fixed bottom-8 right-8 z-50 hidden">
+        <div class="bg-card border border-light/20 rounded-lg shadow-lg p-4 min-w-[300px] flex items-start animate-fadeIn">
+            <div class="mr-3 mt-0.5">
+                <i id="toast-icon" class="fa text-xl"></i>
+            </div>
+            <div>
+                <h3 id="toast-title" class="font-medium"></h3>
+                <p id="toast-message" class="text-secondary text-sm mt-1"></p>
+            </div>
+            <button class="ml-4 text-secondary hover:text-primary" id="close-toast">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 模拟数据
+        const sampleComments = [
+            {
+                id: 1,
+                name: "张三",
+                email: "zhangsan@example.com",
+                message: "这个博客的内容非常有深度，对我帮助很大。希望作者能继续分享更多优质内容！",
+                timestamp: "2025-06-10 14:30",
+                likes: 12,
+                replies: 3
+            },
+            {
+                id: 2,
+                name: "李四",
+                email: "lisi@example.com",
+                message: "黑白简约的设计风格很吸引人，阅读体验也很好。建议增加一些分类导航，方便查找特定主题的文章。",
+                timestamp: "2025-06-12 09:15",
+                likes: 8,
+                replies: 1
+            },
+            {
+                id: 3,
+                name: "王五",
+                email: "wangwu@example.com",
+                message: "非常喜欢博主的写作风格，深入浅出，通俗易懂。期待更新更多关于前端开发的内容！",
+                timestamp: "2025-06-15 16:45",
+                likes: 15,
+                replies: 0
+            },
+            {
+                id: 4,
+                name: "技术爱好者",
+                email: "tech@example.com",
+                message: "最近的文章关于响应式设计的部分写得非常好，解决了我实际项目中遇到的布局问题。感谢分享！",
+                timestamp: "2025-06-14 11:20",
+                likes: 6,
+                replies: 2
+            },
+            {
+                id: 5,
+                name: "设计达人",
+                email: "design@example.com",
+                message: "UI设计部分的内容很专业，特别是颜色搭配和排版技巧，让我在设计项目时有了新的灵感。",
+                timestamp: "2025-06-13 15:40",
+                likes: 9,
+                replies: 1
+            }
+        ];
+
+        // DOM 元素
+        const commentsContainer = document.getElementById('comments-container');
+        const commentForm = document.getElementById('comment-form');
+        const commentCount = document.getElementById('comment-count');
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const nameInput = document.getElementById('name');
+        const messageInput = document.getElementById('message');
+        const nameLength = document.getElementById('name-length');
+        const messageLength = document.getElementById('message-length');
+        const sortBtn = document.getElementById('sort-btn');
+        const sortDirection = document.getElementById('sort-direction');
+        const searchInput = document.getElementById('search-comments');
+        const submitBtn = document.getElementById('submit-btn');
+        const toast = document.getElementById('toast');
+        const toastIcon = document.getElementById('toast-icon');
+        const toastTitle = document.getElementById('toast-title');
+        const toastMessage = document.getElementById('toast-message');
+        const closeToast = document.getElementById('close-toast');
+        
+        // 排序状态
+        let sortByNewest = true;
+        let currentFilter = 'all';
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 加载评论
+            loadComments();
+            
+            // 设置事件监听器
+            setupEventListeners();
+        });
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 移动菜单切换
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                menuToggle.innerHTML = mobileMenu.classList.contains('hidden') 
+                    ? '<i class="fa fa-bars text-xl"></i>' 
+                    : '<i class="fa fa-times text-xl"></i>';
+            });
+
+            // 移动菜单项点击后关闭菜单
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    menuToggle.innerHTML = '<i class="fa fa-bars text-xl"></i>';
+                });
+            });
+
+            // 字符计数
+            nameInput.addEventListener('input', () => {
+                nameLength.textContent = nameInput.value.length;
+                if (nameInput.value.length > 20) {
+                    nameLength.classList.add('text-accent');
+                } else {
+                    nameLength.classList.remove('text-accent');
+                }
+            });
+
+            messageInput.addEventListener('input', () => {
+                messageLength.textContent = messageInput.value.length;
+                if (messageInput.value.length > 500) {
+                    messageLength.classList.add('text-accent');
+                } else {
+                    messageLength.classList.remove('text-accent');
+                }
+            });
+
+            // 排序功能
+            sortBtn.addEventListener('click', () => {
+                sortByNewest = !sortByNewest;
+                sortDirection.textContent = sortByNewest ? '最新' : '最早';
+                loadComments();
+            });
+
+            // 筛选功能
+            document.querySelectorAll('[data-filter]').forEach(button => {
+                button.addEventListener('click', function() {
+                    currentFilter = this.dataset.filter;
+                    loadComments();
+                    showToast('筛选已更新', 'success', `显示${getFilterText(currentFilter)}`);
+                });
+            });
+
+            // 搜索功能
+            searchInput.addEventListener('input', () => {
+                loadComments();
+            });
+
+            // 添加表单提交事件监听
+            commentForm.addEventListener('submit', addComment);
+            
+            // 关闭Toast
+            closeToast.addEventListener('click', () => {
+                toast.classList.add('hidden');
+            });
+        }
+
+        // 加载评论
+        function loadComments() {
+            // 从本地存储获取评论
+            let comments = JSON.parse(localStorage.getItem('comments')) || [];
+            
+            // 如果没有评论，使用模拟数据
+            if (comments.length === 0) {
+                comments = sampleComments;
+                localStorage.setItem('comments', JSON.stringify(comments));
+            }
+            
+            // 应用搜索过滤
+            const searchTerm = searchInput.value.toLowerCase();
+            if (searchTerm) {
+                comments = comments.filter(comment => 
+                    comment.name.toLowerCase().includes(searchTerm) || 
+                    comment.message.toLowerCase().includes(searchTerm))
+            }
+            
+            // 应用时间过滤
+            if (currentFilter === 'recent') {
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                comments = comments.filter(comment => new Date(comment.timestamp) > oneWeekAgo);
+            } else if (currentFilter === 'popular') {
+                comments = comments.filter(comment => comment.likes > 5);
+            }
+            
+            // 排序评论
+            if (sortByNewest) {
+                comments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            } else {
+                comments.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            }
+            
+            renderComments(comments);
+        }
+
+        // 渲染评论
+        function renderComments(comments) {
+            if (comments.length === 0) {
+                commentsContainer.innerHTML = `
+                    <div class="text-secondary text-center py-16 animate-pulse-slow">
+                        <i class="fa fa-comments text-4xl mb-4 block opacity-50"></i>
+                        <p class="text-lg">没有找到匹配的留言</p>
+                        <p class="text-sm mt-2">尝试不同的搜索词或筛选条件</p>
+                    </div>
+                `;
+            } else {
+                commentsContainer.innerHTML = '';
+                comments.forEach(comment => {
+                    const commentElement = document.createElement('div');
+                    commentElement.className = 'bg-card rounded-xl p-6 animate-fadeIn border border-light/10 hover:border-light/20 smooth-transition hover:bg-light/5 content-auto';
+                    commentElement.setAttribute('data-id', comment.id);
+                    
+                    // 生成颜色
+                    const charCode = comment.name.charCodeAt(0) || 0;
+                    const hue = charCode % 360;
+                    const bgColor = `hsl(${hue}, 50%, 15%)`;
+                    
+                    commentElement.innerHTML = `
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full ${bgColor} flex items-center justify-center text-primary font-bold text-xl shadow-md">
+                                    ${comment.name.charAt(0)}
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="font-semibold">${escapeHTML(comment.name)}</h3>
+                                    <p class="text-xs text-secondary">${formatDate(comment.timestamp)}</p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="text-secondary/60 hover:text-accent smooth-transition like-comment" data-liked="false">
+                                    <i class="fa fa-heart-o mr-1"></i>
+                                    <span class="like-count">${comment.likes}</span>
+                                </button>
+                                <button class="text-secondary/60 hover:text-accent2 smooth-transition ml-2 delete-comment">
+                                    <i class="fa fa-trash-o"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-primary/90 leading-relaxed break-words mb-4">${escapeHTML(comment.message)}</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-light/10">
+                            <button class="text-xs text-secondary/60 hover:text-accent2 smooth-transition flex items-center">
+                                <i class="fa fa-reply mr-1"></i> 回复
+                                <span class="ml-1">(${comment.replies})</span>
+                            </button>
+                            <div class="text-xs text-secondary/60 flex items-center">
+                                <i class="fa fa-thumbs-up mr-1"></i> ${comment.likes} 人点赞
+                            </div>
+                        </div>
+                    `;
+                    
+                    commentsContainer.appendChild(commentElement);
+                });
+                
+                // 添加删除评论事件监听
+                document.querySelectorAll('.delete-comment').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const commentId = parseInt(this.closest('[data-id]').getAttribute('data-id'));
+                        deleteComment(commentId);
+                    });
+                });
+                
+                // 添加点赞功能
+                document.querySelectorAll('.like-comment').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const likeCount = this.querySelector('.like-count');
+                        const currentCount = parseInt(likeCount.textContent);
+                        
+                        if (this.dataset.liked === "false") {
+                            likeCount.textContent = currentCount + 1;
+                            this.dataset.liked = "true";
+                            this.classList.add('text-accent');
+                            this.querySelector('i').classList.remove('fa-heart-o');
+                            this.querySelector('i').classList.add('fa-heart');
+                            
+                            // 保存点赞状态到本地存储
+                            const commentId = parseInt(this.closest('[data-id]').getAttribute('data-id'));
+                            saveLikeStatus(commentId, true);
+                        } else {
+                            likeCount.textContent = currentCount - 1;
+                            this.dataset.liked = "false";
+                            this.classList.remove('text-accent');
+                            this.querySelector('i').classList.remove('fa-heart');
+                            this.querySelector('i').classList.add('fa-heart-o');
+                            
+                            // 保存点赞状态到本地存储
+                            const commentId = parseInt(this.closest('[data-id]').getAttribute('data-id'));
+                            saveLikeStatus(commentId, false);
+                        }
+                    });
+                });
+            }
+            
+            // 更新评论计数
+            commentCount.textContent = `${comments.length}`;
+        }
+
+        // 添加评论
+        function addComment(event) {
+            event.preventDefault();
+            
+            const name = nameInput.value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = messageInput.value.trim();
+            
+            if (!name || !email || !message) {
+                showToast('请填写所有必填字段', 'error', '昵称、邮箱和留言内容都是必需的');
+                return;
+            }
+            
+            if (name.length > 20) {
+                showToast('昵称不能超过20个字符', 'error', '请缩短你的昵称');
+                return;
+            }
+            
+            if (message.length > 500) {
+                showToast('留言内容不能超过500个字符', 'error', '请精简你的留言内容');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showToast('邮箱格式不正确', 'error', '请输入有效的邮箱地址');
+                return;
+            }
+            
+            // 禁用提交按钮，防止重复提交
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>提交中...';
+            
+            // 模拟网络延迟
+            setTimeout(() => {
+                // 创建新评论对象
+                const newComment = {
+                    id: Date.now(),
+                    name,
+                    email,
+                    message,
+                    timestamp: new Date().toISOString(),
+                    likes: 0,
+                    replies: 0
+                };
+                
+                // 获取现有评论
+                let comments = JSON.parse(localStorage.getItem('comments')) || [];
+                
+                // 添加新评论到开头
+                comments.unshift(newComment);
+                
+                // 保存到本地存储
+                localStorage.setItem('comments', JSON.stringify(comments));
+                
+                // 重置表单
+                commentForm.reset();
+                nameLength.textContent = '0';
+                messageLength.textContent = '0';
+                
+                // 恢复提交按钮
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa fa-paper-plane mr-2"></i> 提交留言';
+                
+                // 显示成功消息
+                showToast('留言提交成功！', 'success', '感谢你的反馈，你的留言已添加到留言板顶部');
+                
+                // 滚动到新评论
+                setTimeout(() => {
+                    loadComments();
+                    const firstComment = commentsContainer.querySelector('[data-id]');
+                    if (firstComment) {
+                        firstComment.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        // 添加高亮效果
+                        firstComment.classList.add('ring-2', 'ring-accent2');
+                        setTimeout(() => {
+                            firstComment.classList.remove('ring-2', 'ring-accent2');
+                        }, 3000);
+                    }
+                }, 500);
+            }, 1000); // 模拟1秒网络延迟
+        }
+
+        // 删除评论
+        function deleteComment(id) {
+            if (confirm('确定要删除这条留言吗？此操作不可撤销。')) {
+                // 获取现有评论
+                let comments = JSON.parse(localStorage.getItem('comments')) || [];
+                
+                // 过滤掉要删除的评论
+                comments = comments.filter(comment => comment.id !== id);
+                
+                // 保存到本地存储
+                localStorage.setItem('comments', JSON.stringify(comments));
+                
+                // 显示成功消息
+                showToast('留言已删除！', 'success', '该留言已从留言板中移除');
+                
+                // 重新渲染评论
+                loadComments();
+            }
+        }
+
+        // 保存点赞状态
+        function saveLikeStatus(commentId, liked) {
+            let likedComments = JSON.parse(localStorage.getItem('likedComments')) || {};
+            likedComments[commentId] = liked;
+            localStorage.setItem('likedComments', JSON.stringify(likedComments));
+        }
+
+        // 显示提示消息
+        function showToast(title, type = 'success', message = '') {
+            // 设置Toast样式
+            if (type === 'success') {
+                toastIcon.className = 'fa fa-check-circle text-green-500';
+                toastTitle.className = 'font-medium text-green-500';
+            } else if (type === 'error') {
+                toastIcon.className = 'fa fa-exclamation-circle text-accent';
+                toastTitle.className = 'font-medium text-accent';
+            } else {
+                toastIcon.className = 'fa fa-info-circle text-accent2';
+                toastTitle.className = 'font-medium text-accent2';
+            }
+            
+            // 设置内容
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            
+            // 显示Toast
+            toast.classList.remove('hidden');
+            
+            // 5秒后自动隐藏
+            setTimeout(() => {
+                if (!toast.classList.contains('hidden')) {
+                    toast.classList.add('hidden');
+                }
+            }, 5000);
+        }
+
+        // 辅助函数
+        function escapeHTML(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return '刚刚';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds/60)}分钟前`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds/3600)}小时前`;
+            if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds/86400)}天前`;
+            
+            return date.toLocaleDateString('zh-CN', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email.toLowerCase());
+        }
+
+        function getFilterText(filter) {
+            switch(filter) {
+                case 'all': return '全部留言';
+                case 'recent': return '最近7天的留言';
+                case 'popular': return '热门留言';
+                default: return '留言';
+            }
+        }
+    </script>
+</body>
+</html>

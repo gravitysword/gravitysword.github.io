@@ -10,6 +10,7 @@ body {
     font-size:16px;
 }
 
+
 /* 技术栈页面特定样式 */
 .top-background {
     height: 45vh;
@@ -62,6 +63,7 @@ body {
     background-color: #fff;
     padding: 30px 0;
     margin: 0 10%;
+    border-radius: 5px;
 }
 /* 搜索框样式 */
 .search-section {
