@@ -259,62 +259,16 @@ document.querySelectorAll('files').forEach(fileElement => {
         }
         
         // 创建倒计时提示框
-        const modal = document.createElement('div');
-        modal.style = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 20px 40px;
-            border-radius: 10px;
-            font-size: 24px;
-            z-index: 10000;
-            font-family: "AlibabaPuHuiTi";
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        `;
-        document.body.appendChild(modal);
-        
-        // 倒计时函数
-        let count = 4;
-        const countdown = () => {
-            if (count > 0) {
-                modal.textContent = `文件将在 ${count} 秒后打开...`;
-                count--;
-                setTimeout(countdown, 1000);
-            } else {
-                modal.textContent = '正在打开文件...';
-            }
-        };
-        countdown();
 
         try {
             // 获取files.json配置
             const config = await backend();
             const host = config.host;
+        
+            location.href= `${host}/file_url/${fileId}`
             
-            // 获取文件URL
-            const response = await fetch(`${host}/file_url/${fileId}`);
-            const file_url = await response.text();
-            
-            // 移除提示框
-            document.body.removeChild(modal);
-            
-            if (file_url === "e") {
-                alert('服务器异常');
-            } else {
-                // 创建隐藏链接并触发点击
-                const link = document.createElement('a');
-                link.href = file_url;
-                link.style.display = 'none';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
         } catch (error) {
             // 出错时移除提示框并显示错误
-            document.body.removeChild(modal);
             console.error('Error processing file link:', error);
             alert('处理文件链接时出错，请检查控制台获取更多信息。');
         }
