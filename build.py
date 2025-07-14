@@ -2,8 +2,6 @@ import os
 import json
 import sys
 import datetime
-from xml.etree import ElementTree as ET
-from xml.dom import minidom
 
 # 配置文件路径
 CONFIG_PATH = "config/blogs.json"
@@ -104,15 +102,28 @@ def update_blogs():
     print(f"已更新博客列表，共 {len(blog_files)} 篇文章")
     print(f"已更新动态列表，共 {len(daily_files)} 条动态")
 
+def parse_blog_metadata(content):
+    """解析博客文章中的元数据"""
+    try:
+        # 查找元数据部分（在<div class="author">标签中的JSON）
+        start = content.find('{', content.find('<div style="display:none;" class="author"'))
+        end = content.find('}', start) + 1
+        metadata = json.loads(content[start:end])
+        return metadata
+    except Exception as e:
+        print(f"解析元数据失败: {str(e)}")
+        return None
+
 def update_tech_stack():
-    """更新技术栈文件列表及元数据"""
+    """更新技术栈文件列表及元数据，支持子目录"""
     # 获取技术栈目录路径
     tech_stack_dir = os.path.join(os.getcwd(), 'article/tech_stack').replace("\\", "/")
     
-    # 获取所有.md文件
+    # 获取所有.md文件（递归）
     tech_stack_files = list_files(tech_stack_dir)
-    for i in range(len(tech_stack_files)):
-        tech_stack_files[i] = tech_stack_files[i].replace(tech_stack_dir + "/", "")
+    # 转换为相对路径（相对于tech_stack_dir）
+    tech_stack_files = [os.path.relpath(f, tech_stack_dir).replace("\\", "/") 
+                       for f in tech_stack_files]
     
     # 加载现有配置
     config = load_config()
@@ -131,7 +142,6 @@ def update_tech_stack():
                 content = f.read()
                 metadata = parse_blog_metadata(content)
                 if metadata:
-                    
                     # 更新标签列表（不重复添加）
                     if "tag" in metadata:
                         for tag in metadata["tag"]:
@@ -225,122 +235,6 @@ def delete_daily_item():
     except ValueError:
         print("请输入有效的数字")
 
-# ===== RSS生成函数 =====
-def parse_blog_metadata(content):
-    """解析博客文章中的元数据"""
-    try:
-        # 查找元数据部分（在<div class="author">标签中的JSON）
-        start = content.find('{', content.find('<div style="display:none;" class="author"'))
-        end = content.find('}', start) + 1
-        metadata = json.loads(content[start:end])
-        return metadata
-    except Exception as e:
-        print(f"解析元数据失败: {str(e)}")
-        return None
-
-def generate_rss(is_cloud=False):
-    """生成RSS feed
-    
-    Args:
-        is_cloud (bool): 是否为云端模式，True为云端模式使用GitHub Pages链接，False为本地模式
-    """
-    # 创建RSS根元素
-    rss = ET.Element('rss', version='2.0')
-    channel = ET.SubElement(rss, 'channel')
-    
-    # 设置基础URL
-    base_url = "https://gravitysword.github.io" if is_cloud else "http://localhost:8000"
-    
-    # 设置频道基本信息
-    title = ET.SubElement(channel, 'title')
-    title.text = '泛舟游客的博客'
-    link = ET.SubElement(channel, 'link')
-    link.text = base_url
-    description = ET.SubElement(channel, 'description')
-    description.text = '欢迎来到泛舟游客的博客'
-    
-    # 遍历博客文章目录
-    blog_dir = os.path.join(os.path.dirname(__file__), 'blog')
-    articles = []
-    
-    # 收集所有文章
-    for root, dirs, files in os.walk(blog_dir):
-        for file in files:
-            if file.endswith('.md'):
-                file_path = os.path.join(root, file)
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                    metadata = parse_blog_metadata(content)
-                    if metadata:
-                        articles.append((metadata, file_path))
-    
-    # 按日期排序文章（最新的在前）
-    def get_date(article):
-        date_str = article[0].get('date', '')
-        try:
-            return datetime.datetime.strptime(date_str, '%Y-%m-%d')
-        except:
-            return datetime.datetime.min
-    articles.sort(key=get_date, reverse=True)
-    
-    # 添加文章到RSS feed
-    for metadata, file_path in articles:
-        item = ET.SubElement(channel, 'item')
-        
-        # 添加标题
-        item_title = ET.SubElement(item, 'title')
-        item_title.text = metadata.get('title', '')
-        
-        # 添加链接
-        item_link = ET.SubElement(item, 'link')
-        rel_path = os.path.relpath(file_path, blog_dir).replace('\\', '/')
-        item_link.text = f'{base_url}/blog/{rel_path}'
-        
-        # 添加描述
-        item_description = ET.SubElement(item, 'description')
-        item_description.text = metadata.get('description', '')
-        
-        # 添加发布日期
-        item_pubDate = ET.SubElement(item, 'pubDate')
-        date_str = metadata.get('date', '')
-        try:
-            # 解析日期并设置默认时间为当天中午12点
-            date_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
-            date_obj = date_obj.replace(hour=12, minute=0, second=0)
-            item_pubDate.text = date_obj.strftime('%a, %d %b %Y %H:%M:%S +0800')
-        except:
-            item_pubDate.text = ''
-        
-        # 添加分类（标签）
-        for tag in metadata.get('tag', []):
-            category = ET.SubElement(item, 'category')
-            category.text = tag
-            
-    return rss  # 返回生成的RSS元素
-
-def save_rss(rss_path='rss.xml', is_cloud=False):
-    """生成RSS feed并保存到文件
-    
-    Args:
-        rss_path (str): RSS文件保存路径
-        is_cloud (bool): 是否为云端模式，True为云端模式使用GitHub Pages链接，False为本地模式
-    """
-    try:
-        # 生成RSS内容
-        rss = generate_rss(is_cloud)
-        
-        # 格式化XML输出
-        xml_str = minidom.parseString(ET.tostring(rss)).toprettyxml(indent='  ')
-        
-        # 保存到文件
-        with open(rss_path, 'w', encoding='utf-8') as f:
-            f.write(xml_str)
-            
-        mode_str = "云端" if is_cloud else "本地"
-        print(f'{mode_str}模式 RSS feed已生成: {rss_path}')
-    except Exception as e:
-        print(f'生成RSS feed失败: {str(e)}')
-
 # ===== 主菜单函数 =====
 def daily_menu():
     """动态管理菜单"""
@@ -370,8 +264,6 @@ def blog_menu():
         print("\n=== 博客管理 ===")
         print("1. 更新博客和动态列表")
         print("2. 更新技术栈列表")
-        print("3. 生成本地RSS订阅文件")
-        print("4. 生成云端RSS订阅文件")
         print("0. 返回主菜单")
         
         choice = input("请选择操作: ")
@@ -380,10 +272,6 @@ def blog_menu():
             update_blogs()
         elif choice == "2":
             update_tech_stack()
-        elif choice == "3":
-            save_rss(is_cloud=False)
-        elif choice == "4":
-            save_rss(is_cloud=True)
         elif choice == "0":
             break
         else:
@@ -395,8 +283,6 @@ def main():
         print("\n=== 博客站点管理系统 ===")
         print("1. 更新博客和动态列表")
         print("2. 更新技术栈列表")
-        print("3. 生成本地RSS订阅文件")
-        print("4. 生成云端RSS订阅文件")
         print("0. 退出")
         
         choice = input("请选择操作: ")
@@ -405,10 +291,6 @@ def main():
             update_blogs()
         elif choice == "2":
             update_tech_stack()
-        elif choice == "3":
-            save_rss(is_cloud=False)
-        elif choice == "4":
-            save_rss(is_cloud=True)
         elif choice == "0":
             print("感谢使用，再见！")
             break

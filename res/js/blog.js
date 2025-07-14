@@ -258,13 +258,12 @@ document.querySelectorAll('files').forEach(fileElement => {
             return;
         }
         
-        // 创建倒计时提示框
 
         try {
             // 获取files.json配置
             const config = await backend();
             const host = config.host;
-        
+            alert("为防止ddos攻击，请耐心等待5秒")
             location.href= `${host}/file_url/${fileId}`
             
         } catch (error) {
