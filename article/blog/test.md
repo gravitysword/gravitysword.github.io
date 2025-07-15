@@ -31,5 +31,13 @@
 ### 测试latex公式
 $$ \left\\{\begin{matrix} 1 &2   & 3\\\\ 1 & 2 &3\end{matrix}\right. $$
 
+### 测试代码
+```
+  qe
+d s
+  fsd
+
+```
+
 
      

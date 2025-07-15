@@ -171,7 +171,7 @@ body {
 	border-radius: 6px;
 	white-space: pre-wrap;
 	display: block;
-	background: #1e1e1e;
+	background: #222;
 	padding: 16px 20px;
 	border: 1px solid #333;
 	margin-bottom: 25px;
@@ -180,6 +180,7 @@ body {
 	overflow-x: auto;
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
+
 .content code {
 	color: #ff7b9d;
 	background-color: #422;
@@ -189,6 +190,17 @@ body {
 	font-size: 90%;
 	white-space: nowrap;
 }
+
+.content pre code {
+    color: #ffffff;
+    background-color: #222;
+	border-radius: 4px;
+	font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+	padding: 3px 6px;
+	font-size: 90%;
+    white-space: pre-wrap;
+}
+
 .content p>code {
 	color: #ff7b9d;
 	background-color: #422;
