@@ -32,10 +32,57 @@
 $$ \left\\{\begin{matrix} 1 &2   & 3\\\\ 1 & 2 &3\end{matrix}\right. $$
 
 ### 测试代码
-```
-  qe
-d s
-  fsd
+`123`
+```python
+
+import os
+import time
+from concurrent.futures import ProcessPoolExecutor
+import fitz  # PyMuPDF
+from functools import lru_cache
+
+@lru_cache(maxsize=1)
+def get_doc(pdf_path):
+    return fitz.open(pdf_path)
+
+def process_page(args):
+    pdf_path, page_num, output_folder, dpi = args
+    """处理单个页面并保存为图像"""
+    doc = get_doc(pdf_path)
+    page = doc.load_page(page_num)
+    pix = page.get_pixmap(dpi=dpi)
+    output_file = os.path.join(output_folder, f"{page_num + 1}.png")
+    pix.save(output_file)
+    return "1"
+
+def pdf2images(pdf_path, output_folder, dpi, workers):
+    """使用多进程并行转换PDF页面为图像"""
+    start_time = time.time()
+    os.makedirs(output_folder, exist_ok=True)
+
+    total_pages = len(fitz.open(pdf_path))
+
+    tasks = [(pdf_path,page_num, output_folder, dpi) for page_num in range(total_pages)]
+
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        futures = [executor.submit(process_page, task) for task in tasks]
+        for i, future in enumerate(futures):
+            result = future.result()
+            if result:
+                print(f"Processed page {i + 1}/{total_pages}: {os.path.basename(result)}")
+
+    print(f"Conversion completed in {time.time() - start_time:.2f} seconds")
+
+
+if __name__ == "__main__":
+    # 配置参数
+    pdf_path = r"高等数学-第八版下.pdf"
+    output_dir = r"下"
+    dpi = 400  # 根据实际需要调整
+    workers = 20
+
+    pdf2images(pdf_path, output_dir, dpi, workers)
+
 
 ```
 

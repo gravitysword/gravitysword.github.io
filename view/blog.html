@@ -4,24 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <title>泛舟游客的博客</title>
+
+    <!-- 基础功能  -->
     <link rel="stylesheet" href="/res/css/md.css" >
     <link rel="stylesheet" href="/res/css/blog.css">
-
+    <link rel="stylesheet" href="/view/tags/footer.css">    
+    <meta name="referrer" content="no-referrer" />
+    <script src="/res/js/blog.js" type="module"></script>
+    <!-- toc,nav -->
     <link rel="stylesheet" href="/res/css/toc.css">
-    <script src="/res/js/toc.js"></script>
-
-    <link rel="stylesheet" href="/view/tags/footer.css">
     <link rel="stylesheet" href="/view/tags/nav.css">
     <script  src="/view/tags/nav.js" defer></script>
     <script src="/view/tags/toc.js"></script>
 
-    <meta name="referrer" content="no-referrer" />
 
+    <!-- markdown -->
     <script src="/res/js/marked.js"></script>
-
-
-    <script src="/res/js/blog.js" type="module"></script>
-    
 
     <link rel="stylesheet" href="/res/js/katex/katex.min.css">
     <script src="/res/js/katex/katex.min.js"></script>
@@ -39,10 +37,17 @@
         });
     </script>
 
+    <link rel="stylesheet" href="/res/js/prism/prism.css">
+
+
+
+
     
 </head>
 
 <body>
+        
+
     <div class="navigation">
     </div>
     
@@ -86,6 +91,20 @@
             const data = await response.text();
             document.getElementById('footer').innerHTML = data;
         })();
+
+        function loadScript(src) {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = () => callback();
+            document.head.appendChild(script);
+        }
+
+        function delayedFunction() {
+             loadScript('/res/js/prism/prism.js');
+            }
+
+        setTimeout(delayedFunction, 200); 
+       
     </script>
 </body>
 

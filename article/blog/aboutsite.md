@@ -59,6 +59,7 @@ rss订阅包含首页和技术栈的内容，不包括碎碎念的内容。
 文件托管平台：豆包AI云盘（单文件最高50GB）
 latex公式生成：https://www.latexlive.com/
 latex显示：MathJax
+代码高亮：Prism.js
 
 B站视频下载： https://www.xtdowner.com/video/bilibili/
 音视频合并：https://www.hanloth.cn/tool/audio-video-combine
