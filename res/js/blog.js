@@ -251,12 +251,16 @@ document.querySelectorAll('files').forEach(fileElement => {
     fileElement.style.cursor = 'pointer'; // 添加指针样式，提示用户可点击
 
     fileElement.addEventListener('click', async function() {
-        const fileId = this.getAttribute('file-id');
+        let fileId = this.getAttribute('file-id');
         if (!fileId) {
             console.error('File element is missing an id attribute.');
             alert('文件元素缺少ID属性。');
             return;
         }
+
+        let response = await fetch("/config/files.json");
+        let files = await response.json(); 
+        fileId = files["files"][String(fileId)]["file_id"]
         
 
         try {

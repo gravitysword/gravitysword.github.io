@@ -26,7 +26,7 @@
 
 ### 测试文件
 <files file-id="1">测试文件大</files>(40GB)
-<files file-id="2">测试文件小</files>(300KB)
+<files file-id="2">测试文件小</files>(70KB)
 
 ### 测试latex公式
 $$ \left\\{\begin{matrix} 1 &2   & 3\\\\ 1 & 2 &3\end{matrix}\right. $$
