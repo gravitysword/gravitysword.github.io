@@ -6,7 +6,15 @@
             "from": "计算机科学/人工智能/",
             "author": "中科院研究生教材系列",
             "publisher": "机械工业出版社"
+        },
+        {
+            "name": "x1",
+            "book_id": "2",
+            "from": "计算机科学/人工智能/jx/",
+            "author": "x1",
+            "publisher": "x1"
         }
+        
     ],
     "files":{
         "1" : {

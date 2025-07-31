@@ -29,36 +29,27 @@ function renderBooks(books) {
     bookshelf.className = 'bookshelf';
     bookshelf.innerHTML = '';
     
+    // 显示搜索栏
+    const searchBar = document.querySelector('.search-bar');
+    if (searchBar) {
+        searchBar.style.display = 'flex';
+    }
+    
     books.forEach(book => {
         const bookElement = document.createElement('div');
-        bookElement.className = 'book';
+        bookElement.className = 'book-card';
         bookElement.innerHTML = `
-            <div class="book-inner">
-                <div class="book-front">
-                    <div class="book-cover-preview">
-                        <div class="book-cover-img">
-                            <i class="fas fa-book"></i>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="book-title">${book.name}</div>
-                        <div class="book-author">${book.author}</div>
-                        <div class="book-publisher">${book.publisher}</div>
-                        <div book-id="${book.book_id}"></div>
-                    </div>
-                    
-                </div>
-                <div class="book-back">
-                    <h3>${book.name}</h3>
-                    <div class="book-desc">
-                        ${book.desc}
-                    </div>
-                    <div class="book-actions">
-                        <button class="download-btn"><i class="fas fa-download"></i> 下载</button>
-                    </div>
-                </div>
-            </div>
+    <div class="book-cover">
+        <div class="book-cover-img">
+            <i class="fas fa-book"></i>
+        </div>
+    </div>
+    <div class="book-info">
+        <h3 class="book-title">${book.name}</h3>
+        <p class="book-author">${book.author}</p>
+        <p class="book-publisher">${book.publisher}</p>
+        <div book-id="${book.book_id}"></div>
+    </div>
         `;
         bookElement.style.cursor = 'pointer'; // 添加指针样式，提示用户可点击
 
@@ -205,6 +196,12 @@ function renderFolderView(books) {
     bookshelf.className = 'bookshelf folder-view';
     bookshelf.innerHTML = '';
     
+    // 隐藏搜索栏
+    const searchBar = document.querySelector('.search-bar');
+    if (searchBar) {
+        searchBar.style.display = 'none';
+    }
+    
     // 构建文件夹树
     const folderTree = buildFolderTree(books);
     
@@ -214,17 +211,7 @@ function renderFolderView(books) {
     // 渲染导航栏
     renderFolderNavigation();
     
-    // 检查当前路径是否为最深层（包含书籍的路径）
-    let hasFolders = Object.keys(currentContent).length > 0;
-    let currentFolderBooks = [];
-    
-    // 如果没有子文件夹，检查是否在书籍所在的路径
-    if (!hasFolders && currentFolderPath.length > 0) {
-        const fullPath = currentFolderPath.join('/') + '/';
-        currentFolderBooks = books.filter(book => book.from === fullPath);
-    }
-    
-    // 渲染当前路径下的文件夹和书籍
+    // 渲染当前路径下的文件夹
     for (const itemName in currentContent) {
         const item = currentContent[itemName];
         
@@ -256,20 +243,28 @@ function renderFolderView(books) {
         }
     }
     
-    // 如果在最深层文件夹且有书籍，则直接显示书籍
-    if (!hasFolders && currentFolderBooks.length > 0) {
+    // 渲染当前路径下的书籍
+    const fullPath = currentFolderPath.length > 0 ? currentFolderPath.join('/') + '/' : '';
+    const currentFolderBooks = books.filter(book => book.from === fullPath);
+    
+    if (currentFolderBooks.length > 0) {
         const booksContainer = document.createElement('div');
-        booksContainer.className = 'folder-books';
-        booksContainer.innerHTML = currentFolderBooks.map(book => `
-            <div class="folder-book" data-id="${book.id}">
-                <div class="book-icon">
-                    <i class="fas fa-book"></i>
-                </div>
-                <div class="book-title">${book.name}</div>
-                <div class="book-author">${book.author}</div>
-                <div class="book-publisher">${book.publisher}</div>
+        booksContainer.className = 'current-folder-books';
+        booksContainer.innerHTML = `
+            <h3><i class="fas fa-books"></i> 当前文件夹的书籍 (${currentFolderBooks.length})</h3>
+            <div class="folder-books">
+                ${currentFolderBooks.map(book => `
+                    <div class="folder-book" data-id="${book.id}">
+                        <div class="book-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="book-title">${book.name}</div>
+                        <div class="book-author">${book.author}</div>
+                        <div class="book-publisher">${book.publisher}</div>
+                    </div>
+                `).join('')}
             </div>
-        `).join('');
+        `;
         bookshelf.appendChild(booksContainer);
     }
     
@@ -281,6 +276,23 @@ function renderFolderView(books) {
             loadBookData().then(data => {
                 renderFolderView(data.books);
             });
+        });
+    });
+    
+    // 添加书籍点击事件
+    document.querySelectorAll('.folder-book').forEach(book => {
+        book.addEventListener('click', async function() {
+            const bookId = this.getAttribute('data-id');
+            try {
+                // 获取files.json配置
+                const config = await backend();
+                const host = config.host;
+                alert("为防止ddos攻击，请耐心等待5秒")
+                location.href = `${host}/book_url/${bookId}`;
+            } catch (error) {
+                console.error('Error processing file link:', error);
+                alert('处理文件链接时出错，请检查控制台获取更多信息。');
+            }
         });
     });
 }
