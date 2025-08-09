@@ -102,16 +102,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 return 'error';
             }
             
-            // 构造请求URL
-            const url = `${config.host}/message_board`;
+            // 将评论对象转换为查询参数
+            const queryParams = new URLSearchParams(comment).toString();
             
-            // 发送POST请求
+            // 构造请求URL
+            const url = `${config.host}/message_board?${queryParams}`;
+            
+            // 发送GET请求
             const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(comment)
+                method: 'GET'
             });
             
             if (!response.ok) {
