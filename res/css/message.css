@@ -1,0 +1,148 @@
+/* 黑底白字简约优雅的博客留言板样式 */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.5em;
+    font-weight: 300;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+h2 {
+    font-size: 1.8em;
+    font-weight: 300;
+}
+
+.message-form {
+    background-color: #111;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 300;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 3px;
+    background-color: #222;
+    color: #fff;
+    font-size: 16px;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #666;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #444;
+}
+
+.message-tip {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 3px;
+    text-align: center;
+    font-weight: bold;
+    display: none;
+}
+
+.message-tip.success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.message-tip.error {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.messages {
+    background-color: #111;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.comment {
+    padding: 15px;
+    border-bottom: 1px solid #333;
+}
+
+.comment:last-child {
+    border-bottom: none;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.comment-name {
+    font-weight: bold;
+}
+
+.comment-date {
+    color: #666;
+}
+
+.comment-message {
+    line-height: 1.8;
+}
+
+.comment-contact {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #999;
+    font-style: italic;
+}

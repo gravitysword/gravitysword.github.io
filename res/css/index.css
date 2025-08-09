@@ -12,9 +12,12 @@ body {
     min-height: 100vh; 
     display: flex;
     flex-direction: column;
+    color: #ffffff;
 }
+
 a {
     text-decoration: none;
+    color: #ffffff;
 }
 
 .top-section {
@@ -54,7 +57,7 @@ a {
 }
 
 .top-background .top-sign-1 {
-    color: #999;
+    color: #ccc;
     font-size: 18px;
     display: flex;
     justify-content: center; 

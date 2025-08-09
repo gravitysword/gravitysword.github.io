@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客留言板</title>
+    <link rel="stylesheet" href="/res/css/message.css">
+
+
+</head>
+<body>
+    <div class="container">
+        <h1>博客留言板</h1>
+        
+        <div class="message-form">
+            <h2>发表留言</h2>
+            <form id="commentForm">
+                <div class="form-group">
+                    <label for="name">姓名：</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">邮箱：</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">留言内容：</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact">其他联系方式（选填）：</label>
+                    <input type="text" id="contact" name="contact">
+                </div>
+                
+                <button type="submit">提交留言</button>
+            </form>
+            
+            <!-- 提示信息显示区域 -->
+            <div id="messageTip" class="message-tip"></div>
+        </div>
+        
+        <div class="messages">
+            <h2>留言列表</h2>
+            <div id="commentsContainer">
+                <!-- 留言将通过JavaScript动态添加 -->
+            </div>
+        </div>
+    </div>
+    
+    <script src="/res/js/message.js" type="module"></script>
+</body>
+</html>

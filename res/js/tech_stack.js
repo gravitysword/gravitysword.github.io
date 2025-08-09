@@ -140,14 +140,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         const listElement = document.querySelector('.blog-list ul');
         listElement.innerHTML = filteredList.slice(startIndex, endIndex).map(item => `
             <li>
-                <span class="blog-title">${item.subtitle}</span>
-                <span class="blog-subtitle">${item.title}</span>
-                <span class="blog-introduce">
+                <div class="card-header">
+                    <span class="blog-title">${item.subtitle}</span>
+                    <span class="blog-subtitle">${item.title}</span>
+                </div>
+                <div class="blog-introduce">
                     <img class="calendar" src="/res/media/svg/sys/calendar.svg" alt="logo">
                     <span class="blog-date">${item.date}</span>
-                    ${item.tag.map(t => `<span class="blog-tag">#${t}</span>`).join('')}
-                </span>
-                <span class="blog-summary">${item.description}</span>
+                    <div class="blog-tags-container">
+                        ${item.tag.map(t => `<span class="blog-tag">#${t}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="blog-summary">${item.description}</div>
             </li>
         `).join('');
         
@@ -190,7 +194,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                 <span class="blog-introduce">
                     <img class="calendar" src="./res/media/svg/sys/calendar.svg" alt="logo">
                     <span class="blog-date">${item.date}</span>
-                    ${item.tag.map(t => `<span class="blog-tag">${t}</span>`).join('')}
+                    <div class="blog-tags-container">
+                        ${item.tag.map(t => `<span class="blog-tag">#${t}</span>`).join('')}
+                    </div>
                 </span>
                 <span class="blog-summary">${item.description}</span>
             </li>
