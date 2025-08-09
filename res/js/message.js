@@ -108,19 +108,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // 构造请求URL
             const url = `${config.host}/message_board?${queryParams}`;
             
-            // 发送GET请求
-            const response = await fetch(url, {
-                method: 'GET'
-            });
+            // 直接跳转到URL
+            window.location.href = url;
             
-            if (!response.ok) {
-                console.error('发送留言失败:', response.status);
-                return 'error';
-            }
-            
-            // 获取响应文本
-            const result = await response.text();
-            return result;
+            // 由于页面跳转，以下代码不会执行
+            return 'ok';
         } catch (error) {
             console.error('发送留言时发生错误:', error);
             return 'error';
