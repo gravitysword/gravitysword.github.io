@@ -37,8 +37,7 @@
         });
     </script>
 
-    <link rel="stylesheet" href="/res/js/prism/prism.css">
-
+  <link rel="stylesheet" href="/res/js/prism/prism-trae-dark.css">
 
 
 
@@ -53,14 +52,21 @@
     
     <div class="main-content">
         <div class="introduce">
-            <h1 class="title"></h1>
-            <div class="blog-introduce">
-                <img class="calendar" src="/res/media/svg/sys/calendar.svg" alt="calendar">
-                <span class="blog-date"> </span>
-                <img class="weather" src="/" alt="weather">
+            <div class="title-wrapper">
+                <h1 class="title"></h1>
+                <div class="title-line"></div>
+            </div>
+            <div class="meta-info">
+                <div class="meta-item">
+                    <img class="calendar" src="/res/media/svg/sys/calendar.svg" alt="calendar">
+                    <span class="blog-date"></span>
+                </div>
+                <div class="meta-item">
+                    <img class="weather" src="/" alt="weather">
+                </div>
             </div>
         </div>
-        <hr width="100%" />
+        <div class="section-divider"></div>
         <div class="content" style="background-color: rgb(0, 0, 0); ">
             <div id="markdown-content"></div>
         </div>
@@ -92,20 +98,18 @@
             document.getElementById('footer').innerHTML = data;
         })();
 
-        function loadScript(src) {
-            const script = document.createElement('script');
-            script.src = src;
-            script.onload = () => callback();
-            document.head.appendChild(script);
-        }
-
-        function delayedFunction() {
-             loadScript('/res/js/prism/prism.js');
+        // 使用更简洁的方式加载 prism.js
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await import('/res/js/prism/prism.js');
+                console.log('Prism.js loaded successfully');
+            } catch (error) {
+                console.error('Failed to load Prism.js:', error);
             }
-
-        setTimeout(delayedFunction, 200); 
+        }); 
        
     </script>
+    
 </body>
 
 </html>

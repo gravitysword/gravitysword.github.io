@@ -1,183 +1,236 @@
 
 
+/* blog.css - 博客页面整体布局样式 */
+
+/* 1. 页面基础样式 */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    font-family: "AlibabaPuHuiTi", sans-serif;
+}
+
+/* SVG图标样式 - 确保在黑色背景上显示为白色 */
+img[src$=".svg"]:not(.modal-image) {
+    filter: invert(100%) brightness(100%);
+}
+
+/* 特别处理天气图标，确保其保持原有样式但颜色为白色 */
+.weather {
+    filter: invert(100%) brightness(100%);
+}
+
+/* 防止模态窗中的图片被反色 */
+.image-modal img {
+    filter: none !important;
+}
+
+/* 2. 主容器样式 */
 .main-content {
-  background-color: #000000;
-  flex-grow: 1;
-  width: 50%;
-  margin:5% auto;
-  padding :40px;
-  border-radius: 10px;
+    background-color: #000000;
+    flex-grow: 1;
+    width: 50%;
+    margin: 5% auto;
+    padding: 40px;
+    border-radius: 10px;
 }
 
+/* 3. 分割线样式 */
 .main-content hr {
-	margin: 35px auto;
-	border: 0;
-	height: 1px;
-	background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
-	width: 80%;
+    margin: 35px auto;
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+    width: 80%;
 }
 
-/* 段落缩进样式 */
-.indented-paragraph {
-  text-indent: 2em;
-}
-
-
-
-/* 图片样式增强 */
-.zoomable {
-  cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: 0;
-}
-
-.zoomable.loaded {
-  opacity: 1;
-}
-
-.zoomable.zoomed {
-  transform: scale(1.05);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  z-index: 100;
-}
-
-/* 代码块样式增强 */
-pre {
-  position: relative;
-  margin: 20px 0;
-  overflow: hidden;
-}
-
-.code-language-label {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: #333;
-  color: #ccc;
-  padding: 2px 8px;
-  font-size: 12px;
-  border-radius: 0 0 0 4px;
-  z-index: 1;
-}
-
-.copy-code-button {
-  position: absolute;
-  top: 0;
-  right: 60px;
-  background: #333;
-  color: #ccc;
-  border: none;
-  padding: 2px 8px;
-  font-size: 12px;
-  cursor: pointer;
-  border-radius: 0 0 0 4px;
-  z-index: 1;
-  transition: all 0.2s ease;
-}
-
-.copy-code-button:hover {
-  background: #444;
-}
-
-/* 表格样式增强 */
-.table-wrapper {
-  overflow-x: auto;
-  margin: 20px 0;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.styled-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.styled-table th {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  font-weight: bold;
-  text-align: left;
-  padding: 12px 15px;
-  border-bottom: 2px solid #444;
-}
-
-.styled-table td {
-  padding: 10px 15px;
-  border-bottom: 1px solid #333;
-  color: #d0d0d0;
-}
-
-.styled-table tr:nth-child(even) {
-  background-color: #1a1a1a;
-}
-
-.styled-table tr:hover {
-  background-color: #2c2c2c;
-}
-
-
-
-.blog-introduce {
-  margin-top: 20px;
-  font-size: 14px;
-  display: flex;
-  flex-direction: row;
-  color: #aaaaaa;
-  align-items: center;
-  justify-content: center;
-}
-.title{
-  font-size: 2.3em;
-  text-align: center;
-  margin-bottom: 30px;
-  color: #fff;
-}
-.blog-introduce img {
-  width: 16px;
-  height: 16px;
-  padding-bottom: 3px;
-  margin-right: 3px;
-}
-
-.blog-introduce .weather {
-  margin:0px 10px;
-  padding: 5px 5px;
-  width: 20px;
-  height: 20px;
-  background-color: #fff;
-  border-radius: 30%;
-}
-
-
-
-
-.blog-introduce .blog-time {
-  text-align: center;
-}
-
-.blog-introduce .blog-tag  {
-    border-radius: 10%;
+/* 4. 极简留白美学标题区域 */
+.introduce {
     text-align: center;
-    margin-left: 10px;
-    color: #ddd;
-    background-color: #2a2a2a;
-    padding :4px 6px;
+    padding: 60px 0 40px;
+    position: relative;
 }
 
-files {
-    text-decoration-line:underline;
+.title-wrapper {
+    margin-bottom: 40px;
 }
 
-iframe{
-  width: 100%;
-  aspect-ratio: 16/10;
-  align-items: center;
-  padding:2%;
+.title {
+    font-size: 2.8em;
+    font-weight: 400;
+    color: #fff;
+    margin: 0 0 20px;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
 }
-/* 图片放大功能样式 */
+
+.title-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeIn 1s ease-out 0.3s forwards;
+}
+
+.meta-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 0.5s forwards;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #eee;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.meta-item img {
+    width: 16px;
+    height: 16px;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+.meta-item:hover img {
+    opacity: 1;
+}
+
+.blog-date {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    letter-spacing: 1px;
+}
+
+.blog-tags {
+    gap: 6px;
+}
+
+.blog-tag {
+    font-size: 13px;
+    color:#eee;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.blog-tag:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.blog-tag:not(:last-child)::after {
+    content: "·";
+    margin-left: 6px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    margin: 0 auto 40px;
+    max-width: 200px;
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* 5. 内容区域样式 */
+.content {
+    background-color: rgb(0, 0, 0);
+}
+
+
+/* 6. 工具区域样式 */
+.tool {
+    margin-top: 20px;
+}
+
+.share {
+    text-align: center;
+}
+
+/* From Uiverse.io by adamgiebl */
+.share button {
+    font-size: 16px;
+    background: rgb(0, 0, 0);
+    color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: none;
+    margin: 0 auto;
+}
+
+.share button span {
+    transition: all 0.3s ease-in-out;
+    font-size: 14px;
+}
+
+.share button svg {
+    width: 70%;
+    display: block;
+    transform-origin: center center;
+    transition: transform 0.3s ease-in-out;
+    margin-right: 10px;
+    fill: white;
+}
+
+.share button:hover .share-svg {
+    animation: fly-1 0.6s ease-in-out infinite alternate;
+}
+
+.share button:hover svg {
+    transform: translateX(1.2em) rotate(45deg) scale(1.1);
+}
+
+.share button:hover span {
+    transform: translateX(5em);
+}
+
+.share button:active {
+    transform: scale(0.95);
+}
+
+@keyframes fly-1 {
+    from {
+        transform: translateY(0.1em);
+    }
+    to {
+        transform: translateY(-0.1em);
+    }
+}
+
+
+
 .image-modal {
     display: none;
     position: fixed;
@@ -205,6 +258,12 @@ iframe{
     transform: scale(1);
 }
 
+/* 修复模态窗图片反色问题 */
+.modal-image {
+    filter: none !important;
+    border-radius: 8px;
+}
+
 .modal-close {
     position: absolute;
     top: 20px;
@@ -226,76 +285,35 @@ iframe{
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* 图片点击效果 */
-.content img:not(.weather) {
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
+/* 10. 其他元素样式 - files和iframe样式已迁移到md.css */
 
-.content img:not(.weather):hover {
-    transform: scale(1.01);
-}
-
-.content video{
-    width: 100%;
-    margin: auto auto;
-}
-.content .video-time-jump{
-    color: #ff7e79;
-}
-
-/* From Uiverse.io by adamgiebl */ 
-.share button {
-    font-size: 16px;
-    background: rgb(0, 0, 0);
-    color: white;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    border-radius: 10px;
-    overflow: hidden;
-    transition: all 0.3s;
-    cursor: pointer;
-  }
-  
-  .share  button span {
-    transition: all 0.3s ease-in-out;
-    font-size: 14px;
-  }
-  
-  .share button svg {
-    width: 70%;
-    display: block;
-    transform-origin: center center;
-    transition: transform 0.3s ease-in-out;
-    margin-right: 10px;
-  }
-  
-  .share button:hover .share-svg {
-    animation: fly-1 0.6s ease-in-out infinite alternate;
-  }
-  
-  .share button:hover svg {
-    transform: translateX(1.2em) rotate(45deg) scale(1.1);
-  }
-  
-  .share button:hover span {
-    transform: translateX(5em);
-  }
-  
-  .share button:active {
-    transform: scale(0.95);
-  }
-  
-  @keyframes fly-1 {
-    from {
-      transform: translateY(0.1em);
+/* 11. 响应式设计 */
+@media screen and (max-width: 768px) {
+    .main-content {
+        width: 95%;
+        margin: 2% auto;
+        padding: 20px;
     }
-  
-    to {
-      transform: translateY(-0.1em);
+    
+    .introduce {
+        padding: 40px 0 30px;
     }
-  }
+    
+    .title {
+        font-size: 2.2em;
+        margin-bottom: 15px;
+    }
+    
+    .meta-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .section-divider {
+        max-width: 120px;
+        margin-bottom: 30px;
+    }
+}
 
 
 
