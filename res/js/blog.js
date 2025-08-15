@@ -303,7 +303,150 @@ const VideoHandler = {
   }
 };
 
-// 表格处理模块
+// 段落缩进处理模块
+const ParagraphIndentHandler = {
+  // 为文章段落添加缩进
+  addParagraphIndent() {
+    const content = document.getElementById('markdown-content');
+    if (!content) return;
+
+    // 等待内容完全渲染
+    setTimeout(() => {
+      this.processContent(content);
+    }, 100);
+  },
+
+  // 处理内容区域的段落缩进
+  processContent(content) {
+    // 处理现有的p标签
+    this.handleExistingParagraphs(content);
+    
+    // 处理br标签分割的文本
+    this.handleBrTags(content);
+  },
+
+  // 处理现有的p标签
+  handleExistingParagraphs(content) {
+    const paragraphs = content.querySelectorAll('p');
+    paragraphs.forEach(p => {
+      // 排除特定容器内的段落
+      if (!this.shouldSkipIndent(p)) {
+        this.handleParagraphWithBr(p);
+      }
+    });
+  },
+
+  // 处理包含br标签的段落
+  handleParagraphWithBr(paragraph) {
+    // 检查段落内是否有br标签
+    const brTags = paragraph.querySelectorAll('br');
+    if (brTags.length > 0) {
+      // 有br标签的段落，创建新的结构来处理
+      this.splitParagraphByBr(paragraph);
+    } else {
+      // 没有br标签的段落，直接缩进
+      paragraph.style.textIndent = '2em';
+    }
+  },
+
+  // 按br标签分割段落并添加缩进
+  splitParagraphByBr(paragraph) {
+    // 获取段落的所有文本内容
+    const textContent = paragraph.textContent;
+    
+    // 保存原始HTML结构
+    const originalHTML = paragraph.innerHTML;
+    
+    // 用br标签分割内容
+    const parts = originalHTML.split(/<br\s*\/?>/gi);
+    
+    if (parts.length > 1) {
+      // 创建新的HTML结构，保持原有格式
+      let newHTML = '';
+      parts.forEach((part, index) => {
+        if (part.trim()) {
+          // 清理空白字符
+          const cleanPart = part.trim();
+          
+          if (index === 0) {
+            // 第一段添加缩进
+            newHTML += `<span style="display: block; text-indent: 2em;">${cleanPart}</span>`;
+          } else {
+            // 后续段落换行并缩进
+            newHTML += `<span style="display: block; text-indent: 2em; margin-top: 0.5em;">${cleanPart}</span>`;
+          }
+        }
+      });
+      paragraph.innerHTML = newHTML;
+    } else {
+      // 只有一个段落，直接缩进
+      paragraph.style.textIndent = '2em';
+    }
+  },
+
+  // 处理br标签分割的文本
+  handleBrTags(content) {
+    // 找到所有br标签
+    const brTags = content.querySelectorAll('br');
+    
+    brTags.forEach(br => {
+      // 获取br标签的父元素
+      const parent = br.parentNode;
+      
+      // 如果父元素是p标签，已在handleExistingParagraphs中处理
+      if (parent.tagName === 'P') return;
+      
+      // 非P标签内的br标签，给父元素添加缩进
+      if (parent && !this.shouldSkipIndent(parent)) {
+        parent.style.textIndent = '2em';
+      }
+    });
+
+    // 处理直接包含文本的div或其他元素
+    const textContainers = content.querySelectorAll('div, section, article');
+    textContainers.forEach(container => {
+      if (!this.shouldSkipIndent(container)) {
+        // 处理直接子文本节点
+        const childNodes = Array.from(container.childNodes);
+        childNodes.forEach(node => {
+          if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+            const p = document.createElement('p');
+            p.textContent = node.textContent.trim();
+            p.style.textIndent = '2em';
+            container.replaceChild(p, node);
+          }
+        });
+      }
+    });
+  },
+
+  // 判断是否应该跳过缩进
+  shouldSkipIndent(element) {
+    // 跳过特定标签内的元素
+    const skipSelectors = [
+      'pre',
+      'code',
+      'table',
+      'blockquote',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'li',
+      'ol',
+      'ul',
+      'dt',
+      'dd',
+      'dl'
+    ];
+    
+    return skipSelectors.some(selector => element.closest(selector));
+  }
+};
+
+  // 表格处理模块
 const TableHandler = {
   // 为表格添加样式和增强功能
   enhanceTables() {
@@ -544,8 +687,13 @@ document.addEventListener('DOMContentLoaded', () => {
       // 为表格添加样式和增强功能
       TableHandler.enhanceTables();
       
-      // 添加文件链接跳转功能
-      FileLinkHandler.addFileLinkHandler();
+      // 为文章段落添加缩进
+      ParagraphIndentHandler.addParagraphIndent();
+      
+      // 添加文件链接跳转功能（在所有DOM操作完成后执行）
+      setTimeout(() => {
+        FileLinkHandler.addFileLinkHandler();
+      }, 200);
       
       // 初始化分享功能
       ShareHandler.initShare();

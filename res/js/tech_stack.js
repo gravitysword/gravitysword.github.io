@@ -10,9 +10,17 @@ let currentTag = '全部';
 // 标签切换功能
 async function initializeTags() {
     try {
-        const response = await fetch("/config/blogs.json");
-        const data = await response.json();
-        const tags = ["全部", ...data.tech_stack.tag];
+        // 从知识库文章中动态提取所有标签
+        const allTags = new Set();
+        knowledgeList.forEach(item => {
+            if (item.tag && Array.isArray(item.tag)) {
+                item.tag.forEach(t => allTags.add(t));
+            }
+        });
+        
+        // 将标签数组按字母顺序排序
+        const sortedTags = Array.from(allTags).sort();
+        const tags = ["全部", ...sortedTags];
         
         // 更新标签容器
         const tagsContainer = document.querySelector('.tags-container');

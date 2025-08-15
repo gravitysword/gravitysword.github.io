@@ -10,6 +10,8 @@ export async function BLOG_getBlogItems() {
             j.id = i
             blogsData.push(j)
         }
+        // 按日期降序排序，最新的文章在前
+        blogsData.sort((a, b) => new Date(b.date) - new Date(a.date));
         return blogsData
     } catch (error) {
         console.error('Error fetching blogs.json:', error);
@@ -37,7 +39,7 @@ export async function BLOG_getKnowledgeItems() {
     try {
         const response = await fetch("/config/blogs.json");
         let data = await response.text();
-        data = JSON.parse(data)["tech_stack"]["article"];
+        data = JSON.parse(data)["tech_stack"];
         let blogsData = [];
         for (let i of data) {
             i = "/article/tech_stack/"+i
@@ -46,6 +48,8 @@ export async function BLOG_getKnowledgeItems() {
             j.id = i
             blogsData.push(j)
         }
+        // 按日期降序排序，最新的文章在前
+        blogsData.sort((a, b) => new Date(b.date) - new Date(a.date));
         return blogsData
     } catch (error) {
         console.error('Error fetching blogs.json:', error);

@@ -167,8 +167,18 @@ async function initTimeline() {
     
     if (dailyItems.length === 0) {
         const emptyMessage = document.createElement('div');
-        emptyMessage.className = 'text-center text-white py-8';
-        emptyMessage.textContent = '暂无动态内容';
+        emptyMessage.className = 'text-center py-16';
+        emptyMessage.innerHTML = `
+            <div style="color: #888; font-size: 1.2rem; margin-bottom: 10px;">
+                📭
+            </div>
+            <div style="color: #667eea; font-size: 1.1rem;">
+                暂无动态内容
+            </div>
+            <div style="color: #666; font-size: 0.9rem; margin-top: 8px;">
+                期待你的第一条碎碎念～
+            </div>
+        `;
         timelineContainer.appendChild(emptyMessage);
         return;
     }
@@ -178,13 +188,25 @@ async function initTimeline() {
         timelineContainer.appendChild(dailyItem);
     });
     
-    setTimeout(() => {
-        document.querySelectorAll('.timeline-item').forEach((item, index) => {
-            setTimeout(() => {
-                item.classList.add('visible');
-            }, index * 100);
+    // 使用 Intersection Observer 实现滚动动画
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
         });
-    }, 100);
+    }, observerOptions);
+    
+    setTimeout(() => {
+        document.querySelectorAll('.timeline-item').forEach((item) => {
+            observer.observe(item);
+        });
+    }, 200);
 }
 
 // 图片放大和视频播放功能

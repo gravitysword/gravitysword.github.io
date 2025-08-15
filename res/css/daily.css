@@ -7,17 +7,24 @@ body {
     background-color: #000000;
     color: #ffffff;
     font-family: 'AlibabaPuHuiTi', Arial, sans-serif;
-    font-size:18px;
+    font-size: 18px;
     margin: 0;
     padding: 0;
     line-height: 1.6;
+    overflow-x: hidden;
 }
-p {
 
+p {
     font-weight: 400;
     letter-spacing: 0.5px;
     font-size: 16px;
     color: #000;
+    line-height: 1.8;
+}
+
+/* 移除背景动画，保持纯黑 */
+body::before {
+    display: none;
 }
 
 .top-section {
@@ -79,50 +86,98 @@ p {
 }
 
 .main-content {
-    padding: 20px 0;
-    min-height: calc(100vh - 300px); /* 减去顶部的高度 */
+    padding: 40px 0;
+    min-height: calc(100vh - 300px);
     display: flex;
     flex-direction: column;
+    background-color: #000000;
+    position: relative;
 }
 
 .content-container {
-    width: 45%;
+    width: 50%;
+    max-width: 800px;
     margin: 0 auto;
     position: relative;
-    min-height: calc(100vh - 300px - 100px); /* 减去顶部和底部的高度 */
+    padding: 0 20px;
+}
+
+@media (max-width: 1200px) {
+    .content-container {
+        width: 65%;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-container {
+        width: 85%;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-container {
+        width: 95%;
+        padding: 0 10px;
+    }
 }
 
 .timeline-container {
     position: relative;
-    padding: 20px 0;
+    padding: 40px 0;
 }
 
 .timeline-line {
     position: absolute;
-    left: 35px;
-    top: -20px;
+    left: 29px;
+    top: 0;
     bottom: 0;
     width: 2px;
-    background: #ffffff;
+    background-color: #eee;
+    animation: linePulse 3s infinite;
+}
+
+@keyframes linePulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
 }
 
 .timeline-dot {
     position: absolute;
-    left: 36px;
+    left: 30px;
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background-color: #000000;
-    border: 3px solid #ffffff;
-    box-shadow: 0 0 0 1px #000000, 0 0 0 4px #ffffff;
-    margin-top: 28px;
+    background-color: #ffffff;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px #000000;
+    margin-top: 25px;
     transform: translateX(-50%);
     transition: all 0.3s ease;
+    cursor: pointer;
+    animation: pulse 2s infinite;
 }
 
 .timeline-dot:hover {
-    transform: translateX(-50%) scale(1.1);
-    box-shadow: 0 0 0 3px #000000, 0 0 0 8px #ffffff;
+    transform: translateX(-50%) scale(1.2);
+    box-shadow: 0 0 0 3px #000000, 0 0 0 5px #ffffff;
+    animation: none;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
 }
 
 /* 限制时间轴图片的最大尺寸 */
@@ -185,9 +240,9 @@ video{
 /* 动画效果 */
 .timeline-item {
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    margin-bottom: 40px;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    margin-bottom: 50px;
     position: relative;
 }
 
@@ -197,19 +252,42 @@ video{
 }
 
 .timeline-item-content {
-    background-color: rgba(255, 255, 255, 0.95);
-    border-radius: 12px;
+    background-color: #ffffff;
+    border-radius: 8px;
     padding: 25px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    margin-left: 60px;
+    margin-left: 50px;
     position: relative;
-    color: #000;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #000000;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
 .timeline-item-content:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+}
+
+.timeline-item-content::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 30px;
+    width: 0;
+    height: 0;
+    border: 4px solid transparent;
+    border-right-color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .timeline-item-content {
+        margin-left: 40px;
+        padding: 20px;
+    }
+    
+    .timeline-item-content::before {
+        left: -10px;
+        border-width: 5px;
+    }
 }
 
 .text-black {
@@ -220,13 +298,20 @@ video{
 .hashtag {
     display: inline-flex;
     align-items: center;
-    padding: 4px 8px;
-    margin-right: 8px;
-    margin-top: 8px;
-    background-color: #ddd;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    color: #4b5563;
+    padding: 4px 10px;
+    margin-right: 6px;
+    margin-top: 6px;
+    background-color: #333333;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    color: #ffffff;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.hashtag:hover {
+    background-color: #555555;
+    transform: translateY(-1px);
 }
 
 /* 底部样式 */
@@ -263,29 +348,114 @@ video{
     vertical-align: middle;
 }
 
-/* 加载动画 */
+/* 加载动画 - 黑白极简 */
 .loading {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px;
+    height: 200px;
 }
 
 .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
+    width: 30px;
+    height: 30px;
+    border: 2px solid #333;
+    border-top: 2px solid #fff;
     border-radius: 50%;
-    border-top-color: #ffffff;
-    animation: spin 1s ease-in-out infinite;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
 
+/* 滚动条样式 - 黑白极简 */
+::-webkit-scrollbar {
+    width: 6px;
+}
 
-/* 图片放大功能样式 */
+::-webkit-scrollbar-track {
+    background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+
+/* 图片网格样式 - 黑白极简 */
+.pictures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+    align-items: start;
+}
+
+.pictures-grid:has(> .picture-wrapper:only-child) {
+    grid-template-columns: 1fr;
+}
+
+.pictures-grid:has(> .picture-wrapper:only-child) .picture-wrapper {
+    max-height: 500px;
+    background-color: #f0f0f0;
+}
+
+.picture-wrapper {
+    position: relative;
+    overflow: hidden;
+    border: none;
+    transition: all 0.2s ease;
+    max-height: 400px;
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.picture-wrapper:hover {
+    transform: scale(1.02);
+}
+
+.timeline-image {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    transform-origin: center center;
+}
+
+.timeline-image:hover {
+    transform: scale(1.02);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.timeline-video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: 1px solid #333;
+    transition: all 0.2s ease;
+}
+
+.timeline-video:hover {
+    border-color: #666;
+    transform: scale(1.01);
+}
+
+/* 图片放大功能样式 - 黑白极简 */
 .image-modal {
     display: none;
     position: fixed;
@@ -297,15 +467,15 @@ video{
     z-index: 1000;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(5px);
 }
 
 .modal-image {
     max-width: 90%;
-    max-height: 90vh;
+    max-height: 80vh;
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.9);
     transition: opacity 0.3s ease, transform 0.3s ease;
+    border: 1px solid #fff;
 }
 
 .modal-image.active {
@@ -325,21 +495,10 @@ video{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.2s ease;
 }
 
 .modal-close:hover {
     background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* 图片点击效果 */
-.timeline-image {
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.timeline-image:hover {
-    transform: scale(1.01);
 }

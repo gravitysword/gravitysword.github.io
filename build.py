@@ -2,6 +2,7 @@ import os
 import json
 import sys
 import datetime
+from typing import List
 
 # 配置文件路径
 CONFIG_PATH = "config/blogs.json"
@@ -25,135 +26,79 @@ def save_config(config):
     except Exception as e:
         print(f"Error saving config: {e}")
 
-# ===== 博客文章管理函数 =====
-def cmp(x, y):
-    # 新增根目录判断逻辑
-    x_in_root = '/' not in x
-    y_in_root = '/' not in y
-    
-    # 根目录文件永远排最后
-    if x_in_root and not y_in_root:
-        return True  # 需要交换位置
-    elif not x_in_root and y_in_root:
-        return False  # 不需要交换
-    elif x_in_root and y_in_root:
-        return False  # 都根目录保持原序
-    
-    # 原有排序逻辑
-    x_year = int(x.split("/")[-2])
-    x_num = int(x.split("/")[-1].split(".")[0])
-    y_year = int(y.split("/")[-2])
-    y_num = int(y.split("/")[-1].split(".")[0])
-
-    if x_year > y_year:
-        return False
-    elif x_year < y_year:
-        return True
-    else:
-        return x_num < y_num  # 改为升序排列（可选）
-
-def sort_daily(daily_files):
-    """对动态文件进行排序"""
-    for i in range(len(daily_files)-1):
-        for j in range(i+1, len(daily_files)):
-            if cmp(daily_files[i], daily_files[j]):
-                daily_files[i], daily_files[j] = daily_files[j], daily_files[i]
-    
-def sort_blog(blogs):
-    """对博客文件进行排序"""
-    for i in range(len(blogs)-1):
-        for j in range(i+1, len(blogs)):
-            if cmp(blogs[i], blogs[j]):
-                blogs[i], blogs[j] = blogs[j], blogs[i]
-    
-def list_files(directory):
+# ===== 通用工具函数 =====
+def list_files(directory: str) -> List[str]:
     """递归列出目录中的所有文件"""
     file_paths = []
-    # 递归遍历目录
     for entry in os.listdir(directory):
-        full_path = os.path.join(directory, entry).replace("\\", "/")  # 使用斜杠作为分隔符
+        full_path = os.path.join(directory, entry).replace("\\", "/")
         if os.path.isdir(full_path):
-            file_paths.extend(list_files(full_path))  # 递归调用
+            file_paths.extend(list_files(full_path))
         else:
             file_paths.append(full_path)
     return file_paths
 
-def update_blogs():
-    """更新博客文件列表"""
-    # 更新博客列表
-    blog_directory = os.getcwd().replace("\\", "/")+"/article/blog/"
-    blog_files = list_files(blog_directory)
-    for i in range(len(blog_files)):
-        blog_files[i] = blog_files[i].replace(blog_directory, "")
-    sort_blog(blog_files)
+def sort_files_by_structure(file_paths: List[str]) -> List[str]:
+    """按目录结构和文件名排序文件"""
+    def get_sort_key(path):
+        parts = path.replace("\\", "/").split("/")
+        # 根目录文件排最后
+        if len(parts) == 1:
+            return (9999, 9999, parts[0])
+        
+        try:
+            year = int(parts[-2])
+            num = int(parts[-1].split(".")[0])
+            return (year, num, "/".join(parts[:-1]))
+        except (ValueError, IndexError):
+            return (9998, 9999, path)
     
-    # 更新动态列表
-    daily_directory = os.getcwd().replace("\\", "/")+"/article/daily/"
-    daily_files = list_files(daily_directory)
-    for i in range(len(daily_files)):
-        daily_files[i] = daily_files[i].replace(daily_directory, "")
-    sort_daily(daily_files)
+    return sorted(file_paths, key=get_sort_key)
+
+def update_file_list(config_key: str, directory_path: str) -> int:
+    """通用函数：更新指定类型的文件列表"""
+    full_dir = os.path.join(os.getcwd(), directory_path).replace("\\", "/")
+    if not os.path.exists(full_dir):
+        print(f"目录不存在: {full_dir}")
+        return 0
     
-    # 加载现有配置并更新
+    files = list_files(full_dir)
+    relative_files = [os.path.relpath(f, full_dir).replace("\\", "/") 
+                     for f in files if f.endswith('.md')]
+    
+    sorted_files = sort_files_by_structure(relative_files)
+    
     config = load_config()
-    config["blogs"] = blog_files
-    config["daily"] = daily_files
+    config[config_key] = sorted_files
     save_config(config)
-    print(f"已更新博客列表，共 {len(blog_files)} 篇文章")
-    print(f"已更新动态列表，共 {len(daily_files)} 条动态")
+    
+    return len(sorted_files)
 
 def parse_blog_metadata(content):
     """解析博客文章中的元数据"""
     try:
-        # 查找元数据部分（在<div class="author">标签中的JSON）
         start = content.find('{', content.find('<div style="display:none;" class="author"'))
         end = content.find('}', start) + 1
-        metadata = json.loads(content[start:end])
-        return metadata
+        return json.loads(content[start:end])
     except Exception as e:
         print(f"解析元数据失败: {str(e)}")
         return None
 
-def update_tech_stack():
-    """更新技术栈文件列表及元数据，支持子目录"""
-    # 获取技术栈目录路径
-    tech_stack_dir = os.path.join(os.getcwd(), 'article/tech_stack').replace("\\", "/")
+def update_all_file_lists():
+    """一键更新所有文件列表（博客、动态、技术栈）"""
+    file_types = [
+        ("blogs", "article/blog", "博客"),
+        ("daily", "article/daily", "动态"),
+        ("tech_stack", "article/tech_stack", "技术栈")
+    ]
     
-    # 获取所有.md文件（递归）
-    tech_stack_files = list_files(tech_stack_dir)
-    # 转换为相对路径（相对于tech_stack_dir）
-    tech_stack_files = [os.path.relpath(f, tech_stack_dir).replace("\\", "/") 
-                       for f in tech_stack_files]
+    total_files = 0
+    for config_key, directory, name in file_types:
+        count = update_file_list(config_key, directory)
+        print(f"已更新{name}列表，共 {count} 篇文章")
+        total_files += count
     
-    # 加载现有配置
-    config = load_config()
-    if "tech_stack" not in config:
-        config["tech_stack"] = {"tag": [], "article": []}
-    
-    # 清空现有列表
-    config["tech_stack"]["tag"] = []
-    config["tech_stack"]["article"] = tech_stack_files
-    
-    # 遍历每个文件解析元数据
-    for file_path in tech_stack_files:
-        full_path = os.path.join(tech_stack_dir, file_path)
-        try:
-            with open(full_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-                metadata = parse_blog_metadata(content)
-                if metadata:
-                    # 更新标签列表（不重复添加）
-                    if "tag" in metadata:
-                        for tag in metadata["tag"]:
-                            if tag not in config["tech_stack"]["tag"]:
-                                config["tech_stack"]["tag"].append(tag)
-        except Exception as e:
-            print(f"处理文件 {file_path} 时出错: {str(e)}")
-    
-    # 保存更新后的配置
-    save_config(config)
-    print(f"已更新技术栈列表，共 {len(tech_stack_files)} 篇文章")
-    print(f"标签列表：{config['tech_stack']['tag']}")
+    print(f"\n总计更新 {total_files} 个文件")
 
 # ===== 动态管理函数 =====
 def add_daily_item():
@@ -262,16 +207,13 @@ def blog_menu():
     """博客管理菜单"""
     while True:
         print("\n=== 博客管理 ===")
-        print("1. 更新博客和动态列表")
-        print("2. 更新技术栈列表")
+        print("1. 一键更新所有文件列表")
         print("0. 返回主菜单")
         
         choice = input("请选择操作: ")
         
         if choice == "1":
-            update_blogs()
-        elif choice == "2":
-            update_tech_stack()
+            update_all_file_lists()
         elif choice == "0":
             break
         else:
@@ -281,16 +223,13 @@ def main():
     """主函数"""
     while True:
         print("\n=== 博客站点管理系统 ===")
-        print("1. 更新博客和动态列表")
-        print("2. 更新技术栈列表")
+        print("1. 一键更新所有文件列表")
         print("0. 退出")
         
         choice = input("请选择操作: ")
         
         if choice == "1":
-            update_blogs()
-        elif choice == "2":
-            update_tech_stack()
+            update_all_file_lists()
         elif choice == "0":
             print("感谢使用，再见！")
             break
