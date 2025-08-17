@@ -278,11 +278,16 @@ const VideoHandler = {
   // 添加视频时间跳转功能
   addVideoTimeJump() {
     document.querySelectorAll('.video-time-jump').forEach(span => {
-      span.addEventListener('click', function() {
+      // 添加键盘可访问性
+      span.setAttribute('tabindex', '0');
+      span.setAttribute('role', 'button');
+      span.setAttribute('aria-label', `跳转到视频时间点: ${span.textContent.trim()}`);
+      
+      const handleJump = function() {
         const timeStr = this.textContent.trim();
         const bindId = this.getAttribute('bind-id');
         const video = document.querySelector(`video[video-id="${bindId}"]`);
-        console.log(`Video ID: ${bindId}`);
+        
         if (video) {
           const timeParts = timeStr.split(':').map(Number);
           let seconds = 0;
@@ -295,8 +300,42 @@ const VideoHandler = {
             seconds = timeParts[0] * 60 + timeParts[1];
           }
           
+          // 添加跳转动画
+          this.classList.add('jumping');
+          setTimeout(() => {
+            this.classList.remove('jumping');
+          }, 600);
+          
+          // 跳转到指定时间并播放
           video.currentTime = seconds;
-          video.play();
+          video.play().catch(error => {
+            console.warn('视频播放失败:', error);
+          });
+          
+          // 高亮效果：滚动到视频位置
+          video.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+          
+          // 添加视频边框高亮效果
+          video.style.boxShadow = '0 0 20px rgba(255, 107, 102, 0.6)';
+          setTimeout(() => {
+            video.style.boxShadow = '';
+          }, 1000);
+        } else {
+          console.warn(`未找到视频元素，video-id: ${bindId}`);
+        }
+      };
+      
+      // 点击事件
+      span.addEventListener('click', handleJump);
+      
+      // 键盘事件
+      span.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleJump.call(this);
         }
       });
     });

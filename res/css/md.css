@@ -169,21 +169,13 @@ body {
 	color: #ff7b9d;
 	background-color: #422;
 	border-radius: 4px;
-	font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-	padding: 3px 6px;
+	padding: 4px 4px;
+    margin: 0 4px;
 	font-size: 90%;
 	white-space: nowrap;
 }
 
 
-.content p>code {
-	color: #ff7b9d;
-	background-color: #422;
-	font-size: .95em;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-}
 .content figure {
 	margin: 1em 0;
 }
@@ -205,6 +197,7 @@ body {
 .content video{
     width: 100%;
     height: auto;
+    margin: 20px auto;
 
 }
 
@@ -514,23 +507,6 @@ body {
 	border: 1px solid #333;
 }
 
-.content code {
-	color: #ff7b9d;
-	background-color: #422;
-	border-radius: 4px;
-	font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-	padding: 3px 6px;
-	font-size: 90%;
-	white-space: nowrap;
-}
-
-.content pre code {
-	background: transparent;
-	padding: 0;
-	border-radius: 0;
-	white-space: pre;
-	color: #d0d0d0;
-}
 
 /* 复制按钮样式 */
 .copy-code-button {
@@ -575,29 +551,141 @@ body {
 }
 
 /* 文件链接样式 - 从blog.css迁移 */
+/* 简约淡雅的Files标签样式 */
 .content files {
-	text-decoration-line: underline;
-	cursor: pointer;
-	color: #ff6b66;
-	transition: color 0.2s ease;
+    position: relative;
+    padding: 4px 12px;
+    margin: 0 4px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #222 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    color: #d0d0d0;
+    font-size: 0.9em;
+    font-weight: 400;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.3px;
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .content files:hover {
-	color: #ff8a86;
-	text-decoration: underline;
+    color: #ffffff;
+    background: linear-gradient(135deg, #2a2a2a 0%, #333 100%);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-/* iframe样式 - 从blog.css迁移 */
-.content iframe {
-	width: 100%;
-	aspect-ratio: 16/10;
-	align-items: center;
-	padding: 2%;
-	border-radius: 8px;
-	border: 1px solid #333;
-	margin: 20px 0;
+.content files:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 1px 4px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
+.content files::before {
+    content: '📄';
+    margin-right: 6px;
+    font-size: 0.85em;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.content files:hover::before {
+    opacity: 1;
+}
+
+/* 简约淡雅的Video Time Jump样式 - 更新图标 */
+.video-time-jump {
+    padding: 5px 10px;
+    margin: 0px 3px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #222;
+
+    border-radius: 10px;
+    color: #b0b0b0;
+    font-size: 0.9em;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.video-time-jump::before {
+    content: '▶';
+    margin-right: 4px;
+    font-size: 0.7em;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+    vertical-align: middle;
+}
+
+.video-time-jump:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.video-time-jump:hover::before {
+    opacity: 1;
+}
+
+.video-time-jump:active {
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.video-time-jump:focus {
+    outline: none;
+    box-shadow: 
+        0 0 0 2px rgba(255, 255, 255, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 点击时的脉冲动画 */
+.video-time-jump.jumping {
+    animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+    .video-time-jump {
+        padding: 2px 8px;
+        font-size: 0.8em;
+        margin: 0 2px;
+    }
+    
+    .video-time-jump::before {
+        margin-right: 3px;
+        font-size: 0.65em;
+    }
+}
 .content ol p, .content ul p {
 	margin-bottom: 0px;
 }

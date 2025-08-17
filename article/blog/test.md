@@ -25,8 +25,8 @@
 <span class="video-time-jump" bind-id="0">08:00</span>
 
 ### 测试文件
-<files file-id="1">测试文件大</files> (40GB)
-<files file-id="2">测试文件小</files> (70KB)
+<files file-id="1">测试文件-大 (40GB)</files>
+<files file-id="2">测试文件-小 (70KB)</files>
 
 ### 测试latex公式
 $$ \left\\{\begin{matrix} 1 &2   & 3\\\\ 1 & 2 &3\end{matrix}\right. $$
