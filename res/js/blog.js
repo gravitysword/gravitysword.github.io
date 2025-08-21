@@ -623,11 +623,44 @@ const FileLinkHandler = {
           // 获取files.json配置
           const config = await backend();
           const host = config.host;
-          alert("为防止ddos攻击，请耐心等待5秒");
-          location.href = `${host}/file_url/${fileId}`;
+          const downloadUrl = `${host}/file_url/${fileId}`;
+          
+          // 显示下载提醒模态窗
+          const downloadModal = document.getElementById('downloadModal');
+          const confirmDownloadBtn = document.getElementById('confirmDownload');
+          
+          // 设置模态窗为flex显示以居中内容
+          downloadModal.style.display = 'flex';
+          // 添加active类以触发动画
+          setTimeout(() => {
+            downloadModal.classList.add('active');
+          }, 10);
+          
+          // 确认按钮点击事件
+          const handleConfirmDownload = function() {
+            // 移除事件监听以防止多次绑定
+            confirmDownloadBtn.removeEventListener('click', handleConfirmDownload);
+            
+            // 添加关闭动画
+            downloadModal.classList.remove('active');
+            
+            // 隐藏模态窗后跳转
+            setTimeout(() => {
+              downloadModal.style.display = 'none';
+              // 跳转到下载链接
+              location.href = downloadUrl;
+            }, 300);
+          };
+          
+          // 绑定点击事件
+          confirmDownloadBtn.addEventListener('click', handleConfirmDownload);
+          
         } catch (error) {
-          // 出错时移除提示框并显示错误
+          // 出错时隐藏模态窗并显示错误
           console.error('Error processing file link:', error);
+          const downloadModal = document.getElementById('downloadModal');
+          downloadModal.style.display = 'none';
+          downloadModal.classList.remove('active');
           alert('处理文件链接时出错，请检查控制台获取更多信息。');
         }
       });

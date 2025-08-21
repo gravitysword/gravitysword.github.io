@@ -5,16 +5,34 @@
             "book_id": "1",
             "from": "计算机科学/人工智能/",
             "author": "中科院研究生教材系列",
-            "publisher": "机械工业出版社"
+            "publisher": "机械工业出版社",
+            "read_status" : "未读-无阅读计划"
         },
         {
-            "name": "x1",
+            "name": "阿里天池大赛赛题解析-机器学习篇",
             "book_id": "2",
+            "from": "计算机科学/人工智能/",
+            "author": "天池平台",
+            "publisher": "电子工业出版社",
+            "read_status" : "未读-无阅读计划"
+        },
+        {
+            "name": "阿里天池大赛赛题解析-深度学习篇",
+            "book_id": "3",
+            "from": "计算机科学/人工智能/",
+            "author": "天池平台",
+            "publisher": "电子工业出版社",
+            "read_status" : "未读-无阅读计划"
+        },
+        {
+            "name": "test",
+            "book_id": "1",
             "from": "计算机科学/人工智能/jx/",
-            "author": "x1",
-            "publisher": "x1"
+            "author": "test1",
+            "publisher": "test1",
+            "read_status" : "在读"
         }
-        
+
     ],
     "files":{
         "1" : {

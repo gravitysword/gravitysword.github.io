@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人电子书库 | 云端书架</title>
+    <title>个人书架 | 云端书架</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/res/css/books.css">
 
@@ -13,6 +14,7 @@
 
 
 </head>
+
 <body>
     <div class="navigation">
     </div>
@@ -20,7 +22,7 @@
         <header>
             <div class="logo">
                 <i class="fas fa-book-open"></i>
-                <h1>个人电子书库</h1>
+                <h1>个人书架</h1>
             </div>
             <div class="header-controls">
                 <div class="view-toggle">
@@ -33,22 +35,40 @@
                 </div>
             </div>
         </header>
-        
+
         <div class="search-bar">
             <input type="text" placeholder="搜索书名、作者或出版社...">
             <button><i class="fas fa-search"></i></button>
         </div>
-        
+
         <div class="bookshelf" id="bookshelf">
             <!-- 书籍将在这里动态加载 -->
         </div>
-        
+
         <footer>
             <p>个人电子书库 &copy; 2025 </p>
             <p>所有书籍源自网络，如有侵权，联系必删</p>
         </footer>
     </div>
 
+    <!-- 下载提醒模态窗 -->
+    <div id="downloadModal" class="download-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                </div>
+                <h3>安全提醒</h3>
+            </div>
+            <p>为保护服务器安全，每个下载请求需等待10秒。同时有多个下载时，按队列顺序处理，请耐心等待。</p>
+            <p style="font-size: 0.9em; color: #888; margin-top: 10px;">点击"我已知晓"后将跳转到下载页面</p>
+            <button id="confirmDownload" class="modal-button">我已知晓</button>
+        </div>
+    </div>
+
     <script src="/res/js/books.js" type="module"></script>
 </body>
+
 </html>

@@ -39,19 +39,29 @@ def list_files(directory: str) -> List[str]:
     return file_paths
 
 def sort_files_by_structure(file_paths: List[str]) -> List[str]:
-    """按目录结构和文件名排序文件"""
+    """按目录结构和文件名排序文件（时间倒序，最近发布的优先）"""
     def get_sort_key(path):
         parts = path.replace("\\", "/").split("/")
-        # 根目录文件排最后
+        filename = parts[-1] if parts else ""
+        
+        # test.md 和 aboutsite.md 始终排在末尾（使用最高优先级值）
+        if filename == "aboutsite.md":
+            return (9999, 1, filename)
+        if filename == "test.md":
+            return (9999, 2, filename)
+        
+        # 根目录文件排最后（仅次于特殊文件）
         if len(parts) == 1:
-            return (9999, 9999, parts[0])
+            return (9998, 0, parts[0])
         
         try:
             year = int(parts[-2])
             num = int(parts[-1].split(".")[0])
-            return (year, num, "/".join(parts[:-1]))
+            # 使用负值实现倒序排序（最近的年份和序号优先）
+            # 年份越大越优先，序号越大越优先
+            return (-year, -num, "/".join(parts[:-1]))
         except (ValueError, IndexError):
-            return (9998, 9999, path)
+            return (9997, 0, path)
     
     return sorted(file_paths, key=get_sort_key)
 

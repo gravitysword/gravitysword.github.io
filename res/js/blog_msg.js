@@ -10,8 +10,7 @@ export async function BLOG_getBlogItems() {
             j.id = i
             blogsData.push(j)
         }
-        // 按日期降序排序，最新的文章在前
-        blogsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // 直接使用blogs.json中的顺序，不进行排序
         return blogsData
     } catch (error) {
         console.error('Error fetching blogs.json:', error);
@@ -48,8 +47,7 @@ export async function BLOG_getKnowledgeItems() {
             j.id = i
             blogsData.push(j)
         }
-        // 按日期降序排序，最新的文章在前
-        blogsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // 直接使用blogs.json中的顺序，不进行排序
         return blogsData
     } catch (error) {
         console.error('Error fetching blogs.json:', error);
@@ -61,13 +59,15 @@ export async function BLOG_getKnowledgeItems() {
 export async function backend() {
     try {
         const response = await fetch("/config/backend.json");
-        const { test_host, work_host } = await response.json();
+        const { test_host, work_host ,env} = await response.json();
         
         const config = {
             test_host,
             work_host,
-            host: window.location.hostname === "127.0.0.1" ? test_host : work_host
+            host: window.location.hostname === "127.0.0.1" ? (env === "web" ? work_host: test_host ) : work_host
+
         };
+
         
         return config;
     } catch (error) {

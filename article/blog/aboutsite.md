@@ -13,7 +13,6 @@
 ## 联系作者
 
 - 邮箱：boatdrift@qq.com
-- B站：<a href="https://space.bilibili.com/3546762656614479">瀚海方心</a>
 - github：<a href="https://github.com/gravitysword">gravitysword</a>
 
 ## 个人简介

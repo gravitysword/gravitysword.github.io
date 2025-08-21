@@ -118,16 +118,6 @@ a {
     padding: 20px; 
 }
 
- .sidebar-introduce,
-.sidebar-notice {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    border: 1px solid #e9ecef;
-    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
 
 .sidebar-notice h3,
 .sidebar-introduce h3 {
@@ -331,7 +321,6 @@ a {
     flex-direction: column;
     align-items: stretch;
     transition: all 0.3s ease-in-out; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
     background-color: #fff;
     cursor: pointer;
     position: relative;
@@ -340,8 +329,6 @@ a {
 }
 
 .content-container .blog-list li:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     border-left: 3px solid #000;
 }
 
@@ -838,40 +825,13 @@ a {
   }
 }
 
-/* 优化侧边栏动画 */
-.sidebar > div {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
-}
 
 .sidebar > div:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* 增强博客卡片交互 */
-.blog-list li {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
 
-.blog-list li:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-}
-
-.blog-list li::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 10px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.blog-list li:hover::after {
-  opacity: 1;
-}
 
 /* 新增关键帧动画 */
 @keyframes signAppear {

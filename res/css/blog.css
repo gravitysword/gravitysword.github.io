@@ -285,6 +285,90 @@ img[src$=".svg"]:not(.modal-image) {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
+/* 下载提醒模态窗 */
+.download-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.download-modal.active {
+    opacity: 1;
+}
+
+.download-modal .modal-content {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.download-modal.active .modal-content {
+    transform: scale(1);
+}
+
+.download-modal .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.download-modal .modal-icon {
+    color: #4a90e2;
+}
+
+.download-modal h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.3em;
+}
+
+.download-modal p {
+    color: #ccc;
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.download-modal .modal-button {
+    background: #111;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    min-width: 120px;
+}
+
+.download-modal .modal-button:hover {
+    transform: translateY(-2px);
+}
+
+.download-modal .modal-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(74, 144, 226, 0.3);
+}
+
 /* 10. 其他元素样式 - files和iframe样式已迁移到md.css */
 
 /* 11. 响应式设计 */

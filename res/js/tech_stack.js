@@ -5,52 +5,8 @@ let knowledgeList = [];
 let currentPage = 1;
 let itemsPerPage = 5;
 let totalPages = 1;
-let currentTag = '全部';
 
-// 标签切换功能
-async function initializeTags() {
-    try {
-        // 从知识库文章中动态提取所有标签
-        const allTags = new Set();
-        knowledgeList.forEach(item => {
-            if (item.tag && Array.isArray(item.tag)) {
-                item.tag.forEach(t => allTags.add(t));
-            }
-        });
-        
-        // 将标签数组按字母顺序排序
-        const sortedTags = Array.from(allTags).sort();
-        const tags = ["全部", ...sortedTags];
-        
-        // 更新标签容器
-        const tagsContainer = document.querySelector('.tags-container');
-        tagsContainer.innerHTML = tags.map(tag => 
-            `<span class="tag ${tag === '全部' ? 'active' : ''}">${tag}</span>`
-        ).join('');
-        
-        // 重新绑定标签点击事件
-        const categoryTags = document.querySelectorAll('.tags-container .tag');
-        categoryTags.forEach(tag => {
-            tag.addEventListener('click', function() {
-                // 移除所有分类标签的active类
-                categoryTags.forEach(t => t.classList.remove('active'));
-                
-                // 为当前点击的标签添加active类
-                this.classList.add('active');
-                
-                // 清空搜索框
-                document.querySelector('.search-input').value = '';
-                
-                // 更新当前标签并重新显示文章
-                currentTag = this.textContent;
-                console.log('选中分类标签:', currentTag);
-                displayKnowledgeItems();
-            });
-        });
-    } catch (error) {
-        console.error('Error loading tags:', error);
-    }
-}
+
 
 document.addEventListener('DOMContentLoaded', async function() {
     
@@ -70,43 +26,183 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
     
-    // 执行搜索
+    // 实时搜索 - 输入时延迟触发
+    let searchTimeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            performSearch();
+        }, 300); // 300ms延迟，避免频繁搜索
+    });
+    
+    // 增强版搜索功能 - 支持多维度检索和多关键词搜索
     function performSearch() {
+        const searchInput = document.querySelector('.search-input');
         const searchTerm = searchInput.value.trim().toLowerCase();
+        
         if (searchTerm === '') {
-            alert('请输入搜索内容');
+            // 空搜索时显示所有文章
+            currentPage = 1;
+            displayKnowledgeItems();
             return;
         }
         
         console.log('搜索关键词:', searchTerm);
         
-        // 获取所有博客项
-        const blogItems = document.querySelectorAll('.blog-list li');
-        let foundCount = 0;
+        // 分割多个关键词（支持空格分隔）
+        const keywords = searchTerm.split(/\s+/).filter(keyword => keyword.length > 0);
         
-        // 遍历博客项进行搜索匹配
-        blogItems.forEach(item => {
-            const title = item.querySelector('.blog-title').textContent.toLowerCase();
-            const summary = item.querySelector('.blog-summary').textContent.toLowerCase();
-            const tag = item.querySelector('.blog-tag').textContent.toLowerCase();
+        if (keywords.length === 0) {
+            currentPage = 1;
+            displayKnowledgeItems();
+            return;
+        }
+        
+        // 多维度搜索过滤（包含文章内容）
+        const filteredList = knowledgeList.filter(item => {
+            // 搜索维度：标题、副标题、描述、标签、日期、完整内容
+            const searchableFields = [
+                item.title?.toLowerCase() || '',
+                item.subtitle?.toLowerCase() || '',
+                item.description?.toLowerCase() || '',
+                item.date?.toLowerCase() || '',
+                item.fullContent || '', // 添加完整内容搜索
+                ...(item.tag?.map(tag => tag.toLowerCase()) || [])
+            ];
             
-            // 如果标题、摘要或标签中包含搜索词，则显示该项
-            if (title.includes(searchTerm) || summary.includes(searchTerm) || tag.includes(searchTerm)) {
-                item.style.display = '';
-                foundCount++;
-            } else {
-                item.style.display = 'none';
+            // 将所有可搜索字段合并为一个字符串
+            const combinedText = searchableFields.join(' ');
+            
+            // 检查是否包含所有关键词（AND逻辑）
+            return keywords.every(keyword => {
+                // 支持模糊匹配和部分匹配
+                return combinedText.includes(keyword) || 
+                       // 日期格式支持：2024-01-01, 2024年1月, 2024/01/01
+                       item.date?.includes(keyword) ||
+                       // 标签精确匹配
+                       item.tag?.some(tag => tag.toLowerCase().includes(keyword));
+            });
+        });
+        
+        // 显示搜索结果统计
+        displaySearchResults(filteredList, keywords);
+    }
+    
+    // 显示搜索结果和统计信息
+    function displaySearchResults(filteredList, keywords) {
+        if (filteredList.length === 0) {
+            // 显示友好的无结果提示
+            displayNoResultsMessage(keywords);
+            return;
+        }
+        
+        // 显示结果统计
+        const searchStats = document.querySelector('.search-stats');
+        if (!searchStats) {
+            // 创建搜索结果统计元素
+            const searchSection = document.querySelector('.search-section');
+            const statsDiv = document.createElement('div');
+            statsDiv.className = 'search-stats';
+            statsDiv.innerHTML = `
+                <div class="search-result-info">
+                    <span class="result-count">找到 ${filteredList.length} 篇相关文章</span>
+                    <span class="search-keywords">关键词：${keywords.join('、')}</span>
+                    <button class="clear-search">清除搜索</button>
+                </div>
+            `;
+            searchSection.appendChild(statsDiv);
+            
+            // 绑定清除搜索事件
+            statsDiv.querySelector('.clear-search').addEventListener('click', () => {
+                document.querySelector('.search-input').value = '';
+                currentPage = 1;
+                displayKnowledgeItems();
+                statsDiv.remove();
+            });
+        } else {
+            // 更新统计信息
+            searchStats.querySelector('.result-count').textContent = `找到 ${filteredList.length} 篇相关文章`;
+            searchStats.querySelector('.search-keywords').textContent = `关键词：${keywords.join('、')}`;
+        }
+        
+        // 显示过滤后的文章列表
+        currentPage = 1;
+        const listElement = document.querySelector('.blog-list ul');
+        listElement.innerHTML = filteredList.map(item => `
+            <li>
+                <div class="geometric-decoration"></div>
+                <div class="right-line"></div>
+                <div class="bottom-line"></div>
+                <div class="right-line"></div>
+                <div class="bottom-line"></div>
+                <div class="right-line"></div>
+                <div class="bottom-line"></div>
+                <div class="card-header">
+                    <span class="blog-title">${highlightKeywords(item.subtitle, keywords)}</span>
+                    <span class="blog-subtitle">${highlightKeywords(item.title, keywords)}</span>
+                </div>
+                <div class="blog-introduce">
+                    <img class="calendar" src="/res/media/svg/sys/calendar.svg" alt="logo">
+                    <span class="blog-date">${highlightKeywords(item.date, keywords)}</span>
+                    <div class="blog-tags-container">
+                        ${item.tag.map(t => `<span class="blog-tag">${highlightKeywords(t, keywords)}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="blog-summary">${highlightKeywords(item.description, keywords)}</div>
+            </li>
+        `).join('');
+        
+        totalPages = Math.ceil(filteredList.length / itemsPerPage);
+        updatePagination();
+        bindKnowledgeItemEvents();
+    }
+    
+    // 显示无结果提示
+    function displayNoResultsMessage(keywords) {
+        const listElement = document.querySelector('.blog-list ul');
+        listElement.innerHTML = `
+            <li class="no-results">
+                <div class="no-results-content">
+                    <h3>未找到相关文章</h3>
+                    <p>抱歉，没有找到与 "${keywords.join(' ')}" 相关的文章</p>
+                    <button class="clear-search-btn">清除搜索</button>
+                </div>
+            </li>
+        `;
+        
+        // 绑定清除搜索事件
+        listElement.querySelector('.clear-search-btn').addEventListener('click', () => {
+            document.querySelector('.search-input').value = '';
+            currentPage = 1;
+            displayKnowledgeItems();
+        });
+        
+        // 隐藏分页和搜索结果信息
+        document.querySelector('.pagination').innerHTML = '';
+        const searchResultInfo = document.querySelector('.search-result-info');
+        if (searchResultInfo) {
+            searchResultInfo.remove();
+        }
+    }
+    
+    // 高亮搜索关键词
+    function highlightKeywords(text, keywords) {
+        if (!text || keywords.length === 0) return text;
+        
+        let highlightedText = text;
+        keywords.forEach(keyword => {
+            if (keyword.length > 0) {
+                const regex = new RegExp(`(${escapeRegExp(keyword)})`, 'gi');
+                highlightedText = highlightedText.replace(regex, '<mark>$1</mark>');
             }
         });
         
-        // 显示搜索结果
-        if (foundCount === 0) {
-            alert('没有找到匹配的内容');
-            // 恢复显示所有博客项
-            blogItems.forEach(item => {
-                item.style.display = '';
-            });
-        }
+        return highlightedText;
+    }
+    
+    // 转义正则表达式特殊字符
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 });
     
@@ -126,13 +222,59 @@ document.addEventListener('DOMContentLoaded', async function() {
     // 加载知识库数据
     async function loadKnowledgeData() {
         try {
+            // 显示加载指示器
+            showLoadingIndicator();
+            
             knowledgeList = await BLOG_getKnowledgeItems();
+            
+            // 为每篇文章加载完整内容，用于内容搜索
+            console.log('开始加载文章内容...');
+            for (let item of knowledgeList) {
+                try {
+                    const response = await fetch(item.id);
+                    const content = await response.text();
+                    // 提取文章内容部分（移除元数据）
+                    const contentMatch = content.match(/<div style="display:none;" class="author">[\s\S]*?<\/div>([\s\S]*)/i);
+                    if (contentMatch && contentMatch[1]) {
+                        item.fullContent = contentMatch[1].toLowerCase();
+                    } else {
+                        item.fullContent = item.description.toLowerCase(); // 回退到描述
+                    }
+                } catch (error) {
+                    console.error(`加载文章 ${item.id} 内容失败:`, error);
+                    item.fullContent = item.description.toLowerCase(); // 回退到描述
+                }
+            }
+            console.log('文章内容加载完成');
+            
             totalPages = Math.ceil(knowledgeList.length / itemsPerPage);
-            await initializeTags();
             displayKnowledgeItems();
+            
+            // 隐藏加载指示器
+            hideLoadingIndicator();
         } catch (error) {
             console.error('Error loading knowledge data:', error);
+            hideLoadingIndicator();
         }
+    }
+    
+    // 显示加载指示器
+    function showLoadingIndicator() {
+        const listElement = document.querySelector('.blog-list ul');
+        listElement.innerHTML = `
+            <li class="loading-content">
+                <div class="loading-spinner"></div>
+                <p>正在加载文章内容...</p>
+            </li>
+        `;
+        
+        // 隐藏分页
+        document.querySelector('.pagination').innerHTML = '';
+    }
+    
+    // 隐藏加载指示器
+    function hideLoadingIndicator() {
+        // 加载指示器会在displayKnowledgeItems中被替换
     }
 
     // 显示知识库文章
@@ -140,14 +282,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         
-        // 根据当前标签筛选文章
-        const filteredList = currentTag === '全部' 
-            ? knowledgeList 
-            : knowledgeList.filter(item => item.tag.includes(currentTag));
-        
         const listElement = document.querySelector('.blog-list ul');
-        listElement.innerHTML = filteredList.slice(startIndex, endIndex).map(item => `
+        listElement.innerHTML = knowledgeList.slice(startIndex, endIndex).map(item => `
             <li>
+                <div class="geometric-decoration"></div>
+                <div class="right-line"></div>
+                <div class="bottom-line"></div>
                 <div class="card-header">
                     <span class="blog-title">${item.subtitle}</span>
                     <span class="blog-subtitle">${item.title}</span>
@@ -156,63 +296,20 @@ document.addEventListener('DOMContentLoaded', async function() {
                     <img class="calendar" src="/res/media/svg/sys/calendar.svg" alt="logo">
                     <span class="blog-date">${item.date}</span>
                     <div class="blog-tags-container">
-                        ${item.tag.map(t => `<span class="blog-tag">#${t}</span>`).join('')}
+                        ${item.tag.map(t => `<span class="blog-tag">${t}</span>`).join('')}
                     </div>
                 </div>
                 <div class="blog-summary">${item.description}</div>
             </li>
         `).join('');
         
-        totalPages = Math.ceil(filteredList.length / itemsPerPage);
+        totalPages = Math.ceil(knowledgeList.length / itemsPerPage);
         updatePagination();
         bindKnowledgeItemEvents();
     }
 
     // 初始化加载
     await loadKnowledgeData();
-    
-    // 搜索功能实现
-    function performSearch() {
-        const searchTerm = searchInput.value.trim().toLowerCase();
-        if (searchTerm === '') {
-            alert('请输入搜索内容');
-            return;
-        }
-        
-        const filteredList = knowledgeList.filter(item =>
-            item.title.toLowerCase().includes(searchTerm) ||
-            item.subtitle.toLowerCase().includes(searchTerm) ||
-            item.description.toLowerCase().includes(searchTerm) ||
-            item.tag.some(tag => tag.toLowerCase().includes(searchTerm))
-        );
-        
-        if (filteredList.length === 0) {
-            alert('没有找到匹配的内容');
-            searchInput.value = '';
-            displayKnowledgeItems();
-            return;
-        }
-        
-        currentPage = 1;
-        const listElement = document.querySelector('.blog-list ul');
-        listElement.innerHTML = filteredList.map(item => `
-            <li>
-                <span class="blog-title">${item.subtitle}</span>
-                <span class="blog-subtitle">${item.title}</span>
-                <span class="blog-introduce">
-                    <img class="calendar" src="./res/media/svg/sys/calendar.svg" alt="logo">
-                    <span class="blog-date">${item.date}</span>
-                    <div class="blog-tags-container">
-                        ${item.tag.map(t => `<span class="blog-tag">#${t}</span>`).join('')}
-                    </div>
-                </span>
-                <span class="blog-summary">${item.description}</span>
-            </li>
-        `).join('');
-        
-        totalPages = Math.ceil(filteredList.length / itemsPerPage);
-        updatePagination();
-    }
     
     // 更新分页状态
     function updatePagination() {

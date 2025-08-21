@@ -36,6 +36,7 @@ function renderBooks(books) {
     }
     
     books.forEach(book => {
+        const statusInfo = getStatusInfo(book.read_status);
         const bookElement = document.createElement('div');
         bookElement.className = 'book-card';
         bookElement.innerHTML = `
@@ -43,6 +44,10 @@ function renderBooks(books) {
         <div class="book-cover-img">
             <i class="fas fa-book"></i>
         </div>
+    </div>
+    <div class="reading-status ${statusInfo.className}">
+        ${statusInfo.text}
+        ${statusInfo.tooltip ? `<span class="reading-plan-tooltip">${statusInfo.tooltip}</span>` : ''}
     </div>
     <div class="book-info">
         <h3 class="book-title">${book.name}</h3>
@@ -54,53 +59,83 @@ function renderBooks(books) {
         bookElement.style.cursor = 'pointer'; // 添加指针样式，提示用户可点击
 
         bookElement.addEventListener('click', async function() {
-        let bookId = book.book_id
+            let bookId = book.book_id;
 
-        try {
-            // 获取files.json配置
-            const config = await backend();
-            const host = config.host;
-            alert("为防止ddos攻击，请耐心等待5秒")
-            location.href= `${host}/book_url/${bookId}`
-            
-        } catch (error) {
-            // 出错时移除提示框并显示错误
-            console.error('Error processing file link:', error);
-            alert('处理文件链接时出错，请检查控制台获取更多信息。');
-        }
-    });
+            try {
+                // 获取files.json配置
+                const config = await backend();
+                const host = config.host;
+                const downloadUrl = `${host}/book_url/${bookId}`;
+                
+                // 显示下载提醒模态窗
+                const downloadModal = document.getElementById('downloadModal');
+                const confirmDownloadBtn = document.getElementById('confirmDownload');
+                
+                // 设置模态窗为flex显示以居中内容
+                downloadModal.style.display = 'flex';
+                // 添加active类以触发动画
+                setTimeout(() => {
+                    downloadModal.classList.add('active');
+                }, 10);
+                
+                // 确认按钮点击事件
+                const handleConfirmDownload = function() {
+                    // 移除事件监听以防止多次绑定
+                    confirmDownloadBtn.removeEventListener('click', handleConfirmDownload);
+                    
+                    // 添加关闭动画
+                    downloadModal.classList.remove('active');
+                    
+                    // 隐藏模态窗后跳转
+                    setTimeout(() => {
+                        downloadModal.style.display = 'none';
+                        // 跳转到下载链接
+                        location.href = downloadUrl;
+                    }, 300);
+                };
+                
+                // 绑定点击事件
+                confirmDownloadBtn.addEventListener('click', handleConfirmDownload);
+                
+            } catch (error) {
+                // 出错时隐藏模态窗并显示错误
+                console.error('Error processing file link:', error);
+                alert('处理文件链接时出错，请检查控制台获取更多信息。');
+            }
+        });
 
         bookshelf.appendChild(bookElement);
     });
-    
-    // 添加书籍交互效果
-    document.querySelectorAll('.book').forEach(book => {
-        book.addEventListener('click', function(e) {
-            // 避免收藏按钮触发翻转
-            if (!e.target.closest('.book-favorite')) {
-                this.querySelector('.book-inner').classList.toggle('flipped');
-            }
-        });
-    });
-    
-    // 添加收藏功能
-    document.querySelectorAll('.book-favorite').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            this.classList.toggle('active');
-            const bookId = this.closest('.book').getAttribute('data-id');
-            // 在实际应用中，这里会更新书籍的收藏状态
-        });
-    });
 }
 
-// 获取状态文本
-function getStatusText(status) {
-    switch(status) {
-        case 'unread': return '未读';
-        case 'reading': return '阅读中';
-        case 'finished': return '已读完';
-        default: return '';
+// 获取状态文本和类名
+function getStatusInfo(status) {
+    if (status === '已读') {
+        return {
+            text: '已读',
+            className: 'status-read',
+            tooltip: ''
+        };
+    } else if (status === '在读') {
+        return {
+            text: '在读',
+            className: 'status-reading',
+            tooltip: ''
+        };
+    } else if (status.includes('未读')) {
+        // 提取'-'后的内容作为tooltip
+        const tooltip = status.includes('-') ? status.split('-')[1] : status;
+        return {
+            text: '未读',
+            className: 'status-unread',
+            tooltip: tooltip
+        };
+    } else {
+        return {
+            text: '',
+            className: '',
+            tooltip: ''
+        };
     }
 }
 
@@ -228,6 +263,10 @@ function renderFolderView(books) {
                     <div class="folder-books">
                         ${item.books.map(book => `
                             <div class="folder-book" data-id="${book.id}">
+                                <div class="reading-status ${getStatusInfo(book.read_status).className}">
+                                    ${getStatusInfo(book.read_status).text}
+                                    ${getStatusInfo(book.read_status).tooltip ? `<span class="reading-plan-tooltip">${getStatusInfo(book.read_status).tooltip}</span>` : ''}
+                                </div>
                                 <div class="book-icon">
                                     <i class="fas fa-book"></i>
                                 </div>
@@ -255,6 +294,10 @@ function renderFolderView(books) {
             <div class="folder-books">
                 ${currentFolderBooks.map(book => `
                     <div class="folder-book" data-id="${book.id}">
+                        <div class="reading-status ${getStatusInfo(book.read_status).className}">
+                            ${getStatusInfo(book.read_status).text}
+                            ${getStatusInfo(book.read_status).tooltip ? `<span class="reading-plan-tooltip">${getStatusInfo(book.read_status).tooltip}</span>` : ''}
+                        </div>
                         <div class="book-icon">
                             <i class="fas fa-book"></i>
                         </div>
@@ -287,8 +330,38 @@ function renderFolderView(books) {
                 // 获取files.json配置
                 const config = await backend();
                 const host = config.host;
-                alert("为防止ddos攻击，请耐心等待5秒")
-                location.href = `${host}/book_url/${bookId}`;
+                const downloadUrl = `${host}/book_url/${bookId}`;
+                
+                // 显示下载提醒模态窗
+                const downloadModal = document.getElementById('downloadModal');
+                const confirmDownloadBtn = document.getElementById('confirmDownload');
+                
+                // 设置模态窗为flex显示以居中内容
+                downloadModal.style.display = 'flex';
+                // 添加active类以触发动画
+                setTimeout(() => {
+                    downloadModal.classList.add('active');
+                }, 10);
+                
+                // 确认按钮点击事件
+                const handleConfirmDownload = function() {
+                    // 移除事件监听以防止多次绑定
+                    confirmDownloadBtn.removeEventListener('click', handleConfirmDownload);
+                    
+                    // 添加关闭动画
+                    downloadModal.classList.remove('active');
+                    
+                    // 隐藏模态窗后跳转
+                    setTimeout(() => {
+                        downloadModal.style.display = 'none';
+                        // 跳转到下载链接
+                        location.href = downloadUrl;
+                    }, 300);
+                };
+                
+                // 绑定点击事件
+                confirmDownloadBtn.addEventListener('click', handleConfirmDownload);
+                
             } catch (error) {
                 console.error('Error processing file link:', error);
                 alert('处理文件链接时出错，请检查控制台获取更多信息。');
