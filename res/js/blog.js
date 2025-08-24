@@ -1,4 +1,5 @@
-import { BLOG_getContent,backend } from '/res/js/blog_msg.js';
+import { BLOG_getContent,backend,CORS_file_config } from '/res/js/blog_msg.js';
+
 
 // 配置marked解析器选项
 const markedOptions = {
@@ -251,6 +252,38 @@ const ImageHandler = {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeModal();
+      }
+    });
+  },
+
+  // 识别图片alt属性并添加注释
+  addImageCaptions() {
+    const content = document.getElementById('markdown-content');
+    if (!content) return;
+
+    // 查找所有图片元素（排除天气图标）
+    const images = content.querySelectorAll('img:not(.weather)');
+    
+    images.forEach(img => {
+      const altText = img.getAttribute('alt');
+      
+      // 如果有alt属性且不为空，添加注释
+      if (altText && altText.trim()) {
+        // 创建注释容器
+        const caption = document.createElement('div');
+        caption.className = 'image-caption';
+        caption.textContent = altText.trim();
+        
+        // 将图片包装在容器中
+        const wrapper = document.createElement('div');
+        wrapper.className = 'image-wrapper';
+        
+        // 如果图片已经有父元素，将wrapper插入到相同位置
+        if (img.parentNode) {
+          img.parentNode.insertBefore(wrapper, img);
+          wrapper.appendChild(img);
+          wrapper.appendChild(caption);
+        }
       }
     });
   }
@@ -615,8 +648,7 @@ const FileLinkHandler = {
           return;
         }
 
-        let response = await fetch("/config/files.json");
-        let files = await response.json(); 
+        let files = await CORS_file_config();
         fileId = files["files"][String(fileId)]["file_id"];
 
         try {
@@ -761,6 +793,9 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // 为文章段落添加缩进
       ParagraphIndentHandler.addParagraphIndent();
+      
+      // 识别图片alt属性并添加注释
+      ImageHandler.addImageCaptions();
       
       // 添加文件链接跳转功能（在所有DOM操作完成后执行）
       setTimeout(() => {

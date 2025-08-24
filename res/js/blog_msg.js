@@ -77,3 +77,10 @@ export async function backend() {
 }
 
 
+export async function CORS_file_config() {
+    // 目标文件URL
+    const targetUrl = "https://gitee.com/gravitysword/blog/raw/master/files.json";
+    const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`);
+    const data = await response.json();
+    return data;
+}

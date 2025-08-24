@@ -1,7 +1,4 @@
 
-
-/* blog.css - 博客页面整体布局样式 */
-
 /* 1. 页面基础样式 */
 body {
     margin: 0;
@@ -261,7 +258,6 @@ img[src$=".svg"]:not(.modal-image) {
 /* 修复模态窗图片反色问题 */
 .modal-image {
     filter: none !important;
-    border-radius: 8px;
 }
 
 .modal-close {
@@ -369,7 +365,6 @@ img[src$=".svg"]:not(.modal-image) {
     box-shadow: 0 2px 10px rgba(74, 144, 226, 0.3);
 }
 
-/* 10. 其他元素样式 - files和iframe样式已迁移到md.css */
 
 /* 11. 响应式设计 */
 @media screen and (max-width: 768px) {
@@ -396,6 +391,60 @@ img[src$=".svg"]:not(.modal-image) {
     .section-divider {
         max-width: 120px;
         margin-bottom: 30px;
+    }
+}
+
+
+
+   
+/* 图片注释样式 */
+.image-wrapper {
+    display: inline-block;
+    margin: 20px 0;
+    text-align: center;
+    max-width: 100%;
+}
+
+.image-wrapper img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-wrapper img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.image-caption {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #ccc;
+    font-style: italic;
+    text-align: center;
+    line-height: 1.4;
+    padding: 0 10px;
+}
+
+/* 响应式图片注释 */
+@media screen and (max-width: 768px) {
+    .image-caption {
+        font-size: 13px;
+        margin-top: 6px;
+    }
+    
+    .image-wrapper {
+        margin: 15px 0;
+    }
+}
+
+/* 深色模式下的图片注释 */
+@media (prefers-color-scheme: dark) {
+    .image-caption {
+        color: #aaa;
     }
 }
 

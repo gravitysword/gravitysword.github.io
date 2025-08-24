@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS 数据加载示例</title>
+</head>
+<body>
+    <p id="loading">loading</p>
+    <button onclick="loadData()">重新加载</button>
+
+    <script>
+        function loadData() {
+            const pElement = document.getElementById('loading');
+            pElement.textContent = '加载中...';
+            pElement.style.color = 'black';
+
+            // 使用代理服务器或者本地文件
+            const urls = [
+                'https://gitee.com/gravitysword/blog/raw/master/files.json',
+                'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://gitee.com/gravitysword/blog/raw/master/files.json'),
+                'https://cors-anywhere.herokuapp.com/https://gitee.com/gravitysword/blog/raw/master/files.json'
+            ];
+
+            // 尝试多个 URL
+            const tryNextUrl = (index) => {
+                if (index >= urls.length) {
+                    pElement.textContent = '所有加载方式都失败了';
+                    pElement.style.color = 'red';
+                    return;
+                }
+
+                const url = urls[index];
+                console.log(`尝试加载: ${url}`);
+
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        pElement.textContent = JSON.stringify(data, null, 2);
+                        pElement.style.whiteSpace = 'pre-wrap';
+                        pElement.style.fontFamily = 'monospace';
+                        pElement.style.fontSize = '12px';
+                        pElement.style.maxWidth = '100%';
+                        pElement.style.overflow = 'auto';
+                        pElement.style.color = 'green';
+                        console.log('成功加载数据');
+                    })
+                    .catch(error => {
+                        console.warn(`加载失败 (${url}):`, error.message);
+                        // 尝试下一个 URL
+                        tryNextUrl(index + 1);
+                    });
+            };
+
+            tryNextUrl(0);
+        }
+
+        // 页面加载时自动尝试加载
+        window.addEventListener('load', loadData);
+    </script>
+</body>
+</html>

@@ -121,6 +121,7 @@ body {
 
 
 
+
 .blog-list {
     margin: 40px 40px;
 }
@@ -611,4 +612,19 @@ mark {
     color: #6b7280;
     font-size: 1.1rem;
     margin: 0;
+}
+
+/* 移除搜索结果相关样式 */
+.search-stats,
+.search-result-info,
+.no-results,
+mark {
+    display: none !important;
+}
+
+/* 禁用搜索框交互样式 */
+.search-input:focus,
+.search-button:hover {
+    border-color: #ddd;
+    background-color: #f5f5f5;
 }
