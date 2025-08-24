@@ -78,9 +78,43 @@ export async function backend() {
 
 
 export async function CORS_file_config() {
-    // 目标文件URL
-    const targetUrl = "https://gitee.com/gravitysword/blog/raw/master/files.json";
-    const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`);
-    const data = await response.json();
-    return data;
+    // 使用Gitee API获取文件内容
+    // 注意：需要替换为有效的访问令牌
+    const OWNER = 'gravitysword';
+    const REPO = 'blog';
+    const PATH = 'files.json';
+    
+    const apiUrl = `https://gitee.com/api/v5/repos/${OWNER}/${REPO}/contents/${PATH}`;
+    
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Gitee API返回的文件内容是base64编码的，需要解码
+        if (data.content) {
+            // 解码base64内容
+            const decodedContent = atob(data.content);
+            // 确保以UTF-8格式处理解码后的内容
+            const utf8Content = new TextDecoder('utf-8').decode(
+                new Uint8Array([...decodedContent].map(char => char.charCodeAt(0)))
+            );
+            console.log(utf8Content);
+            return JSON.parse(utf8Content);
+        } else {
+            throw new Error('文件内容为空');
+        }
+    } catch (error) {
+        console.error('使用Gitee API获取文件失败:', error);
+        
+    }
 }
