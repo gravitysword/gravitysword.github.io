@@ -8,15 +8,18 @@
     <!-- 基础功能  -->
     <link rel="stylesheet" href="/res/css/md.css" >
     <link rel="stylesheet" href="/res/css/blog.css">
-    <link rel="stylesheet" href="/view/tags/footer.css">    
+      
+    <script src="/view/tags/footer.js"></script>
+
     <meta name="referrer" content="no-referrer" />
     <script src="/res/js/blog.js" type="module"></script>
-    <!-- toc,nav -->
+    <!-- toc,nav,footer -->
     <link rel="stylesheet" href="/res/css/toc.css">
     <link rel="stylesheet" href="/view/tags/nav.css">
+    <link rel="stylesheet" href="/view/tags/footer.css">  
     <script  src="/view/tags/nav.js" defer></script>
     <script src="/view/tags/toc.js"></script>
-
+    <script src="/view/tags/footer.js"></script>
 
     <!-- markdown -->
     <script src="/res/js/marked.js"></script>
@@ -91,24 +94,6 @@
 
     </div>
     <div id="footer"></div>
-    <script>
-        (async () => {
-            const response = await fetch('/view/tags/footer.html');
-            const data = await response.text();
-            document.getElementById('footer').innerHTML = data;
-        })();
-
-        // 使用更简洁的方式加载 prism.js
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                await import('/res/js/prism/prism.js');
-                console.log('Prism.js loaded successfully');
-            } catch (error) {
-                console.error('Failed to load Prism.js:', error);
-            }
-        }); 
-       
-    </script>
     
     <!-- 下载提醒模态窗 -->
     <div id="downloadModal" class="download-modal">

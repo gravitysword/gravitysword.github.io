@@ -508,6 +508,10 @@ body {
 	border: 1px solid #333;
 }
 
+.content pre:not(.code-collapsed) {
+	padding-bottom: 50px; /* 为底部折叠按钮留出空间 */
+}
+
 
 /* 复制按钮样式 */
 .copy-code-button {
@@ -549,6 +553,84 @@ body {
 	font-size: 11px;
 	font-family: 'SFMono-Regular', Consolas, monospace;
 	z-index: 10;
+}
+
+/* 代码折叠按钮样式 */
+.code-collapse-button {
+	position: absolute;
+	top: 10px;
+	right: 100px; /* 在复制按钮左侧 */
+	background: rgba(0, 0, 0, 0);
+	color: #eee;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	padding: 6px 12px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 12px;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	z-index: 10;
+	opacity: 0.8;
+	backdrop-filter: blur(5px);
+}
+
+.code-collapse-button:hover {
+	opacity: 1;
+	transform: translateY(-1px);
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+.code-collapse-button:active {
+	transform: translateY(0);
+}
+
+/* 底部折叠按钮样式 */
+.code-collapse-bottom-button {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	background: rgba(0, 0, 0, 0.8);
+	color: #eee;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	padding: 6px 12px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 12px;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	z-index: 10;
+	opacity: 0.8;
+	backdrop-filter: blur(5px);
+}
+
+.code-collapse-bottom-button:hover {
+	opacity: 1;
+	transform: translateY(-1px);
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+.code-collapse-bottom-button:active {
+	transform: translateY(0);
+}
+
+/* 折叠状态下的代码块样式 */
+.content pre.code-collapsed {
+	max-height: 150px;
+	overflow: hidden;
+	position: relative;
+}
+
+.content pre.code-collapsed::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 30px;
+	background: linear-gradient(transparent, #1a1a1a);
+	pointer-events: none;
 }
 
 /* 文件链接样式 - 从blog.css迁移 */

@@ -118,12 +118,15 @@ function createDailyItem(item, index) {
         videosContainer.className = 'videos-grid mb-4';
         
         item.videos.forEach(videoUrl => {
-            const iframe = document.createElement('iframe');
-            iframe.src = '/res/tags/video.html?url='+videoUrl;
-            iframe.className = 'timeline-video';
-            iframe.setAttribute('frameborder', '0');
+            const videoElement = document.createElement('video');
+            videoElement.src = videoUrl;
+            videoElement.controls = true;
+            videoElement.preload = 'metadata';
+            videoElement.className = 'timeline-video';
+            videoElement.style.maxWidth = '100%';
+            videoElement.style.height = 'auto';
             
-            videosContainer.appendChild(iframe);
+            videosContainer.appendChild(videoElement);
         });
         
         content.appendChild(videosContainer);

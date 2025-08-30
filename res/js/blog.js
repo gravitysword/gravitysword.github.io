@@ -92,7 +92,7 @@ const BlogInfoHandler = {
 
 // 代码块处理模块
 const CodeBlockHandler = {
-    // 为代码块添加语言标签和复制按钮
+    // 为代码块添加语言标签、复制按钮和折叠功能
     addCodeBlockFeatures() {
         document.querySelectorAll('pre code').forEach(codeBlock => {
             const pre = codeBlock.parentElement;
@@ -103,6 +103,9 @@ const CodeBlockHandler = {
             
             // 添加复制按钮
             this.addCopyButton(codeBlock, pre);
+            
+            // 添加折叠功能
+            this.addCodeCollapse(codeBlock, pre);
         });
     },
     
@@ -170,6 +173,93 @@ const CodeBlockHandler = {
             });
         });
         pre.appendChild(copyButton);
+    },
+    
+    // 添加代码折叠功能
+    addCodeCollapse(codeBlock, pre) {
+        const codeContent = codeBlock.textContent;
+        const codeLines = codeContent.split('\n');
+        
+        // 创建顶部折叠控制器
+        const topCollapseButton = document.createElement('button');
+        topCollapseButton.className = 'code-collapse-button';
+        topCollapseButton.textContent = '展开';
+        topCollapseButton.setAttribute('aria-expanded', 'false');
+        
+        // 创建底部折叠按钮（在展开状态时显示）
+        const bottomCollapseButton = document.createElement('button');
+        bottomCollapseButton.className = 'code-collapse-bottom-button';
+        bottomCollapseButton.textContent = '折叠';
+        bottomCollapseButton.style.display = 'none'; // 初始隐藏
+        
+        // 保存原始内容和前三行内容
+        const originalContent = codeContent;
+        const previewLines = codeLines.slice(0, 3);
+        const previewContent = previewLines.join('\n') + (codeLines.length > 3 ? '\n...' : '');
+        
+        let isCollapsed = true;
+        
+        // 默认折叠代码块
+        codeBlock.textContent = previewContent;
+        pre.classList.add('code-collapsed');
+        
+        // 折叠/展开功能
+        const toggleCollapse = () => {
+            isCollapsed = !isCollapsed;
+            
+            if (isCollapsed) {
+                // 折叠状态：显示前三行
+                codeBlock.textContent = previewContent;
+                topCollapseButton.textContent = '展开';
+                topCollapseButton.setAttribute('aria-expanded', 'false');
+                bottomCollapseButton.style.display = 'none';
+                pre.classList.add('code-collapsed');
+            } else {
+                // 展开状态：显示全部内容
+                codeBlock.textContent = originalContent;
+                topCollapseButton.textContent = '折叠';
+                topCollapseButton.setAttribute('aria-expanded', 'true');
+                bottomCollapseButton.style.display = 'block';
+                pre.classList.remove('code-collapsed');
+            }
+            
+            // 重新应用Prism高亮
+            this.reapplyPrismHighlighting(codeBlock);
+        };
+        
+        // 为两个按钮添加相同的事件处理
+        topCollapseButton.addEventListener('click', toggleCollapse);
+        bottomCollapseButton.addEventListener('click', toggleCollapse);
+        
+        pre.appendChild(topCollapseButton);
+        pre.appendChild(bottomCollapseButton);
+    },
+    
+    // 重新应用Prism高亮
+    reapplyPrismHighlighting(codeBlock) {
+        // 确保Prism已加载
+        if (typeof window.Prism !== 'undefined') {
+            // 清除已有的高亮样式
+            const existingSpans = codeBlock.querySelectorAll('.token');
+            existingSpans.forEach(span => {
+                const parent = span.parentNode;
+                parent.insertBefore(document.createTextNode(span.textContent), span);
+                parent.removeChild(span);
+            });
+            
+            // 合并相邻的文本节点
+            codeBlock.normalize();
+            
+            // 重新应用高亮
+            window.Prism.highlightElement(codeBlock);
+            
+            console.log('Prism highlighting reapplied');
+        } else {
+            // 如果Prism还未加载，延迟执行
+            setTimeout(() => {
+                this.reapplyPrismHighlighting(codeBlock);
+            }, 100);
+        }
     }
 };
 
@@ -785,7 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Blog Details:', blog_details);
       BlogInfoHandler.updateBlogInfo(blog_details);
       
-      // 为代码块添加语言标签显示和复制按钮
+      // 为代码块添加语言标签、复制按钮和折叠功能
       CodeBlockHandler.addCodeBlockFeatures();
       
       // 为表格添加样式和增强功能
@@ -800,10 +890,25 @@ document.addEventListener('DOMContentLoaded', () => {
       // 添加文件链接跳转功能（在所有DOM操作完成后执行）
       setTimeout(() => {
         FileLinkHandler.addFileLinkHandler();
-      }, 200);
+      }, 500);
+
       
       // 初始化分享功能
       ShareHandler.initShare();
+      
+      // 加载prism.js语法高亮库，并在加载完成后重新应用高亮
+      const prismScript = document.createElement('script');
+      prismScript.src = '/res/js/prism/prism.js';
+      prismScript.onload = function() {
+        console.log('Prism.js loaded successfully');
+        // Prism加载完成后，为所有代码块重新应用高亮
+        document.querySelectorAll('pre code').forEach(codeBlock => {
+          if (window.Prism) {
+            window.Prism.highlightElement(codeBlock);
+          }
+        });
+      };
+      document.head.appendChild(prismScript);
     } catch (error) {
       console.error('Error loading blog:', error);
     }
