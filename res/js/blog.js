@@ -192,10 +192,10 @@ const CodeBlockHandler = {
         bottomCollapseButton.textContent = '折叠';
         bottomCollapseButton.style.display = 'none'; // 初始隐藏
         
-        // 保存原始内容和前三行内容
+        // 保存原始内容和前5行内容
         const originalContent = codeContent;
-        const previewLines = codeLines.slice(0, 3);
-        const previewContent = previewLines.join('\n') + (codeLines.length > 3 ? '\n...' : '');
+        const previewLines = codeLines.slice(0, 5);
+        const previewContent = previewLines.join('\n') + (codeLines.length > 5 ? '\n...' : '');
         
         let isCollapsed = true;
         
