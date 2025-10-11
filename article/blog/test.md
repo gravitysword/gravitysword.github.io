@@ -53,7 +53,4 @@ if __name__ == "__main__":
 |测试1|测试1|
 
 
-### 画布
-<iframe src="https://flowus.cn/share/52a35945-288a-49f0-a34b-4dc6dcf9cd2c?embed=true&code=4B8QLW" style="width: 100%; height: 50vh;"></iframe>
 
-     

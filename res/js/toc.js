@@ -179,6 +179,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 setTimeout(() => {
                     window.tocLinkClicked = false;
                     window.removeEventListener('scroll', scrollEndDetection);
+                    // 滚动完成后，确保当前高亮项在目录可视区域内
+                    scrollTocToActiveItem();
                 }, 2000); // 延长超时时间，确保长页面有足够时间滚动
             });
 
@@ -218,6 +220,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 监听窗口大小变化，更新位置信息
         window.addEventListener('resize', debounce(updateHeadingPositions, 100));
+
+        // 目录自动滚动功能：确保当前高亮项在可视区域内
+        function scrollTocToActiveItem() {
+            const activeLink = tocContainer.querySelector('a.active');
+            if (!activeLink) return;
+            
+            const activeLi = activeLink.parentElement;
+            const containerRect = tocContainer.getBoundingClientRect();
+            const itemRect = activeLi.getBoundingClientRect();
+            
+            // 计算项目在目录容器中的相对位置
+            const itemTopInContainer = itemRect.top - containerRect.top + tocContainer.scrollTop;
+            const itemBottomInContainer = itemTopInContainer + itemRect.height;
+            const containerHeight = tocContainer.clientHeight;
+            const containerScrollTop = tocContainer.scrollTop;
+            
+            // 检查项目是否在可视区域内
+            const isItemVisible = itemTopInContainer >= containerScrollTop && 
+                                itemBottomInContainer <= containerScrollTop + containerHeight;
+            
+            if (!isItemVisible) {
+                // 如果项目在可视区域上方，滚动到项目位置
+                if (itemTopInContainer < containerScrollTop) {
+                    tocContainer.scrollTop = itemTopInContainer - 10; // 留一点边距
+                }
+                // 如果项目在可视区域下方，滚动到项目位置
+                else if (itemBottomInContainer > containerScrollTop + containerHeight) {
+                    tocContainer.scrollTop = itemBottomInContainer - containerHeight + 10; // 留一点边距
+                }
+            }
+        }
 
         // 更新目录高亮状态
         function updateTocHighlight() {
@@ -309,6 +342,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (!window.tocItemClicked) {
                         updateVisibleItems(currentHeading.id, tocList);
                     }
+                    
+                    // 确保当前高亮项在目录可视区域内
+                    scrollTocToActiveItem();
                 }
             }
         }

@@ -118,3 +118,36 @@ export async function CORS_file_config() {
         
     }
 }
+
+/**
+ * 从后端API获取书籍数据
+ * 返回格式: {'1': {'book_id': '1', 'name': '书名', 'path': '路径', 'author': '作者', 'publisher': '出版社', 'read_status': '状态', 'node_id': '节点ID'}}
+ */
+export async function getBooksData() {
+    try {
+        const config = await backend();
+        const host = config.host;
+        
+        // 构建书籍数据API地址
+        const booksApiUrl = `${host}/books`;
+        
+        const response = await fetch(booksApiUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('成功加载书籍数据:', data);
+        return data;
+        
+    } catch (error) {
+        console.error('获取书籍数据失败:', error);
+        return {};
+    }
+}

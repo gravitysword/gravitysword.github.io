@@ -1,4 +1,4 @@
-import { backend, CORS_file_config } from '/res/js/blog_msg.js';
+import { backend, getBooksData } from '/res/js/blog_msg.js';
 
 // 当前视图模式
 let currentView = 'grid'; // 'grid' or 'folder'
@@ -10,22 +10,23 @@ const BookManager = {
     // 获取书籍数据
     async loadBookData() {
         try {
-            const response = await CORS_file_config();
+            const response = await getBooksData();
             console.log('成功加载书籍数据:', response);
             
             // 创建结果对象
             let result = { books: [] };
             
-            // 检查响应数据
-            if (response && response.books) {
-                // 检查books是否为对象
-                if (typeof response.books === 'object' && !Array.isArray(response.books)) {
-                    // 将对象转换为数组
-                    result.books = Object.values(response.books);
-                } else {
-                    // 如果已经是数组，直接使用
-                    result.books = Array.isArray(response.books) ? response.books : [];
-                }
+            // 检查响应数据，新的数据格式是对象，键为书籍ID
+            if (response && typeof response === 'object') {
+                // 将对象转换为数组，直接使用API返回的字段名称
+                result.books = Object.values(response).map(book => ({
+                    book_id: book.book_id,
+                    name: book.name,
+                    author: book.author,
+                    publisher: book.publisher,
+                    read_status: book.read_status,
+                    from: book.path
+                }));
             }
             
             return result;
@@ -42,6 +43,8 @@ const BookManager = {
             return { text: '已读', className: 'status-read', tooltip: '' };
         } else if (status === '在读') {
             return { text: '在读', className: 'status-reading', tooltip: '' };
+        } else if (status === '无') {
+            return { text: '无', className: 'status-none', tooltip: '' };
         } else if (status.includes('未读')) {
             // 提取'-'后的内容作为tooltip
             const tooltip = status.includes('-') ? status.split('-')[1] : status;
@@ -103,10 +106,21 @@ const ViewRenderer = {
     // 处理书籍点击事件
     async handleBookClick(bookId) {
         try {
-            // 获取files.json配置
+            // 获取后端配置
             const config = await backend();
             const host = config.host;
-            const downloadUrl = `${host}/book_url/${bookId}`;
+            
+            // 获取书籍数据以找到对应的书籍信息
+            const bookData = await BookManager.loadBookData();
+            const book = bookData.books.find(b => b.book_id === bookId);
+            
+            if (!book) {
+                alert('未找到对应的书籍信息');
+                return;
+            }
+            
+            // 使用node_id构建下载链接
+            const downloadUrl = `${host}/book_url/${book.book_id}`;
             
             // 显示下载提醒模态窗
             const downloadModal = document.getElementById('downloadModal');
@@ -150,7 +164,8 @@ const ViewRenderer = {
         const tree = {};
         
         books.forEach(book => {
-            const pathParts = book.from.split('/').filter(part => part.trim() !== '');
+            // 使用bookpath字段作为路径
+            const pathParts = book.from ? book.from.split('/').filter(part => part.trim() !== '') : [];
             let currentLevel = tree;
             
             // 创建文件夹层级
@@ -172,6 +187,20 @@ const ViewRenderer = {
                 
                 currentLevel = currentLevel[part].children;
             });
+            
+            // 如果没有路径信息，将书籍放在根目录
+            if (pathParts.length === 0) {
+                if (!currentLevel['未分类']) {
+                    currentLevel['未分类'] = {
+                        isFolder: true,
+                        name: '未分类',
+                        path: '',
+                        children: {},
+                        books: []
+                    };
+                }
+                currentLevel['未分类'].books.push(book);
+            }
         });
         
         return tree;
@@ -284,7 +313,14 @@ const ViewRenderer = {
         
         // 渲染当前路径下的书籍
         const fullPath = currentFolderPath.length > 0 ? currentFolderPath.join('/') + '/' : '';
-        const currentFolderBooks = books.filter(book => book.from === fullPath);
+        const currentFolderBooks = books.filter(book => {
+            // 处理路径匹配逻辑
+            const bookPath = book.from || '';
+            if (fullPath === '' && bookPath === '') {
+                return true; // 根目录且书籍没有路径信息
+            }
+            return bookPath === fullPath;
+        });
         
         if (currentFolderBooks.length > 0) {
             const booksContainer = document.createElement('div');
@@ -350,7 +386,7 @@ const SearchHandler = {
         const filteredBooks = data.books.filter(book => 
             book.name.toLowerCase().includes(term) || 
             book.author.toLowerCase().includes(term) ||
-            book.from.toLowerCase().includes(term)
+            (book.from && book.from.toLowerCase().includes(term))
         );
         
         if (currentView === 'grid') {

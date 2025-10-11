@@ -3,7 +3,7 @@
     left: 40px;
     top: 200px; /* 固定的top值 */
     width: 220px;
-    max-height: 80vh;
+    max-height: 50vh; /* 限制最大高度为屏幕高度的一半 */
     overflow-y: auto;
     background-color: transparent;
     padding: 10px;
