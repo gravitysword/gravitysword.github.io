@@ -2,52 +2,106 @@
  * 时间轴动态功能
  */
 
-// 从blogs.json获取并解析动态数据
-async function fetchDailyData() {
+// 全局配置和状态
+let dailyFilePaths = []; // 所有daily文件路径
+let loadedItems = []; // 已加载的动态内容
+let currentPage = 1;
+let itemsPerPage = 5;
+let totalPages = 1;
+let isLoading = false;
+
+/**
+ * 从blogs.json获取daily文件路径列表
+ * @returns {Promise<Array>} 文件路径数组
+ */
+async function fetchDailyFilePaths() {
     try {
         const response = await fetch('/config/blogs.json');
         const data = await response.json();
-        const dailyFiles = data.daily || [];
-        
-        const dailyItems = [];
-        for (const filePath of dailyFiles) {
-            try {
-                const response = await fetch(`/article/daily/${filePath}`);
-                const content = await response.text();
-                const regex = /<div style="display:none;" class="author">([^<]*(?:<(?!\/div>)[^<]*)*)<\/div>([\s\S]*)/i;
-                const match = content.match(regex);
-                
-                if (match && match[1] && match[2]) {
-                    try {
-                        const metadataStr = match[1].trim().replace(/,\s*[\n\s]*}/g, '}');
-                        const metadata = JSON.parse(metadataStr);
-                        const textContent = match[2].trim() || metadata.description || '';
-                        
-                        dailyItems.push({
-                            date: metadata.date,
-                            content: textContent,
-                            hashtags: metadata.hashtag ? (Array.isArray(metadata.hashtag) ? metadata.hashtag : [metadata.hashtag]) : [],
-                            weather: metadata.weather,
-                            pictures: metadata.picture ? (Array.isArray(metadata.picture) ? metadata.picture : [metadata.picture]) : [],
-                            videos: metadata.video ? (Array.isArray(metadata.video) ? metadata.video : [metadata.video]) : []
-                        });
-                    } catch (jsonError) {
-                        console.error(`JSON解析错误 ${filePath}:`, jsonError);
-                    }
-                }
-            } catch (err) {
-                console.error(`Error processing file ${filePath}:`, err);
-            }
-        }
-        
-        return dailyItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+        return data.daily || [];
     } catch (error) {
-        console.error('Error fetching daily data:', error);
+        console.error('Error fetching daily file paths:', error);
         return [];
     }
 }
 
-// 格式化日期为中文显示格式
+/**
+ * 加载指定范围的daily数据
+ * @param {number} page - 当前页码
+ * @returns {Promise<Array>} 加载的动态内容数组
+ */
+async function loadDailyPage(page) {
+    if (isLoading) return [];
+    
+    isLoading = true;
+    
+    try {
+        // 如果是第一次加载，先获取所有文件路径
+        if (dailyFilePaths.length === 0) {
+            dailyFilePaths = await fetchDailyFilePaths();
+            totalPages = Math.ceil(dailyFilePaths.length / itemsPerPage);
+        }
+        
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, dailyFilePaths.length);
+        const pageFilePaths = dailyFilePaths.slice(startIndex, endIndex);
+        
+        // 并行加载当前页的所有文件
+        const pageItems = await Promise.all(
+            pageFilePaths.map(async (filePath) => {
+                try {
+                    const response = await fetch(`/article/daily/${filePath}`);
+                    const content = await response.text();
+                    const regex = /<div style="display:none;" class="author">([^<]*(?:<(?!\/div>)[^<]*)*)<\/div>([\s\S]*)/i;
+                    const match = content.match(regex);
+                    
+                    if (match && match[1] && match[2]) {
+                        try {
+                            const metadataStr = match[1].trim().replace(/,\s*[\n\s]*}/g, '}');
+                            const metadata = JSON.parse(metadataStr);
+                            const textContent = match[2].trim() || metadata.description || '';
+                            
+                            return {
+                                date: metadata.date,
+                                content: textContent,
+                                hashtags: metadata.hashtag ? (Array.isArray(metadata.hashtag) ? metadata.hashtag : [metadata.hashtag]) : [],
+                                weather: metadata.weather,
+                                pictures: metadata.picture ? (Array.isArray(metadata.picture) ? metadata.picture : [metadata.picture]) : [],
+                                videos: metadata.video ? (Array.isArray(metadata.video) ? metadata.video : [metadata.video]) : []
+                            };
+                        } catch (jsonError) {
+                            console.error(`JSON解析错误 ${filePath}:`, jsonError);
+                            return null;
+                        }
+                    }
+                    return null;
+                } catch (err) {
+                    console.error(`Error processing file ${filePath}:`, err);
+                    return null;
+                }
+            })
+        );
+        
+        // 过滤掉null值并按日期排序
+        const validItems = pageItems.filter(item => item !== null);
+        
+        // 将新加载的项目添加到已加载项目数组
+        loadedItems = [...loadedItems, ...validItems];
+        
+        return validItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } catch (error) {
+        console.error('Error loading daily page data:', error);
+        return [];
+    } finally {
+        isLoading = false;
+    }
+}
+
+/**
+ * 格式化日期为中文显示格式
+ * @param {string} dateString - 日期字符串
+ * @returns {string} 格式化后的日期
+ */
 function formatDate(dateString) {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -57,12 +111,17 @@ function formatDate(dateString) {
     return `${year} 年 ${month} 月 ${day} 日 `;
 }
 
-// 创建单个动态项的DOM元素
+/**
+ * 创建单个动态项的DOM元素
+ * @param {Object} item - 动态内容项
+ * @param {number} index - 索引
+ * @returns {HTMLElement} DOM元素
+ */
 function createDailyItem(item, index) {
     const date = formatDate(item.date);
     
     const itemElement = document.createElement('div');
-    itemElement.className = 'relative mb-16 timeline-item';
+    itemElement.className = 'relative mb-16 timeline-item opacity-0 translate-y-4 transition-all duration-700 ease-out';
     itemElement.dataset.index = index;
     
     const dot = document.createElement('div');
@@ -96,9 +155,17 @@ function createDailyItem(item, index) {
             pictureWrapper.className = 'picture-wrapper';
             
             const picture = document.createElement('img');
-            picture.src = picUrl;
+            // 使用渐进式加载技术
+            const lazyLoadImg = new Image();
+            lazyLoadImg.onload = () => {
+                picture.src = lazyLoadImg.src;
+                picture.classList.add('loaded');
+            };
+            lazyLoadImg.src = picUrl;
+            
+            picture.src = '/res/media/svg/image-placeholder.svg'; // 占位符
             picture.alt = 'Timeline Image';
-            picture.className = 'timeline-image';
+            picture.className = 'timeline-image opacity-0 transition-opacity duration-500';
             picture.referrerPolicy = 'no-referrer';
             picture.crossOrigin = 'anonymous';
             picture.onerror = function() {
@@ -121,7 +188,7 @@ function createDailyItem(item, index) {
             const videoElement = document.createElement('video');
             videoElement.src = videoUrl;
             videoElement.controls = true;
-            videoElement.preload = 'metadata';
+            videoElement.preload = 'metadata'; // 仅预加载元数据以提高性能
             videoElement.className = 'timeline-video';
             videoElement.style.maxWidth = '100%';
             videoElement.style.height = 'auto';
@@ -150,25 +217,119 @@ function createDailyItem(item, index) {
     return itemElement;
 }
 
-// 初始化时间轴并添加动画效果
+/**
+ * 创建加载更多按钮
+ * @param {HTMLElement} container - 容器元素
+ */
+function createLoadMoreButton(container) {
+    // 移除已有的加载更多按钮
+    const existingButton = document.querySelector('.load-more-button');
+    if (existingButton) {
+        existingButton.remove();
+    }
+    
+    // 只有当还有更多页面时才创建加载更多按钮
+    if (currentPage < totalPages) {
+        const button = document.createElement('button');
+        button.className = 'load-more-button mx-auto block bg-white hover:bg-gray-50 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded shadow transition-colors duration-200';
+        button.textContent = '加载更多动态';
+        button.onclick = loadNextPage;
+        container.appendChild(button);
+    }
+}
+
+/**
+ * 加载下一页数据
+ */
+async function loadNextPage() {
+    if (currentPage >= totalPages || isLoading) return;
+    
+    const timelineContainer = document.getElementById('timeline-container');
+    const loadMoreButton = document.querySelector('.load-more-button');
+    
+    // 显示加载状态
+    if (loadMoreButton) {
+        loadMoreButton.innerHTML = '<div class="loading-spinner-small"></div> 加载中...';
+        loadMoreButton.disabled = true;
+    }
+    
+    currentPage++;
+    const newItems = await loadDailyPage(currentPage);
+    
+    // 添加新内容到时间轴
+    newItems.forEach((item, index) => {
+        const dailyItem = createDailyItem(item, loadedItems.length - newItems.length + index);
+        timelineContainer.appendChild(dailyItem);
+    });
+    
+    // 更新加载更多按钮状态
+    if (loadMoreButton) {
+        loadMoreButton.remove();
+    }
+    
+    // 创建新的加载更多按钮
+    createLoadMoreButton(timelineContainer);
+    
+    // 重新启动Intersection Observer以观察新添加的元素
+    setupIntersectionObserver();
+}
+
+/**
+ * 设置Intersection Observer以实现滚动动画
+ */
+function setupIntersectionObserver() {
+    // 使用Intersection Observer实现滚动动画
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                entry.target.classList.remove('opacity-0', 'translate-y-4');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // 观察所有未显示的时间轴项
+    document.querySelectorAll('.timeline-item:not(.visible)').forEach((item) => {
+        observer.observe(item);
+    });
+}
+
+/**
+ * 初始化时间轴并添加动画效果
+ */
 async function initTimeline() {
     const timelineContainer = document.getElementById('timeline-container');
     if (!timelineContainer) return;
     
+    // 显示加载指示器
     timelineContainer.innerHTML = `
         <div class="loading">
             <div class="loading-spinner"></div>
         </div>
     `;
     
-    const dailyItems = await fetchDailyData();
+    // 获取文件路径并计算总页数
+    if (dailyFilePaths.length === 0) {
+        dailyFilePaths = await fetchDailyFilePaths();
+        totalPages = Math.ceil(dailyFilePaths.length / itemsPerPage);
+    }
+    
+    // 加载第一页数据
+    const initialItems = await loadDailyPage(1);
+    
     timelineContainer.innerHTML = '';
     
     const timelineLine = document.createElement('div');
     timelineLine.className = 'timeline-line';
     timelineContainer.appendChild(timelineLine);
     
-    if (dailyItems.length === 0) {
+    if (initialItems.length === 0 && dailyFilePaths.length === 0) {
         const emptyMessage = document.createElement('div');
         emptyMessage.className = 'text-center py-16';
         emptyMessage.innerHTML = `
@@ -186,33 +347,24 @@ async function initTimeline() {
         return;
     }
     
-    dailyItems.forEach((item, index) => {
+    // 添加第一页内容
+    initialItems.forEach((item, index) => {
         const dailyItem = createDailyItem(item, index);
         timelineContainer.appendChild(dailyItem);
     });
     
-    // 使用 Intersection Observer 实现滚动动画
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+    // 创建加载更多按钮
+    createLoadMoreButton(timelineContainer);
     
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, observerOptions);
-    
+    // 设置滚动动画
     setTimeout(() => {
-        document.querySelectorAll('.timeline-item').forEach((item) => {
-            observer.observe(item);
-        });
+        setupIntersectionObserver();
     }, 200);
 }
 
-// 图片放大和视频播放功能
+/**
+ * 图片放大和视频播放功能
+ */
 const initMediaViewer = () => {
   const modal = document.createElement('div');
   modal.className = 'image-modal';
@@ -255,7 +407,10 @@ const initMediaViewer = () => {
   const handleImageClick = (e) => {
     if (e.target.classList.contains('timeline-image')) {
       const originalSrc = e.target.src;
-      showImage(originalSrc);
+      // 只有当图片已经加载完成才显示大图查看
+      if (originalSrc !== '/res/media/svg/image-placeholder.svg' && e.target.classList.contains('loaded')) {
+        showImage(originalSrc);
+      }
     }
   };
 

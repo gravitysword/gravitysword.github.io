@@ -1,1 +1,13 @@
 泛舟游客的博客
+
+
+{
+    "status": "success",
+    "src": "https://pic-private.zhihu.com/v2-86264a15e3d84ec9f46339ddcec7659b~resize:1440:q75.jpg?source=1f5c5e47&expiration=1763359625&auth_key=1763359625-0-0-22fd3771192da3d8618ebf15a84b77b6&protocol=v2&sampling=False&animatedImagePlayCount=1&overTime=60&incremental=False&sceneCode=article_draft_web&animatedImageAutoPlay=False&retryCount=3&precoder=False",
+    "animation_cover_src": "https://pic-private.zhihu.com/v2-86264a15e3d84ec9f46339ddcec7659b~resize:1440:q75.jpg?source=1f5c5e47&expiration=1763359625&auth_key=1763359625-0-0-22fd3771192da3d8618ebf15a84b77b6&protocol=v2&sampling=False&animatedImagePlayCount=1&overTime=60&incremental=False&sceneCode=article_draft_web&animatedImageAutoPlay=False&retryCount=3&precoder=False",
+    "watermark": "original",
+    "watermark_hash": "v2-61cf5c633b50e0a8296f53bdc1cb2aa6",
+    "watermark_src": "https://pic-private.zhihu.com/v2-61cf5c633b50e0a8296f53bdc1cb2aa6~resize:1440:q75.jpg?source=1f5c5e47&expiration=1763359625&auth_key=1763359625-0-0-2ba070bcd6af2bceac237dae7fe41524&protocol=v2&sampling=False&animatedImagePlayCount=1&overTime=60&incremental=False&sceneCode=article_draft_web&animatedImageAutoPlay=False&retryCount=3&precoder=False",
+    "original_hash": "v2-86264a15e3d84ec9f46339ddcec7659b",
+    "original_src": "https://pic-private.zhihu.com/v2-86264a15e3d84ec9f46339ddcec7659b~resize:0:q75.jpg?source=1f5c5e47&expiration=1763359625&auth_key=1763359625-0-0-a0b9250379caf576b53ab22d8c8dad85&protocol=v2&sampling=False&animatedImagePlayCount=1&overTime=60&incremental=False&sceneCode=article_draft_web&animatedImageAutoPlay=False&retryCount=3&precoder=False"
+}

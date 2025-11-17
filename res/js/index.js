@@ -1,21 +1,25 @@
+/**
+ * 博客首页主脚本
+ */
 import { BLOG_getBlogItems } from '/res/js/blog_msg.js';
 
 // 状态变量
-let bloglist = [];
+let bloglist = []; // 当前页的文章列表
 let currentPage = 1;
 const itemsPerPage = 5;
 let totalPages = 1;
+let totalItems = 0;
 
 // DOM 元素引用
 const blogListElement = document.querySelector('.content-container .blog-list ul');
 const paginationElement = document.querySelector('.pagination');
 
-// 显示博客项
-function displayBlogItems(page) {
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = Math.min(startIndex + itemsPerPage, bloglist.length);
-    
-    blogListElement.innerHTML = bloglist.slice(startIndex, endIndex).map(item => `
+/**
+ * 显示博客项
+ * @param {Array} items - 博客文章列表
+ */
+function displayBlogItems(items) {
+    blogListElement.innerHTML = items.map(item => `
         <li>
             <span class="blog-id" style="display:none">${item.id}</span>
             <span class="blog-title">${item.title}</span>
@@ -32,7 +36,9 @@ function displayBlogItems(page) {
     addBlogItemClickEvents();
 }
 
-// 更新分页组件
+/**
+ * 更新分页组件
+ */
 function updatePagination() {
     // 生成页码按钮
     const startPage = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
@@ -66,32 +72,31 @@ function updatePagination() {
     bindPaginationEvents();
 }
 
-// 绑定分页事件
+/**
+ * 绑定分页事件
+ */
 function bindPaginationEvents() {
     // 页码点击
     paginationElement.querySelectorAll('.page-number').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            currentPage = parseInt(link.textContent);
-            displayBlogItems(currentPage);
-            updatePagination();
+            const page = parseInt(link.textContent);
+            if (page !== currentPage) {
+                loadBlogPage(page);
+            }
         });
     });
     
     // 上一页/下一页
     paginationElement.querySelector('.prev-button').addEventListener('click', () => {
         if (currentPage > 1) {
-            currentPage--;
-            displayBlogItems(currentPage);
-            updatePagination();
+            loadBlogPage(currentPage - 1);
         }
     });
     
     paginationElement.querySelector('.next-button').addEventListener('click', () => {
         if (currentPage < totalPages) {
-            currentPage++;
-            displayBlogItems(currentPage);
-            updatePagination();
+            loadBlogPage(currentPage + 1);
         }
     });
     
@@ -110,10 +115,8 @@ function bindPaginationEvents() {
     jumpButton.addEventListener('click', () => {
         const inputPage = parseInt(pageInput.value);
         
-        if (!isNaN(inputPage)) {
-            currentPage = Math.max(1, Math.min(inputPage, totalPages));
-            displayBlogItems(currentPage);
-            updatePagination();
+        if (!isNaN(inputPage) && inputPage >= 1 && inputPage <= totalPages) {
+            loadBlogPage(inputPage);
         } else {
             alert('请输入有效的页码！');
         }
@@ -127,7 +130,9 @@ function bindPaginationEvents() {
     });
 }
 
-// 设置标题下划线
+/**
+ * 设置标题下划线
+ */
 function setTitleUnderlineWidth() {
     document.querySelectorAll('.blog-title').forEach(title => {
         const measureSpan = document.createElement('span');
@@ -145,7 +150,9 @@ function setTitleUnderlineWidth() {
     });
 }
 
-// 博客项点击事件
+/**
+ * 博客项点击事件
+ */
 function addBlogItemClickEvents() {
     document.querySelectorAll('.content-container .blog-list ul li').forEach(item => {
         item.addEventListener('click', () => {
@@ -155,15 +162,56 @@ function addBlogItemClickEvents() {
     });
 }
 
-// 加载博客数据
-async function loadBlogList() {
-    bloglist = await BLOG_getBlogItems();
-    totalPages = Math.ceil(bloglist.length / itemsPerPage);
-    updatePagination();
-    displayBlogItems(currentPage);
+/**
+ * 加载指定页的博客数据
+ * @param {number} page - 页码
+ */
+async function loadBlogPage(page) {
+    try {
+        // 显示加载状态
+        blogListElement.innerHTML = `
+            <li class="loading-content">
+                <div class="loading-spinner"></div>
+                <p>加载中...</p>
+            </li>
+        `;
+        
+        // 获取分页数据
+        const result = await BLOG_getBlogItems(page, itemsPerPage);
+        
+        if (result && result.items) {
+            currentPage = page;
+            bloglist = result.items;
+            totalItems = result.total;
+            totalPages = result.totalPages;
+            
+            displayBlogItems(bloglist);
+            updatePagination();
+        } else {
+            blogListElement.innerHTML = `
+                <li class="error-content">
+                    <p>加载失败，请稍后重试</p>
+                </li>
+            `;
+        }
+    } catch (error) {
+        console.error('Error loading blog page:', error);
+        blogListElement.innerHTML = `
+            <li class="error-content">
+                <p>加载失败，请稍后重试</p>
+            </li>
+        `;
+    }
+}
+
+/**
+ * 初始化博客列表
+ */
+async function initBlogList() {
+    await loadBlogPage(1); // 加载第一页
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     // 启动博客列表
-    loadBlogList();
+    initBlogList();
 });

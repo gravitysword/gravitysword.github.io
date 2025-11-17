@@ -15,7 +15,8 @@
 本文用于测试博客页面的各类功能是否完善，包括：图片托管，视频托管，文件托管，latex公式，跳转按钮，表格
 
 ### 测试图片 和 注释
-![测试](https://sns-na-i2.xhscdn.com/spectrum/1040g34o31h6jan57424g5pgi0nb1om97r2bn41g)
+![测试](https://i1.hdslb.com/bfs/new_dyn/d6ab7d74fbb6acaf5d63a543bc38486f3546948067920012.jpg)
+
 
 ### 测试视频
 
