@@ -20,7 +20,7 @@
 
 ### 测试视频
 
-<video src="https://sns-video-default.xhscdn.com/stream/79/110/258/01e7fe53860d57424f037001963977f94f_258.mp4" controls="controls" preload="metadata" video-id="0" ></video>
+<video src="https://upos-hz-mirrorakam.akamaized.net/upgcxcode/63/41/33462944163/33462944163-1-192.mp4?e=ig8euxZM2rNcNbRM7wdVhwdlhWKMhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&gen=playurlv3&os=akam&oi=1804878521&platform=html5&deadline=1763545089&og=cos&mid=3546763107502921&nbs=1&uipk=5&trid=35af6653aafb4f5fa8f8e99ed2063c5T&upsig=51d95158231d58b33f07cffcdf0564a0&uparams=e,gen,os,oi,platform,deadline,og,mid,nbs,uipk,trid&hdnts=exp=1763545089~hmac=a9f16e4d4018072adcd008bf577e14d0e9c0e1fbee7d84f2e45b997f50cbeb34&bvc=vod&nettype=0&bw=1154099&dl=0&f=T_0_0&mobi_app=&agrr=1&buvid=&build=0&orderid=0,1" controls="controls" preload="metadata" video-id="0" ></video>
 
 ### 测试跳转按钮
 <span class="video-time-jump" bind-id="0">08:00</span>

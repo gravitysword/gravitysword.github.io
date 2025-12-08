@@ -61,13 +61,17 @@ async function loadDailyPage(page) {
                             const metadata = JSON.parse(metadataStr);
                             const textContent = match[2].trim() || metadata.description || '';
                             
+                            // 处理数组类型的字段
+                            const processArrayField = (field) => 
+                                field ? (Array.isArray(field) ? field : [field]) : [];
+                            
                             return {
                                 date: metadata.date,
                                 content: textContent,
-                                hashtags: metadata.hashtag ? (Array.isArray(metadata.hashtag) ? metadata.hashtag : [metadata.hashtag]) : [],
+                                hashtags: processArrayField(metadata.hashtag),
                                 weather: metadata.weather,
-                                pictures: metadata.picture ? (Array.isArray(metadata.picture) ? metadata.picture : [metadata.picture]) : [],
-                                videos: metadata.video ? (Array.isArray(metadata.video) ? metadata.video : [metadata.video]) : []
+                                pictures: processArrayField(metadata.picture),
+                                videos: processArrayField(metadata.video)
                             };
                         } catch (jsonError) {
                             console.error(`JSON解析错误 ${filePath}:`, jsonError);
@@ -131,6 +135,7 @@ function createDailyItem(item, index) {
     const content = document.createElement('div');
     content.className = 'ml-16 bg-white rounded-md p-6 shadow-lg timeline-item-content';
     
+    // 日期和天气
     const dateElement = document.createElement('div');
     dateElement.className = 'flex items-center mb-3';
     let dateHtml = `<div class="text-sm text-gray-500">${date}`;
@@ -141,11 +146,13 @@ function createDailyItem(item, index) {
     dateElement.innerHTML = dateHtml;
     content.appendChild(dateElement);
     
+    // 内容
     const paragraph = document.createElement('p');
     paragraph.className = 'text-gray-500 mb-4';
     paragraph.innerHTML = item.content.replace(/\n/g, '<br>');
     content.appendChild(paragraph);
     
+    // 图片
     if (item.pictures && item.pictures.length > 0) {
         const picturesContainer = document.createElement('div');
         picturesContainer.className = 'pictures-grid mb-4';
@@ -180,6 +187,7 @@ function createDailyItem(item, index) {
         content.appendChild(picturesContainer);
     }
 
+    // 视频
     if (item.videos && item.videos.length > 0) {
         const videosContainer = document.createElement('div');
         videosContainer.className = 'videos-grid mb-4';
@@ -199,6 +207,7 @@ function createDailyItem(item, index) {
         content.appendChild(videosContainer);
     }
 
+    // 标签
     if (item.hashtags && item.hashtags.length > 0) {
         const hashtagsContainer = document.createElement('div');
         hashtagsContainer.className = 'flex flex-wrap';
@@ -222,7 +231,7 @@ function createDailyItem(item, index) {
  * @param {HTMLElement} container - 容器元素
  */
 function createLoadMoreButton(container) {
-    // 移除已有的加载更多按钮
+    // 移除已有的加载更多按钮和容器
     const existingButton = document.querySelector('.load-more-button');
     if (existingButton) {
         existingButton.remove();
@@ -231,7 +240,7 @@ function createLoadMoreButton(container) {
     // 只有当还有更多页面时才创建加载更多按钮
     if (currentPage < totalPages) {
         const button = document.createElement('button');
-        button.className = 'load-more-button mx-auto block bg-white hover:bg-gray-50 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded shadow transition-colors duration-200';
+        button.className = 'load-more-button';
         button.textContent = '加载更多动态';
         button.onclick = loadNextPage;
         container.appendChild(button);
@@ -357,9 +366,7 @@ async function initTimeline() {
     createLoadMoreButton(timelineContainer);
     
     // 设置滚动动画
-    setTimeout(() => {
-        setupIntersectionObserver();
-    }, 200);
+    setTimeout(() => setupIntersectionObserver(), 200);
 }
 
 /**
@@ -391,9 +398,7 @@ const initMediaViewer = () => {
     modalImg.classList.remove('active');
     modal.style.display = 'flex';
     modalImg.src = src;
-    requestAnimationFrame(() => {
-      modalImg.classList.add('active');
-    });
+    requestAnimationFrame(() => modalImg.classList.add('active'));
   };
 
   const closeModal = () => {
@@ -414,18 +419,43 @@ const initMediaViewer = () => {
     }
   };
 
+  // 添加触摸事件支持
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+  
+  modal.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, false);
+  
+  modal.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
+    handleSwipe();
+  }, false);
+  
+  const handleSwipe = () => {
+    // 检测左右滑动
+    const diffX = touchEndX - touchStartX;
+    const diffY = touchEndY - touchStartY;
+    
+    // 如果水平滑动距离大于垂直滑动距离，并且滑动距离超过50px，则关闭模态窗
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+      closeModal();
+    }
+  };
+
   document.addEventListener('click', handleImageClick);
   closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      closeModal();
-    }
+  closeBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    closeModal();
   });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeModal();
-    }
-  });
+  modal.addEventListener('click', (e) => e.target === modal && closeModal());
+  modal.addEventListener('touchstart', (e) => e.target === modal && closeModal());
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && closeModal());
 };
 
 // 初始化时调用

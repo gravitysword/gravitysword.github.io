@@ -10,7 +10,7 @@ const markedOptions = {
     smartypants: true, // 使用更为时髦的标点
     xhtml: true, // 使用xhtml闭合标签
     html: true, // 允许HTML标签
-    highlight: function(code, lang) {
+    highlight: (code, lang) => {
         // 如果有语言标识且有hljs库，则进行高亮
         if (lang && window.hljs) {
             try {
@@ -63,29 +63,33 @@ const MarkdownHandler = {
 const BlogInfoHandler = {
     // 更新博客标题、日期和标签
     updateBlogInfo(blog_details) {
-        document.querySelector('.title').textContent = blog_details["subtitle"] ? blog_details["subtitle"] : blog_details["title"];
-        document.querySelector('.blog-date').textContent = blog_details["date"];
+        // 更新标题
+        const titleElement = document.querySelector('.title');
+        titleElement.textContent = blog_details.subtitle || blog_details.title;
+        
+        // 更新日期
+        document.querySelector('.blog-date').textContent = blog_details.date;
 
+        // 处理天气信息
         const weatherElement = document.querySelector('.weather');
         if (weatherElement) {
-            if (blog_details["weather"] === "" || blog_details["weather"] === undefined) {
+            if (!blog_details.weather) {
                 weatherElement.style.display = 'none';
                 console.log("天气信息为空，隐藏天气图标");
             } else {
-                weatherElement.setAttribute('src', `/res/media/svg/weather/${blog_details["weather"]}.svg`);
+                weatherElement.setAttribute('src', `/res/media/svg/weather/${blog_details.weather}.svg`);
             }
-        } else {
-            console.warn("未找到 .weather 元素");
         }
 
-        let tag = "";
-        for (const tag_item of blog_details["tag"]) {
-            tag += `<span class="blog-tag">#${tag_item}</span>`;
-        }
+        // 更新标签
+        const tagsHtml = blog_details.tag.map(tag_item => 
+            `<span class="blog-tag">#${tag_item}</span>`
+        ).join('');
+        
         const metaContainer = document.querySelector('.meta-info');
         const tagContainer = document.createElement('div');
         tagContainer.className = 'meta-item blog-tags';
-        tagContainer.innerHTML = tag;
+        tagContainer.innerHTML = tagsHtml;
         metaContainer.appendChild(tagContainer);
     }
 };
@@ -111,8 +115,7 @@ const CodeBlockHandler = {
     
     // 添加语言标签
     addLanguageLabel(codeBlock, pre) {
-        const classNames = codeBlock.className.split(' ');
-        const languageClass = classNames.find(className => className.startsWith('language-'));
+        const languageClass = codeBlock.className.split(' ').find(cls => cls.startsWith('language-'));
         
         if (languageClass) {
             const language = languageClass.replace('language-', '');
@@ -128,50 +131,36 @@ const CodeBlockHandler = {
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-code-button';
         copyButton.textContent = '复制';
-        copyButton.addEventListener('click', function() {
+        
+        copyButton.addEventListener('click', async () => {
             const code = codeBlock.textContent;
             
-            // 检查剪贴板权限
-            if (!navigator.clipboard) {
-                // 降级方案：使用传统的复制方法
-                const textArea = document.createElement('textarea');
-                textArea.value = code;
-                textArea.style.position = 'fixed';
-                textArea.style.left = '-9999px';
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try {
+            try {
+                if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(code);
+                } else {
+                    // 降级方案：使用传统的复制方法
+                    const textArea = document.createElement('textarea');
+                    textArea.value = code;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-9999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
                     document.execCommand('copy');
-                    copyButton.textContent = '已复制!';
-                    setTimeout(() => {
-                        copyButton.textContent = '复制';
-                    }, 2000);
-                } catch (err) {
-                    console.error('复制失败:', err);
-                    copyButton.textContent = '复制失败';
-                    setTimeout(() => {
-                        copyButton.textContent = '复制';
-                    }, 2000);
-                } finally {
                     document.body.removeChild(textArea);
                 }
-                return;
-            }
-            
-            navigator.clipboard.writeText(code).then(() => {
                 copyButton.textContent = '已复制!';
-                setTimeout(() => {
-                    copyButton.textContent = '复制';
-                }, 2000);
-            }).catch(err => {
+            } catch (err) {
                 console.error('复制失败:', err);
                 copyButton.textContent = '复制失败';
+            } finally {
                 setTimeout(() => {
                     copyButton.textContent = '复制';
                 }, 2000);
-            });
+            }
         });
+        
         pre.appendChild(copyButton);
     },
     
@@ -208,7 +197,7 @@ const CodeBlockHandler = {
             isCollapsed = !isCollapsed;
             
             if (isCollapsed) {
-                // 折叠状态：显示前三行
+                // 折叠状态：显示前5行
                 codeBlock.textContent = previewContent;
                 topCollapseButton.textContent = '展开';
                 topCollapseButton.setAttribute('aria-expanded', 'false');
@@ -238,7 +227,7 @@ const CodeBlockHandler = {
     // 重新应用Prism高亮
     reapplyPrismHighlighting(codeBlock) {
         // 确保Prism已加载
-        if (typeof window.Prism !== 'undefined') {
+        if (window.Prism) {
             // 清除已有的高亮样式
             const existingSpans = codeBlock.querySelectorAll('.token');
             existingSpans.forEach(span => {
@@ -252,13 +241,9 @@ const CodeBlockHandler = {
             
             // 重新应用高亮
             window.Prism.highlightElement(codeBlock);
-            
-            console.log('Prism highlighting reapplied');
         } else {
             // 如果Prism还未加载，延迟执行
-            setTimeout(() => {
-                this.reapplyPrismHighlighting(codeBlock);
-            }, 100);
+            setTimeout(() => this.reapplyPrismHighlighting(codeBlock), 100);
         }
     }
 };
@@ -276,11 +261,11 @@ const ImageHandler = {
     modalImg.crossOrigin = 'anonymous';
     modalImg.referrerPolicy = 'no-referrer';
     modalImg.onerror = function() {
-        this.src = '/res/media/svg/sys/image-error.svg';
-        this.onerror = null;
-        // 确保错误图标显示为白色
-        this.style.filter = 'invert(100%) brightness(100%)';
-      };
+      this.src = '/res/media/svg/sys/image-error.svg';
+      this.onerror = null;
+      // 确保错误图标显示为白色
+      this.style.filter = 'invert(100%) brightness(100%)';
+    };
     
     const closeBtn = document.createElement('div');
     closeBtn.className = 'modal-close';
@@ -294,15 +279,14 @@ const ImageHandler = {
       modalImg.classList.remove('active');
       modal.style.display = 'flex';
       modalImg.src = src;
+      
       // 禁用目录功能
       const tocContainer = document.querySelector('.toc-container');
       const tocToggleButton = document.querySelector('.toc-toggle-button');
-      if (tocContainer) {
-        tocContainer.style.display = 'none';
-      }
-      if (tocToggleButton) {
-        tocToggleButton.style.display = 'none';
-      }
+      
+      if (tocContainer) tocContainer.style.display = 'none';
+      if (tocToggleButton) tocToggleButton.style.display = 'none';
+      
       requestAnimationFrame(() => {
         modalImg.classList.add('active');
       });
@@ -313,12 +297,12 @@ const ImageHandler = {
       setTimeout(() => {
         modal.style.display = 'none';
         modalImg.src = '';
+        
         // 重新启用目录功能
         const tocContainer = document.querySelector('.toc-container');
         const tocToggleButton = document.querySelector('.toc-toggle-button');
-        if (tocContainer) {
-          tocContainer.style.display = '';
-        }
+        
+        if (tocContainer) tocContainer.style.display = '';
         if (tocToggleButton) {
           tocToggleButton.style.display = window.innerWidth <= 1200 ? 'flex' : 'none';
         }
@@ -327,23 +311,47 @@ const ImageHandler = {
 
     const handleImageClick = (e) => {
       if (e.target.tagName === 'IMG' && !e.target.classList.contains('weather')) {
-        const originalSrc = e.target.src;
-        showImage(originalSrc);
+        showImage(e.target.src);
+      }
+    };
+
+    // 添加触摸事件支持
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    
+    modal.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, false);
+    
+    modal.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      handleSwipe();
+    }, false);
+    
+    const handleSwipe = () => {
+      // 检测左右滑动
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+      
+      // 如果水平滑动距离大于垂直滑动距离，并且滑动距离超过50px，则关闭模态窗
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        closeModal();
       }
     };
 
     document.addEventListener('click', handleImageClick);
     closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
+    closeBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      closeModal();
     });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeModal();
-      }
-    });
+    modal.addEventListener('click', (e) => e.target === modal && closeModal());
+    modal.addEventListener('touchstart', (e) => e.target === modal && closeModal());
+    document.addEventListener('keydown', (e) => e.key === 'Escape' && closeModal());
   },
 
   // 识别图片alt属性并添加注释
@@ -425,27 +433,18 @@ const VideoHandler = {
           
           // 添加跳转动画
           this.classList.add('jumping');
-          setTimeout(() => {
-            this.classList.remove('jumping');
-          }, 600);
+          setTimeout(() => this.classList.remove('jumping'), 600);
           
           // 跳转到指定时间并播放
           video.currentTime = seconds;
-          video.play().catch(error => {
-            console.warn('视频播放失败:', error);
-          });
+          video.play().catch(error => console.warn('视频播放失败:', error));
           
           // 高亮效果：滚动到视频位置
-          video.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-          });
+          video.scrollIntoView({ behavior: 'smooth', block: 'center' });
           
           // 添加视频边框高亮效果
           video.style.boxShadow = '0 0 20px rgba(255, 107, 102, 0.6)';
-          setTimeout(() => {
-            video.style.boxShadow = '';
-          }, 1000);
+          setTimeout(() => video.style.boxShadow = '', 1000);
         } else {
           console.warn(`未找到视频元素，video-id: ${bindId}`);
         }
@@ -455,7 +454,7 @@ const VideoHandler = {
       span.addEventListener('click', handleJump);
       
       // 键盘事件
-      span.addEventListener('keydown', function(e) {
+      span.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           handleJump.call(this);
@@ -473,9 +472,7 @@ const ParagraphIndentHandler = {
     if (!content) return;
 
     // 等待内容完全渲染
-    setTimeout(() => {
-      this.processContent(content);
-    }, 100);
+    setTimeout(() => this.processContent(content), 100);
   },
 
   // 处理内容区域的段落缩进
@@ -489,8 +486,7 @@ const ParagraphIndentHandler = {
 
   // 处理现有的p标签
   handleExistingParagraphs(content) {
-    const paragraphs = content.querySelectorAll('p');
-    paragraphs.forEach(p => {
+    content.querySelectorAll('p').forEach(p => {
       // 排除特定容器内的段落
       if (!this.shouldSkipIndent(p)) {
         this.handleParagraphWithBr(p);
@@ -513,9 +509,6 @@ const ParagraphIndentHandler = {
 
   // 按br标签分割段落并添加缩进
   splitParagraphByBr(paragraph) {
-    // 获取段落的所有文本内容
-    const textContent = paragraph.textContent;
-    
     // 保存原始HTML结构
     const originalHTML = paragraph.innerHTML;
     
@@ -524,21 +517,17 @@ const ParagraphIndentHandler = {
     
     if (parts.length > 1) {
       // 创建新的HTML结构，保持原有格式
-      let newHTML = '';
-      parts.forEach((part, index) => {
-        if (part.trim()) {
-          // 清理空白字符
+      const newHTML = parts
+        .filter(part => part.trim())
+        .map((part, index) => {
           const cleanPart = part.trim();
-          
-          if (index === 0) {
-            // 第一段添加缩进
-            newHTML += `<span style="display: block; text-indent: 2em;">${cleanPart}</span>`;
-          } else {
-            // 后续段落换行并缩进
-            newHTML += `<span style="display: block; text-indent: 2em; margin-top: 0.5em;">${cleanPart}</span>`;
-          }
-        }
-      });
+          const style = index === 0 
+            ? 'display: block; text-indent: 2em;'
+            : 'display: block; text-indent: 2em; margin-top: 0.5em;';
+          return `<span style="${style}">${cleanPart}</span>`;
+        })
+        .join('');
+      
       paragraph.innerHTML = newHTML;
     } else {
       // 只有一个段落，直接缩进
@@ -549,9 +538,7 @@ const ParagraphIndentHandler = {
   // 处理br标签分割的文本
   handleBrTags(content) {
     // 找到所有br标签
-    const brTags = content.querySelectorAll('br');
-    
-    brTags.forEach(br => {
+    content.querySelectorAll('br').forEach(br => {
       // 获取br标签的父元素
       const parent = br.parentNode;
       
@@ -565,12 +552,10 @@ const ParagraphIndentHandler = {
     });
 
     // 处理直接包含文本的div或其他元素
-    const textContainers = content.querySelectorAll('div, section, article');
-    textContainers.forEach(container => {
+    content.querySelectorAll('div, section, article').forEach(container => {
       if (!this.shouldSkipIndent(container)) {
         // 处理直接子文本节点
-        const childNodes = Array.from(container.childNodes);
-        childNodes.forEach(node => {
+        Array.from(container.childNodes).forEach(node => {
           if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
             const p = document.createElement('p');
             p.textContent = node.textContent.trim();
@@ -585,30 +570,12 @@ const ParagraphIndentHandler = {
   // 判断是否应该跳过缩进
   shouldSkipIndent(element) {
     // 跳过特定标签内的元素
-    const skipSelectors = [
-      'pre',
-      'code',
-      'table',
-      'blockquote',
-      'h1',
-      'h2',
-      'h3',
-      'h4',
-      'h5',
-      'h6',
-      'li',
-      'ol',
-      'ul',
-      'dt',
-      'dd',
-      'dl'
-    ];
-    
+    const skipSelectors = ['pre', 'code', 'table', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ol', 'ul', 'dt', 'dd', 'dl'];
     return skipSelectors.some(selector => element.closest(selector));
   }
 };
 
-  // 表格处理模块
+// 表格处理模块
 const TableHandler = {
   // 为表格添加样式和增强功能
   enhanceTables() {
@@ -648,9 +615,9 @@ const TableHandler = {
       
       // 分析每列的数据类型
       headers.forEach((header, colIndex) => {
-        const cells = Array.from(rows).map(row => 
-          row.cells[colIndex]?.textContent.trim() || ''
-        ).filter(text => text);
+        const cells = Array.from(rows)
+          .map(row => row.cells[colIndex]?.textContent.trim() || '')
+          .filter(text => text);
         
         const dataType = this.detectDataType(cells);
         
@@ -739,7 +706,7 @@ const FileLinkHandler = {
         }
 
         let files = await CORS_file_config();
-        fileId = files["files"][String(fileId)]["file_id"];
+        fileId = files.files[String(fileId)].file_id;
 
         try {
           // 获取files.json配置
@@ -754,9 +721,7 @@ const FileLinkHandler = {
           // 设置模态窗为flex显示以居中内容
           downloadModal.style.display = 'flex';
           // 添加active类以触发动画
-          setTimeout(() => {
-            downloadModal.classList.add('active');
-          }, 10);
+          setTimeout(() => downloadModal.classList.add('active'), 10);
           
           // 确认按钮点击事件
           const handleConfirmDownload = function() {
@@ -801,16 +766,19 @@ const ShareHandler = {
       const articleTitle = document.querySelector('.title').textContent;
       const articleUrl = window.location.href;
       const articleTime = document.querySelector('.blog-date').textContent;
-      let shareContent = `泛舟游客的博客：《${articleTitle}》已于${articleTime}发布，点击查看：${articleUrl}`;
+      const shareContent = `泛舟游客的博客：《${articleTitle}》已于${articleTime}发布，点击查看：${articleUrl}`;
       
       this.copyToClipboard(shareContent);
     });
   },
   
   // 复制到剪贴板
-  copyToClipboard(content) {
+  async copyToClipboard(content) {
     try {
-      if (!navigator.clipboard) {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(content);
+        alert('URL 已成功复制到剪贴板');
+      } else {
         // 降级方案
         const textArea = document.createElement('textarea');
         textArea.value = content;
@@ -819,6 +787,7 @@ const ShareHandler = {
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
+        
         try {
           document.execCommand('copy');
           alert('URL 已成功复制到剪贴板');
@@ -827,17 +796,7 @@ const ShareHandler = {
         } finally {
           document.body.removeChild(textArea);
         }
-        return;
       }
-      
-      navigator.clipboard.writeText(content)
-        .then(() => {
-          alert('URL 已成功复制到剪贴板');
-        })
-        .catch(err => {
-          console.error('复制失败:', err);
-          alert('无法复制 URL');
-        });
     } catch (error) {
       console.error('复制 URL 时出错:', error);
       alert('复制 URL 时出错');
@@ -864,10 +823,8 @@ document.addEventListener('DOMContentLoaded', () => {
         video.crossOrigin = 'anonymous';
       });
       
-      // 处理视频错误
+      // 处理视频相关功能
       VideoHandler.handleVideoError();
-      
-      // 添加视频时间跳转功能
       VideoHandler.addVideoTimeJump();
       
       // 获取并更新博客信息
@@ -875,7 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Blog Details:', blog_details);
       BlogInfoHandler.updateBlogInfo(blog_details);
       
-      // 为代码块添加语言标签、复制按钮和折叠功能
+      // 为代码块添加功能
       CodeBlockHandler.addCodeBlockFeatures();
       
       // 为表格添加样式和增强功能
@@ -888,11 +845,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ImageHandler.addImageCaptions();
       
       // 添加文件链接跳转功能（在所有DOM操作完成后执行）
-      setTimeout(() => {
-        FileLinkHandler.addFileLinkHandler();
-      }, 500);
+      setTimeout(() => FileLinkHandler.addFileLinkHandler(), 500);
 
-      
       // 初始化分享功能
       ShareHandler.initShare();
       

@@ -1,12 +1,12 @@
 @font-face {
-    font-family: 'AlibabaPuHuiTi';
+    font-family: AlibabaPuHuiTi;
     src: url('/res/font/AlibabaPuHuiTi.woff2') format('woff2');
   }
 
 body {
-    background-color: #000000;
-    color: #ffffff;
-    font-family: 'AlibabaPuHuiTi', Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    font-family: AlibabaPuHuiTi, Arial, sans-serif;
     font-size: 18px;
     margin: 0;
     padding: 0;
@@ -37,7 +37,7 @@ body::before {
 .top-background {
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgb(0 0 0 / 40%);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -48,9 +48,9 @@ body::before {
 
 .top-sign-0 {
     font-size: 2.2rem;
-    color: #ffffff;
+    color: #fff;
     margin-bottom: 15px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 4px rgb(0 0 0 / 30%);
     font-weight: bold;
     letter-spacing: 2px;
     animation: fadeInDown 1s ease-out;
@@ -59,38 +59,18 @@ body::before {
 .top-sign-1 {
     font-size: 1.2rem;
     color: #e0e0e0;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 2px rgb(0 0 0 / 20%);
     animation: fadeInUp 1s ease-out;
 }
 
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 .main-content {
     padding: 40px 0;
     min-height: calc(100vh - 300px);
     display: flex;
     flex-direction: column;
-    background-color: #000000;
+    background-color: #000;
     position: relative;
 }
 
@@ -102,23 +82,108 @@ body::before {
     padding: 0 20px;
 }
 
-@media (max-width: 1200px) {
+/* 平板设备 (1024px 以下) */
+@media (max-width: 1024px) {
     .content-container {
-        width: 65%;
+        width: 75%;
     }
 }
 
+/* 小平板和手机设备 (768px 以下) */
 @media (max-width: 768px) {
     .content-container {
         width: 85%;
         padding: 0 15px;
     }
+    
+    .timeline-container {
+        width: 100% !important;
+    }
+    
+    .image-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .timeline-item-content {
+        margin-left: 40px;
+        padding: 20px;
+    }
+    
+    .timeline-item-content::before {
+        left: -10px;
+        border-width: 5px;
+    }
+    
+    /* 图片网格响应式 */
+    .pictures-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+    }
+    
+    /* 视频网格响应式 */
+    .videos-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    /* 加载更多按钮响应式 */
+    .load-more-button {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        min-width: 44px;
+        min-height: 44px;
+    }
 }
 
+/* 手机设备 (480px 以下) */
 @media (max-width: 480px) {
     .content-container {
         width: 95%;
         padding: 0 10px;
+    }
+    
+    /* 顶部标题响应式 */
+    .top-sign-0 {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+    
+    .top-sign-1 {
+        font-size: 1rem;
+    }
+    
+    /* 时间轴内容响应式 */
+    .timeline-item-content {
+        margin-left: 30px;
+        padding: 16px;
+    }
+    
+    /* 图片网格响应式 */
+    .pictures-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 8px;
+    }
+    
+    /* 标签响应式 */
+    .hashtag {
+        padding: 3px 8px;
+        font-size: 0.7rem;
+        margin-right: 4px;
+        margin-top: 4px;
+    }
+    
+    /* 模态窗响应式 */
+    .modal-close {
+        top: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+        font-size: 1.5rem;
+    }
+    
+    .modal-image {
+        max-width: 95%;
+        max-height: 70vh;
     }
 }
 
@@ -141,6 +206,7 @@ body::before {
     0%, 100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.5;
     }
@@ -149,34 +215,38 @@ body::before {
 .timeline-dot {
     position: absolute;
     left: 30px;
-    width: 12px;
-    height: 12px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    background-color: #ffffff;
-    border: 2px solid #ffffff;
-    box-shadow: 0 0 0 2px #000000;
-    margin-top: 25px;
+    background-color: #fff;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #000;
+    margin-top: 22px;
     transform: translateX(-50%);
     transition: all 0.3s ease;
     cursor: pointer;
     animation: pulse 2s infinite;
+    min-width: 20px;
+    min-height: 20px;
 }
 
 .timeline-dot:hover {
     transform: translateX(-50%) scale(1.2);
-    box-shadow: 0 0 0 3px #000000, 0 0 0 5px #ffffff;
+    box-shadow: 0 0 0 3px #000, 0 0 0 5px #fff;
     animation: none;
 }
 
 @keyframes pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+        box-shadow: 0 0 0 0 rgb(255 255 255 / 70%);
     }
+
     70% {
-        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+        box-shadow: 0 0 0 10px rgb(255 255 255 / 0%);
     }
+
     100% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+        box-shadow: 0 0 0 0 rgb(255 255 255 / 0%);
     }
 }
 
@@ -210,32 +280,14 @@ iframe{
 
 video{
     width: 100%;
-    margin: auto auto;
+    margin: auto;
 }
+
 .video-time-jump{
     color: #ff7e79;
 }
 
-/* 响应式布局 */
-@media (max-width: 768px) {
-    .timeline-container {
-        width: 100% !important;
-    }
-    
-    .image-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
 
-@media (max-width: 480px) {
-    .image-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .timeline-item-content {
-        margin-left: 12px !important;
-    }
-}
 
 /* 动画效果 */
 .timeline-item {
@@ -252,19 +304,19 @@ video{
 }
 
 .timeline-item-content {
-    background-color: #ffffff;
+    background-color: #fff;
     border-radius: 8px;
     padding: 25px;
     margin-left: 50px;
     position: relative;
-    color: #000000;
+    color: #000;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgb(255 255 255 / 10%);
 }
 
 .timeline-item-content:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 8px rgb(255 255 255 / 20%);
 }
 
 .timeline-item-content::before {
@@ -275,20 +327,10 @@ video{
     width: 0;
     height: 0;
     border: 4px solid transparent;
-    border-right-color: #ffffff;
+    border-right-color: #fff;
 }
 
-@media (max-width: 768px) {
-    .timeline-item-content {
-        margin-left: 40px;
-        padding: 20px;
-    }
-    
-    .timeline-item-content::before {
-        left: -10px;
-        border-width: 5px;
-    }
-}
+
 
 .text-black {
     color: #000;
@@ -301,16 +343,16 @@ video{
     padding: 4px 10px;
     margin-right: 6px;
     margin-top: 6px;
-    background-color: #333333;
+    background-color: #333;
     border-radius: 12px;
     font-size: 0.75rem;
-    color: #ffffff;
+    color: #fff;
     transition: all 0.2s ease;
     cursor: pointer;
 }
 
 .hashtag:hover {
-    background-color: #555555;
+    background-color: #555;
     transform: translateY(-1px);
 }
 
@@ -328,12 +370,12 @@ video{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #cccccc;
+    color: #ccc;
     font-size: 0.875rem;
 }
 
 .beian {
-    color: #cccccc;
+    color: #ccc;
     text-decoration: none;
 }
 
@@ -363,6 +405,65 @@ video{
     border-top: 2px solid #fff;
     border-radius: 50%;
     animation: spin 1s linear infinite;
+}
+
+.loading-spinner-small {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #333;
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* 加载更多按钮样式 */
+.load-more-button {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 30px auto 20px;
+    min-width: 160px;
+    min-height: 44px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.load-more-button:hover {
+    background-color: #f5f5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.load-more-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.load-more-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 加载更多按钮容器 */
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
 }
 
 @keyframes spin {
@@ -463,7 +564,7 @@ video{
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgb(0 0 0 / 90%);
     z-index: 1000;
     justify-content: center;
     align-items: center;
@@ -495,10 +596,10 @@ video{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgb(255 255 255 / 10%);
     transition: background-color 0.2s ease;
 }
 
 .modal-close:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgb(255 255 255 / 20%);
 }

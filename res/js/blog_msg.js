@@ -1,18 +1,18 @@
 /**
- * 获取博客文章列表（带分页功能）
+ * 通用函数：获取文章列表（带分页功能）
+ * @param {string} type - 文章类型（blogs 或 tech_stack）
  * @param {number} page - 当前页码
  * @param {number} pageSize - 每页显示数量
- * @param {boolean} onlyMetadata - 是否只获取元数据（标题、日期、标签等）
  * @returns {Promise<Object>} 包含文章列表和总页数的对象
  */
-export async function BLOG_getBlogItems(page = 1, pageSize = 10, onlyMetadata = true) {
+async function getArticleList(type, page = 1, pageSize = 10) {
     try {
         const response = await fetch("/config/blogs.json");
-        let data = await response.text();
-        data = JSON.parse(data)["blogs"];
+        const data = await response.json();
+        const articles = data[type] || [];
         
         // 计算总页数
-        const totalItems = data.length;
+        const totalItems = articles.length;
         const totalPages = Math.ceil(totalItems / pageSize);
         
         // 计算当前页的数据范围
@@ -20,37 +20,47 @@ export async function BLOG_getBlogItems(page = 1, pageSize = 10, onlyMetadata = 
         const endIndex = Math.min(startIndex + pageSize, totalItems);
         
         // 获取当前页的文件路径
-        const pageData = data.slice(startIndex, endIndex);
+        const pageData = articles.slice(startIndex, endIndex);
         
         // 并行获取文章数据
-        const blogsData = await Promise.all(
+        const articlesData = await Promise.all(
             pageData.map(async (filePath) => {
-                const fullPath = "/article/blog/" + filePath;
+                const fullPath = `/article/${type === 'blogs' ? 'blog' : 'tech_stack'}/${filePath}`;
                 try {
-                    const j = await BLOG_getContent(fullPath);
-                    j.id = fullPath;
-                    return j;
+                    const content = await BLOG_getContent(fullPath);
+                    content.id = fullPath;
+                    return content;
                 } catch (error) {
-                    console.error(`Error fetching blog ${fullPath}:`, error);
+                    console.error(`Error fetching ${type} article ${fullPath}:`, error);
                     return null;
                 }
             })
         );
         
         // 过滤掉null值
-        const validBlogs = blogsData.filter(blog => blog !== null);
+        const validArticles = articlesData.filter(article => article !== null);
         
         return {
-            items: validBlogs,
+            items: validArticles,
             total: totalItems,
             page,
             pageSize,
             totalPages
         };
     } catch (error) {
-        console.error('Error fetching blogs.json:', error);
+        console.error(`Error fetching ${type} list:`, error);
         return null;
     }
+}
+
+/**
+ * 获取博客文章列表（带分页功能）
+ * @param {number} page - 当前页码
+ * @param {number} pageSize - 每页显示数量
+ * @returns {Promise<Object>} 包含文章列表和总页数的对象
+ */
+export async function BLOG_getBlogItems(page = 1, pageSize = 10) {
+    return getArticleList('blogs', page, pageSize);
 }
 
 /**
@@ -63,10 +73,10 @@ export async function BLOG_getContent(blogId) {
         const response = await fetch(`${blogId}`);
         const data = await response.text();
 
-        // 使用正确的正则表达式匹配 <div> 标签内容
-        const regex = /<div style="display:none;" class="author">([^<]*(?:<(?!\/div>)[^<]*)*)<\/div>/i;
+        // 使用正则表达式匹配 <div> 标签内容
+        const regex = /<div style="display:none;" class="author">([\s\S]*?)<\/div>/i;
         const match = data.match(regex);
-        return match[1] ? JSON.parse(match[1]) : "文章异常，请联系博主";
+        return match && match[1] ? JSON.parse(match[1]) : "文章异常，请联系博主";
     } catch (error) {
         console.error('Error fetching blog:', error);
         return "未找到文章";
@@ -80,51 +90,7 @@ export async function BLOG_getContent(blogId) {
  * @returns {Promise<Object>} 包含文章列表和总页数的对象
  */
 export async function BLOG_getKnowledgeItems(page = 1, pageSize = 10) {
-    try {
-        const response = await fetch("/config/blogs.json");
-        let data = await response.text();
-        data = JSON.parse(data)["tech_stack"];
-        
-        // 计算总页数
-        const totalItems = data.length;
-        const totalPages = Math.ceil(totalItems / pageSize);
-        
-        // 计算当前页的数据范围
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = Math.min(startIndex + pageSize, totalItems);
-        
-        // 获取当前页的文件路径
-        const pageData = data.slice(startIndex, endIndex);
-        
-        // 并行获取文章数据
-        const blogsData = await Promise.all(
-            pageData.map(async (filePath) => {
-                const fullPath = "/article/tech_stack/" + filePath;
-                try {
-                    const j = await BLOG_getContent(fullPath);
-                    j.id = fullPath;
-                    return j;
-                } catch (error) {
-                    console.error(`Error fetching knowledge article ${fullPath}:`, error);
-                    return null;
-                }
-            })
-        );
-        
-        // 过滤掉null值
-        const validBlogs = blogsData.filter(blog => blog !== null);
-        
-        return {
-            items: validBlogs,
-            total: totalItems,
-            page,
-            pageSize,
-            totalPages
-        };
-    } catch (error) {
-        console.error('Error fetching knowledge items:', error);
-        return null;
-    }
+    return getArticleList('tech_stack', page, pageSize);
 }
 
 /**
@@ -138,11 +104,9 @@ export async function loadArticleFullContent(article) {
         const content = await response.text();
         // 提取文章内容部分（移除元数据）
         const contentMatch = content.match(/<div style="display:none;" class="author">[\s\S]*?<\/div>([\s\S]*)/i);
-        if (contentMatch && contentMatch[1]) {
-            article.fullContent = contentMatch[1].toLowerCase();
-        } else {
-            article.fullContent = article.description ? article.description.toLowerCase() : '';
-        }
+        article.fullContent = contentMatch && contentMatch[1] 
+            ? contentMatch[1].toLowerCase() 
+            : (article.description ? article.description.toLowerCase() : '');
         return article;
     } catch (error) {
         console.error(`加载文章 ${article.id} 内容失败:`, error);
@@ -158,17 +122,15 @@ export async function loadArticleFullContent(article) {
 export async function backend() {
     try {
         const response = await fetch("/config/backend.json");
-        const { test_host, work_host ,env} = await response.json();
+        const { test_host, work_host, env } = await response.json();
         
-        const config = {
+        return {
             test_host,
             work_host,
-            host: window.location.hostname === "127.0.0.1" ? (env === "web" ? work_host: test_host ) : work_host
-
+            host: window.location.hostname === "127.0.0.1" 
+                ? (env === "web" ? work_host : test_host) 
+                : work_host
         };
-
-        
-        return config;
     } catch (error) {
         console.error('Error fetching backend.json:', error);
         return null;
@@ -181,7 +143,6 @@ export async function backend() {
  */
 export async function CORS_file_config() {
     // 使用Gitee API获取文件内容
-    // 注意：需要替换为有效的访问令牌
     const OWNER = 'gravitysword';
     const REPO = 'blog';
     const PATH = 'files.json';
@@ -190,10 +151,7 @@ export async function CORS_file_config() {
     
     try {
         const response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
+            headers: { 'Accept': 'application/json' }
         });
         
         if (!response.ok) {
@@ -204,20 +162,14 @@ export async function CORS_file_config() {
         
         // Gitee API返回的文件内容是base64编码的，需要解码
         if (data.content) {
-            // 解码base64内容
             const decodedContent = atob(data.content);
-            // 确保以UTF-8格式处理解码后的内容
-            const utf8Content = new TextDecoder('utf-8').decode(
-                new Uint8Array([...decodedContent].map(char => char.charCodeAt(0)))
-            );
-            console.log(utf8Content);
-            return JSON.parse(utf8Content);
+            return JSON.parse(decodedContent);
         } else {
             throw new Error('文件内容为空');
         }
     } catch (error) {
         console.error('使用Gitee API获取文件失败:', error);
-        
+        return {};
     }
 }
 
@@ -228,16 +180,10 @@ export async function CORS_file_config() {
 export async function getBooksData() {
     try {
         const config = await backend();
-        const host = config.host;
+        if (!config) throw new Error('无法获取后端配置');
         
-        // 构建书籍数据API地址
-        const booksApiUrl = `${host}/books`;
-        
-        const response = await fetch(booksApiUrl, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
+        const response = await fetch(`${config.host}/books`, {
+            headers: { 'Accept': 'application/json' }
         });
         
         if (!response.ok) {

@@ -1,13 +1,99 @@
-泛舟游客的博客
+# 泛舟游客的博客
 
+## 项目架构
 
-{
-    "status": "success",
-    "src": "https://pic-private.zhihu.com/v2-86264a15e3d84ec9f46339ddcec7659b~resize:1440:q75.jpg?source=1f5c5e47&expiration=1763359625&auth_key=1763359625-0-0-22fd3771192da3d8618ebf15a84b77b6&protocol=v2&sampling=False&animatedImagePlayCount=1&overTime=60&incremental=False&sceneCode=article_draft_web&animatedImageAutoPlay=False&retryCount=3&precoder=False",
-    "animation_cover_src": "https://pic-private.zhihu.com/v2-86264a15e3d84ec9f46339ddcec7659b~resize:1440:q75.jpg?source=1f5c5e47&expiration=1763359625&auth_key=1763359625-0-0-22fd3771192da3d8618ebf15a84b77b6&protocol=v2&sampling=False&animatedImagePlayCount=1&overTime=60&incremental=False&sceneCode=article_draft_web&animatedImageAutoPlay=False&retryCount=3&precoder=False",
-    "watermark": "original",
-    "watermark_hash": "v2-61cf5c633b50e0a8296f53bdc1cb2aa6",
-    "watermark_src": "https://pic-private.zhihu.com/v2-61cf5c633b50e0a8296f53bdc1cb2aa6~resize:1440:q75.jpg?source=1f5c5e47&expiration=1763359625&auth_key=1763359625-0-0-2ba070bcd6af2bceac237dae7fe41524&protocol=v2&sampling=False&animatedImagePlayCount=1&overTime=60&incremental=False&sceneCode=article_draft_web&animatedImageAutoPlay=False&retryCount=3&precoder=False",
-    "original_hash": "v2-86264a15e3d84ec9f46339ddcec7659b",
-    "original_src": "https://pic-private.zhihu.com/v2-86264a15e3d84ec9f46339ddcec7659b~resize:0:q75.jpg?source=1f5c5e47&expiration=1763359625&auth_key=1763359625-0-0-a0b9250379caf576b53ab22d8c8dad85&protocol=v2&sampling=False&animatedImagePlayCount=1&overTime=60&incremental=False&sceneCode=article_draft_web&animatedImageAutoPlay=False&retryCount=3&precoder=False"
-}
+### 核心目录结构
+```
+blog/
+├── article/         # 文章内容目录
+│   ├── blog/        # 博客文章
+│   ├── daily/       # 日常记录
+│   └── tech_stack/  # 技术栈文章
+├── config/          # 配置文件
+│   ├── blogs.json   # 文章列表配置
+│   ├── backend.json # 后端服务配置
+│   └── books.json   # 书籍配置
+├── res/             # 静态资源
+│   ├── css/         # 样式文件
+│   ├── js/          # JavaScript模块
+│   ├── font/        # 字体文件
+│   └── media/       # 媒体资源
+├── view/            # 视图模板
+│   ├── blog.html    # 博客详情页
+│   ├── daily.html   # 日常记录页
+│   ├── tech_stack.html # 技术栈页
+│   └── tags/        # 公共组件
+└── index.html       # 首页
+```
+
+## 核心功能
+
+### 1. 文章管理系统
+- **多分类支持**：博客、日常、技术栈
+- **Markdown渲染**：使用marked.js解析Markdown
+- **代码高亮**：集成Prism.js，支持多种语言
+- **数学公式**：KaTeX渲染，支持行内和块级公式
+- **图片增强**：点击放大、alt文本注释
+
+### 2. 交互体验
+- **响应式设计**：适配不同屏幕尺寸
+- **分页浏览**：支持文章列表分页
+- **代码块功能**：折叠、复制、语言标识
+- **表格增强**：自动样式、数据类型识别
+- **图片放大**：模态窗放大查看
+- **分享功能**：一键复制分享链接
+
+### 3. 技术架构
+- **模块化设计**：功能模块独立封装
+- **ES模块规范**：使用import/export组织代码
+- **配置驱动**：JSON配置管理文章和服务
+- **组件化开发**：公共组件复用
+- **静态资源管理**：统一资源目录
+
+## 关键模块
+
+### 文章处理模块
+- `BLOG_getContent()`：获取文章内容
+- `BLOG_getBlogItems()`：获取博客列表（带分页）
+- `BLOG_getKnowledgeItems()`：获取技术栈文章
+
+### 渲染引擎
+- **MarkdownHandler**：Markdown解析与渲染
+- **CodeBlockHandler**：代码块增强功能
+- **ImageHandler**：图片处理与增强
+- **TableHandler**：表格样式与功能增强
+
+### 配置系统
+- 文章列表通过`blogs.json`动态管理
+- 后端服务地址通过`backend.json`配置
+- 支持开发/生产环境切换
+
+## 技术栈
+
+| 类别 | 技术/库 | 用途 |
+|------|---------|------|
+| 前端框架 | 原生JavaScript | 核心逻辑 |
+| Markdown解析 | marked.js | 文章渲染 |
+| 代码高亮 | Prism.js | 代码块处理 |
+| 数学公式 | KaTeX | 数学公式渲染 |
+| 样式设计 | CSS3 | 响应式布局 |
+| 模块规范 | ES Modules | 代码组织 |
+
+## 运行方式
+
+直接在浏览器中打开`index.html`即可运行，无需额外服务器配置。
+
+## 扩展说明
+
+- 支持自定义主题：修改CSS文件即可
+- 文章添加：直接在对应目录下添加Markdown文件，并更新`blogs.json`
+- 支持扩展组件：可在`view/tags/`目录下添加新组件
+- 后端服务：可通过`backend.json`配置自定义后端API
+
+## 项目特点
+
+1. **轻量级**：无复杂依赖，直接运行
+2. **易扩展**：模块化设计，便于功能扩展
+3. **高性能**：静态资源加载，快速渲染
+4. **良好体验**：响应式设计，交互友好
+5. **易于维护**：清晰的目录结构，规范的代码组织

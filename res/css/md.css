@@ -369,21 +369,16 @@ body {
 	background: linear-gradient(135deg, #1e1e1e 0%, #191919 100%);
 }
 
-.content table tr:hover {
-	background: linear-gradient(135deg, #2c2c2c 0%, #252525 100%);
-	transform: scale(1.005);
-	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-	z-index: 1;
-	position: relative;
-}
-
 .content table tr {
-	transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .content table tr:hover {
-	background-color: #2c2c2c;
-	transform: scale(1.01);
+    background: linear-gradient(135deg, #2c2c2c 0%, #252525 100%);
+    transform: scale(1.005);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    z-index: 1;
+    position: relative;
 }
 
 /* 表格排序图标 - 从blog.css迁移 */
@@ -424,52 +419,7 @@ body {
 	opacity: 1;
 }
 
-/* 可访问性改进 */
-.content table caption {
-	position: absolute;
-	left: -10000px;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-	clip: rect(0 0 0 0);
-	clip-path: inset(50%);
-	white-space: nowrap;
-}
 
-/* 屏幕阅读器可见的表格描述 */
-.content .table-description {
-	display: none;
-}
-
-.content table:focus-within {
-	outline: 2px solid #ff6b66;
-	outline-offset: 2px;
-}
-
-/* 键盘导航指示器 */
-.content table th[tabindex]:hover,
-.content table th[tabindex]:focus {
-	background-color: #3a3a3a;
-	cursor: pointer;
-}
-
-/* 跳过表格链接 */
-.content .skip-table {
-	position: absolute;
-	top: -40px;
-	left: 6px;
-	background: #ff6b66;
-	color: #000;
-	padding: 8px;
-	border-radius: 4px;
-	text-decoration: none;
-	z-index: 100;
-	transition: top 0.3s;
-}
-
-.content .skip-table:focus {
-	top: 6px;
-}
 
 /* 表格响应式设计 - 优化移动端显示 */
 @media screen and (max-width: 768px) {

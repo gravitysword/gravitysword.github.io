@@ -24,7 +24,7 @@ function displayBlogItems(items) {
             <span class="blog-id" style="display:none">${item.id}</span>
             <span class="blog-title">${item.title}</span>
             <span class="blog-introduce">
-                <img class="calendar" src="./res/media/svg/sys/calendar.svg">
+                <img class="calendar" src="/res/media/svg/sys/calendar.svg" loading="lazy" alt="日历">
                 <span class="blog-date">${item.date}</span>
                 ${item.tag.map(t => `<span class="blog-tag">#${t}</span>`).join('')}
             </span>
@@ -44,12 +44,10 @@ function updatePagination() {
     const startPage = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
     const endPage = Math.min(startPage + 4, totalPages);
     
-    const pageNumbers = Array.from(
+    const pageNumbersHTML = Array.from(
         { length: endPage - startPage + 1 },
         (_, i) => startPage + i
-    );
-    
-    const pageNumbersHTML = pageNumbers.map(page => `
+    ).map(page => `
         <a href="#" class="page-number ${page === currentPage ? 'active' : ''}">${page}</a>
     `).join('');
     
@@ -214,4 +212,9 @@ async function initBlogList() {
 document.addEventListener('DOMContentLoaded', () => {
     // 启动博客列表
     initBlogList();
+    
+    // 添加窗口大小变化事件监听
+    window.addEventListener('resize', () => {
+        setTitleUnderlineWidth();
+    });
 });

@@ -3,30 +3,27 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #000000;
-    font-family: "AlibabaPuHuiTi", sans-serif;
+    background-color: #000;
+    font-family: AlibabaPuHuiTi, sans-serif;
 }
 
-/* SVG图标样式 - 确保在黑色背景上显示为白色 */
-img[src$=".svg"]:not(.modal-image) {
-    filter: invert(100%) brightness(100%);
-}
-
-/* 特别处理天气图标，确保其保持原有样式但颜色为白色 */
+/* 图标样式 - 确保在黑色背景上显示为白色 */
+img[src$=".svg"]:not(.modal-image),
 .weather {
     filter: invert(100%) brightness(100%);
 }
 
 /* 防止模态窗中的图片被反色 */
-.image-modal img {
+.image-modal img,
+.modal-image {
     filter: none !important;
 }
 
 /* 2. 主容器样式 */
 .main-content {
-    background-color: #000000;
+    background-color: #000;
     flex-grow: 1;
-    width: 50%;
+    width: 55%;
     margin: 5% auto;
     padding: 40px;
     border-radius: 10px;
@@ -37,7 +34,7 @@ img[src$=".svg"]:not(.modal-image) {
     margin: 35px auto;
     border: 0;
     height: 1px;
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+    background-image: linear-gradient(to right, rgb(255 255 255 / 0%), rgb(255 255 255 / 50%), rgb(255 255 255 / 0%));
     width: 80%;
 }
 
@@ -66,7 +63,7 @@ img[src$=".svg"]:not(.modal-image) {
 .title-line {
     width: 60px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 30%), transparent);
     margin: 0 auto;
     opacity: 0;
     animation: fadeIn 1s ease-out 0.3s forwards;
@@ -103,7 +100,7 @@ img[src$=".svg"]:not(.modal-image) {
 }
 
 .blog-date {
-    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-family: SFMono-Regular, Consolas, monospace;
     letter-spacing: 1px;
 }
 
@@ -119,18 +116,18 @@ img[src$=".svg"]:not(.modal-image) {
 }
 
 .blog-tag:hover {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(255 255 255 / 80%);
 }
 
 .blog-tag:not(:last-child)::after {
     content: "·";
     margin-left: 6px;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgb(255 255 255 / 30%);
 }
 
 .section-divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 10%), transparent);
     margin: 0 auto 40px;
     max-width: 200px;
 }
@@ -141,6 +138,7 @@ img[src$=".svg"]:not(.modal-image) {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -151,6 +149,7 @@ img[src$=".svg"]:not(.modal-image) {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -158,7 +157,7 @@ img[src$=".svg"]:not(.modal-image) {
 
 /* 5. 内容区域样式 */
 .content {
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(0 0 0);
 }
 
 
@@ -174,9 +173,9 @@ img[src$=".svg"]:not(.modal-image) {
 /* From Uiverse.io by adamgiebl */
 .share button {
     font-size: 16px;
-    background: rgb(0, 0, 0);
+    background: rgb(0 0 0);
     color: white;
-    padding: 10px;
+    padding: 12px 16px;
     display: flex;
     align-items: center;
     border-radius: 10px;
@@ -185,6 +184,8 @@ img[src$=".svg"]:not(.modal-image) {
     cursor: pointer;
     border: none;
     margin: 0 auto;
+    min-width: 44px;
+    min-height: 44px;
 }
 
 .share button span {
@@ -221,6 +222,7 @@ img[src$=".svg"]:not(.modal-image) {
     from {
         transform: translateY(0.1em);
     }
+
     to {
         transform: translateY(-0.1em);
     }
@@ -235,7 +237,7 @@ img[src$=".svg"]:not(.modal-image) {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgb(0 0 0 / 90%);
     z-index: 1000;
     justify-content: center;
     align-items: center;
@@ -248,16 +250,12 @@ img[src$=".svg"]:not(.modal-image) {
     opacity: 0;
     transform: scale(0.8);
     transition: opacity 0.3s ease, transform 0.3s ease;
+    filter: none !important;
 }
 
 .modal-image.active {
     opacity: 1;
     transform: scale(1);
-}
-
-/* 修复模态窗图片反色问题 */
-.modal-image {
-    filter: none !important;
 }
 
 .modal-close {
@@ -272,13 +270,13 @@ img[src$=".svg"]:not(.modal-image) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgb(0 0 0 / 50%);
     border-radius: 50%;
     transition: background-color 0.3s ease;
 }
 
 .modal-close:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgb(255 255 255 / 20%);
 }
 
 /* 下载提醒模态窗 */
@@ -289,7 +287,7 @@ img[src$=".svg"]:not(.modal-image) {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgb(0 0 0 / 70%);
     backdrop-filter: blur(5px);
     z-index: 1000;
     justify-content: center;
@@ -310,7 +308,7 @@ img[src$=".svg"]:not(.modal-image) {
     text-align: center;
     max-width: 400px;
     width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 50%);
     transform: scale(0.9);
     transition: transform 0.3s ease;
 }
@@ -354,6 +352,10 @@ img[src$=".svg"]:not(.modal-image) {
     transition: all 0.3s ease;
     margin-top: 20px;
     min-width: 120px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .download-modal .modal-button:hover {
@@ -362,11 +364,25 @@ img[src$=".svg"]:not(.modal-image) {
 
 .download-modal .modal-button:active {
     transform: translateY(0);
-    box-shadow: 0 2px 10px rgba(74, 144, 226, 0.3);
+    box-shadow: 0 2px 10px rgb(74 144 226 / 30%);
 }
 
 
 /* 11. 响应式设计 */
+/* 平板设备 (1024px 以下) */
+@media screen and (max-width: 1024px) {
+    .main-content {
+        width: 75%;
+        margin: 4% auto;
+        padding: 30px;
+    }
+    
+    .title {
+        font-size: 2.5em;
+    }
+}
+
+/* 小平板和手机设备 (768px 以下) */
 @media screen and (max-width: 768px) {
     .main-content {
         width: 95%;
@@ -392,11 +408,61 @@ img[src$=".svg"]:not(.modal-image) {
         max-width: 120px;
         margin-bottom: 30px;
     }
+    
+    /* 响应式图片注释 */
+    .image-caption {
+        font-size: 13px;
+        margin-top: 6px;
+    }
+    
+    .image-wrapper {
+        margin: 15px 0;
+    }
+    
+    /* 分享按钮响应式 */
+    .share button {
+        padding: 8px;
+        font-size: 14px;
+    }
 }
 
+/* 手机设备 (480px 以下) */
+@media screen and (max-width: 480px) {
+    .main-content {
+        width: 98%;
+        margin: 1% auto;
+        padding: 15px;
+    }
+    
+    .introduce {
+        padding: 30px 0 20px;
+    }
+    
+    .title {
+        font-size: 1.8em;
+        margin-bottom: 12px;
+    }
+    
+    .meta-item {
+        font-size: 13px;
+    }
+    
+    /* 模态窗响应式 */
+    .download-modal .modal-content {
+        padding: 20px;
+        width: 95%;
+    }
+    
+    /* 图片模态窗响应式 */
+    .modal-close {
+        top: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+        font-size: 1.5rem;
+    }
+}
 
-
-   
 /* 图片注释样式 */
 .image-wrapper {
     display: inline-block;
@@ -410,13 +476,13 @@ img[src$=".svg"]:not(.modal-image) {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgb(0 0 0 / 30%);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .image-wrapper img:hover {
     transform: scale(1.02);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 6px 12px rgb(0 0 0 / 40%);
 }
 
 .image-caption {
@@ -429,22 +495,75 @@ img[src$=".svg"]:not(.modal-image) {
     padding: 0 10px;
 }
 
-/* 响应式图片注释 */
-@media screen and (max-width: 768px) {
-    .image-caption {
-        font-size: 13px;
-        margin-top: 6px;
-    }
-    
-    .image-wrapper {
-        margin: 15px 0;
-    }
-}
-
 /* 深色模式下的图片注释 */
 @media (prefers-color-scheme: dark) {
     .image-caption {
         color: #aaa;
+    }
+}
+
+/* 代码块响应式样式 */
+@media screen and (max-width: 768px) {
+    pre {
+        overflow-x: auto;
+        font-size: 13px;
+        padding: 10px;
+    }
+    
+    pre code {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+    
+    .code-language-label {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+    
+    .copy-code-button {
+        font-size: 12px;
+        padding: 6px 10px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .code-collapse-button,
+    .code-collapse-bottom-button {
+        font-size: 12px;
+        padding: 6px 10px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+/* 表格响应式样式 */
+@media screen and (max-width: 768px) {
+    .table-wrapper {
+        overflow-x: auto;
+        margin: 15px 0;
+    }
+    
+    table {
+        font-size: 13px;
+        min-width: 100%;
+    }
+    
+    th,
+    td {
+        padding: 8px 10px;
+    }
+    
+    .skip-table {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
+
+/* 视频响应式样式 */
+@media screen and (max-width: 768px) {
+    video {
+        max-width: 100%;
+        height: auto;
     }
 }
 

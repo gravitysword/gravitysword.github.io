@@ -194,26 +194,23 @@ document.addEventListener('DOMContentLoaded', function () {
         let currentHeading = null;
 
         // 防抖函数
-        function debounce(func, wait) {
+        const debounce = (func, wait) => {
             let timeout;
             return function () {
-                const context = this;
-                const args = arguments;
                 clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(context, args), wait);
+                timeout = setTimeout(() => func.apply(this, arguments), wait);
             };
-        }
+        };
 
         // 更新标题位置信息
-        function updateHeadingPositions() {
+        const updateHeadingPositions = () => {
             headingPositions = Array.from(headings).map(heading => ({
                 id: heading.id,
                 top: heading.offsetTop,
                 height: heading.offsetHeight,
                 element: heading // 存储元素引用以便快速访问
             }));
-            console.log('更新标题位置:', headingPositions.map(h => ({id: h.id, top: h.top})));
-        }
+        };
 
         // 初始更新位置信息
         updateHeadingPositions();
@@ -351,7 +348,6 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // 监听内容变化，更新位置信息
         const contentObserver = new MutationObserver(debounce(() => {
-            console.log('内容变化，更新标题位置');
             updateHeadingPositions();
             updateTocHighlight();
         }, 100));

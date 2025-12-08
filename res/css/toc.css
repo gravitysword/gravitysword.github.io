@@ -10,6 +10,7 @@
     font-size: 14px;
     z-index: 1000;
     transition: all 0.3s ease;
+
     /* 添加滚动条平滑效果 */
     scroll-behavior: smooth;
 }
@@ -41,15 +42,12 @@
     list-style: none;
     padding: 0;
     margin: 0;
+
     /* 添加左侧垂直线 */
     position: relative;
 }
 
-.toc-container li {
-    margin: -1px 0;
-    padding-left: 15px;
-    position: relative;
-}
+
 
 /* 移除圆点样式 */
 .toc-container li::before {
@@ -69,12 +67,12 @@
 }
 
 .toc-container a:hover {
-    color: #ffffff;
+    color: #fff;
     transform: translateX(3px);
 }
 
 .toc-container a.active {
-    color: #ffffff;
+    color: #fff;
     font-weight: bold;
 }
 
@@ -118,7 +116,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgb(0 0 0 / 50%);
     border: none;
     color: white;
     display: flex;
@@ -137,7 +135,7 @@
 }
 
 .toc-toggle-button:hover {
-    background-color: rgba(50, 50, 50, 0.8);
+    background-color: rgb(50 50 50 / 80%);
     transform: scale(1.05);
 }
 
@@ -152,75 +150,37 @@
     opacity: 1;
 }
 
-/* 在小屏幕上默认隐藏目录 */
-@media (max-width: 1200px) {
-    .toc-container {
-        transform: translateX(-200px);
-        opacity: 0;
-    }
-}
-
 /* 移除目录项的圆点，保持简约风格 */
-.toc-container li::before {
-    display: none;
-}
-
-/* 移除活动项的高亮圆点 */
+.toc-container li::before,
 .toc-container li a.active + li::before {
     display: none;
 }
 
 /* 响应式设计 */
-@media (max-width: 1400px) {
+@media (width <= 1400px) {
     .toc-container {
         left: 10px;
         width: 180px;
     }
 }
 
-
-
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
     .toc-container {
         transform: translateX(-110%); /* 在小屏幕上默认隐藏目录，但保持可访问性 */
+        opacity: 0;
     }
     
     /* 当添加toc-visible类时显示目录 */
     .toc-container.toc-visible {
         transform: translateX(0);
+        opacity: 1;
     }
 }
 
-/* TOC切换按钮样式 */
-.toc-toggle-button {
-    position: fixed;
-    left: 10px;
-    top: 70px;
-    width: 40px;
-    height: 40px;
-    background-color: #222;
-    border: none;
-    border-radius: 50%;
-    color: white;
-    display: none; /* 默认隐藏，在小屏幕上显示 */
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 1001;
-    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3);
-    transition: background-color 0.3s ease;
-}
 
-.toc-toggle-button:hover {
-    background-color: #444;
-}
 
-.toc-toggle-button svg {
-    width: 24px;
-    height: 24px;
-}
 .text-hidden {
-    color: rgba(0, 0, 0, 0) !important;
+    color: rgb(0 0 0 / 0%) !important;
     transition: color 0.5s ease !important;
 }
 

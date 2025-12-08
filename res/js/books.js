@@ -1,35 +1,35 @@
-import { backend, getBooksData } from '/res/js/blog_msg.js';
-
-// 当前视图模式
-let currentView = 'grid'; // 'grid' or 'folder'
-// 当前文件夹路径
-let currentFolderPath = [];
-
 // 书籍管理器
 const BookManager = {
-    // 获取书籍数据
+    // 获取书籍数据 - 从本地配置文件加载
     async loadBookData() {
         try {
-            const response = await getBooksData();
-            console.log('成功加载书籍数据:', response);
+            const response = await fetch('/config/books.json');
+            const configData = await response.json();
             
-            // 创建结果对象
-            let result = { books: [] };
-            
-            // 检查响应数据，新的数据格式是对象，键为书籍ID
-            if (response && typeof response === 'object') {
-                // 将对象转换为数组，直接使用API返回的字段名称
-                result.books = Object.values(response).map(book => ({
-                    book_id: book.book_id,
-                    name: book.name,
+            // 检查配置数据格式
+            if (configData && configData.books && Array.isArray(configData.books)) {
+                // 转换数据格式以匹配现有视图渲染逻辑
+                const books = configData.books.map(book => ({
+                    book_id: book.id,
+                    name: book.title,
                     author: book.author,
                     publisher: book.publisher,
-                    read_status: book.read_status,
-                    from: book.path
+                    read_status: book.status,
+                    from: book.tags ? book.tags.join('/') : '',
+                    created_at: book.created_at
                 }));
+                
+                // 按照创建时间由近至远排序
+                books.sort((a, b) => {
+                    return new Date(b.created_at) - new Date(a.created_at);
+                });
+                
+                console.log('成功从本地配置加载书籍数据:', books);
+                return { books };
+            } else {
+                console.error('书籍配置文件格式不正确');
+                return { books: [] };
             }
-            
-            return result;
         } catch (error) {
             console.error('加载书籍数据失败:', error);
             // 如果加载失败，使用默认数据
@@ -39,222 +39,250 @@ const BookManager = {
 
     // 获取状态文本和类名
     getStatusInfo(status) {
-        if (status === '已读') {
-            return { text: '已读', className: 'status-read', tooltip: '' };
-        } else if (status === '在读') {
-            return { text: '在读', className: 'status-reading', tooltip: '' };
-        } else if (status === '无') {
-            return { text: '无', className: 'status-none', tooltip: '' };
+        const statusMap = {
+            '已读': { text: '已读', className: 'status-read', tooltip: '' },
+            '在读': { text: '在读', className: 'status-reading', tooltip: '' },
+            '无': { text: '无', className: 'status-none', tooltip: '' }
+        };
+        
+        if (statusMap[status]) {
+            return statusMap[status];
         } else if (status.includes('未读')) {
             // 提取'-'后的内容作为tooltip
             const tooltip = status.includes('-') ? status.split('-')[1] : status;
-            return { text: '未读', className: 'status-unread', tooltip: tooltip };
+            return { text: '未读', className: 'status-unread', tooltip };
         } else {
             return { text: '', className: '', tooltip: '' };
         }
-    },
-
-    // 从路径获取标签
-    getBookTags(path) {
-        const parts = path.split('/').filter(part => part.trim() !== '');
-        return parts.slice(0, 2); // 最多返回前两个标签
     }
 };
 
 // 视图渲染器
 const ViewRenderer = {
-    // 渲染书籍网格视图
-    renderBooks(books) {
-        const bookshelf = document.getElementById('bookshelf');
-        bookshelf.className = 'bookshelf';
-        bookshelf.innerHTML = '';
+    // 构建标签树形结构
+    buildTagsTree(books) {
+        // 初始化根节点
+        const tagsTree = {
+            name: '全部书籍',
+            path: null,
+            children: {}
+        };
         
-        // 显示搜索栏
-        const searchBar = document.querySelector('.search-bar');
-        if (searchBar) {
-            searchBar.style.display = 'flex';
+        // 遍历所有书籍，构建标签树
+        books.forEach(book => {
+            if (book.from && book.from.trim() !== '') {
+                const pathParts = book.from.split('/').filter(part => part.trim() !== '');
+                if (pathParts.length > 0) {
+                    let currentNode = tagsTree;
+                    let currentPath = null;
+                    
+                    pathParts.forEach((tag, index) => {
+                        if (index === 0) {
+                            currentPath = tag;
+                        } else {
+                            currentPath += `/${tag}`;
+                        }
+                        
+                        if (!currentNode.children[tag]) {
+                            currentNode.children[tag] = {
+                                name: tag,
+                                path: currentPath,
+                                children: {}
+                            };
+                        }
+                        
+                        currentNode = currentNode.children[tag];
+                    });
+                }
+            }
+        });
+        
+        return tagsTree;
+    },
+    
+    // 创建标签节点元素
+    createTagNode(node, books, selectedTagPath, expandedNodes) {
+        const tagNode = document.createElement('div');
+        tagNode.className = 'tag-node';
+        
+        const tagHeader = document.createElement('div');
+        tagHeader.className = `tag-node-header ${selectedTagPath === node.path ? 'active' : ''}`;
+        
+        // 创建切换按钮
+        const toggleBtn = document.createElement('span');
+        toggleBtn.className = 'tag-toggle';
+        
+        // 创建标签名称
+        const tagName = document.createElement('span');
+        tagName.className = 'tag-name';
+        tagName.textContent = node.name;
+        
+        // 组装标签头部
+        tagHeader.appendChild(toggleBtn);
+        tagHeader.appendChild(tagName);
+        
+        // 先将标签头部添加到节点
+        tagNode.appendChild(tagHeader);
+        
+        // 渲染子节点
+        const children = Object.values(node.children);
+        if (children.length > 0) {
+            const isExpanded = expandedNodes.has(node.path);
+            toggleBtn.textContent = isExpanded ? '▼' : '►';
+            
+            const childrenContainer = document.createElement('div');
+            childrenContainer.className = `tag-children ${isExpanded ? 'open' : ''}`;
+            
+            children.forEach(child => {
+                childrenContainer.appendChild(this.createTagNode(child, books, selectedTagPath, expandedNodes));
+            });
+            
+            // 将子节点容器添加到节点
+            tagNode.appendChild(childrenContainer);
+            
+            // 点击tag-node-header时，同时执行筛选和展开/收缩操作
+            tagHeader.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                // 1. 先处理展开/收缩逻辑
+                childrenContainer.classList.toggle('open');
+                toggleBtn.textContent = childrenContainer.classList.contains('open') ? '▼' : '►';
+                
+                // 2. 保存展开状态
+                if (childrenContainer.classList.contains('open')) {
+                    expandedNodes.add(node.path);
+                } else {
+                    expandedNodes.delete(node.path);
+                }
+                
+                // 3. 执行筛选图书操作
+                this.filterBooksByTagPath(node.path, books);
+            });
+        } else {
+            toggleBtn.textContent = ' ';
+            
+            // 没有子节点的节点，点击只筛选图书
+            tagHeader.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.filterBooksByTagPath(node.path, books);
+            });
         }
         
-        books.forEach(book => {
-            const statusInfo = BookManager.getStatusInfo(book.read_status);
-            const bookElement = document.createElement('div');
-            bookElement.className = 'book-card';
-            bookElement.innerHTML = `
-    <div class="book-cover">
-        <div class="book-cover-img">
-            <i class="fas fa-book"></i>
-        </div>
-    </div>
-    <div class="reading-status ${statusInfo.className}">
-        ${statusInfo.text}
-        ${statusInfo.tooltip ? `<span class="reading-plan-tooltip">${statusInfo.tooltip}</span>` : ''}
-    </div>
-    <div class="book-info">
-        <h3 class="book-title">${book.name}</h3>
-        <p class="book-author">${book.author}</p>
-        <p class="book-publisher">${book.publisher}</p>
-        <div book-id="${book.book_id}"></div>
-    </div>
-            `;
-            bookElement.style.cursor = 'pointer'; // 添加指针样式，提示用户可点击
-
-            bookElement.addEventListener('click', () => this.handleBookClick(book.book_id));
-            bookshelf.appendChild(bookElement);
-        });
+        return tagNode;
     },
-
-    // 处理书籍点击事件
-    async handleBookClick(bookId) {
-        try {
-            // 获取后端配置
-            const config = await backend();
-            const host = config.host;
+    
+    // 根据标签路径筛选书籍
+    filterBooksByTagPath(tagPath, books) {
+        let filteredBooks = [];
+        
+        if (tagPath === null) {
+            // 显示全部书籍
+            filteredBooks = [...books];
+        } else {
+            // 根据标签路径筛选书籍
+            filteredBooks = books.filter(book => {
+                if (book.from && book.from.trim() !== '') {
+                    const bookPathParts = book.from.split('/').filter(part => part.trim() !== '');
+                    for (let i = 0; i < bookPathParts.length; i++) {
+                        const bookTagPath = bookPathParts.slice(0, i + 1).join('/');
+                        if (bookTagPath === tagPath) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            });
+        }
+        
+        // 渲染筛选后的书籍列表
+        this.renderBooksList(filteredBooks);
+    },
+    
+    // 渲染标签树形结构
+    renderTagsTree(books, selectedTagPath, expandedNodes) {
+        const tagsTreeContainer = document.getElementById('tagsTree');
+        if (tagsTreeContainer) {
+            tagsTreeContainer.innerHTML = '';
             
-            // 获取书籍数据以找到对应的书籍信息
-            const bookData = await BookManager.loadBookData();
-            const book = bookData.books.find(b => b.book_id === bookId);
+            // 创建标签树形结构
+            const tree = this.buildTagsTree(books);
             
-            if (!book) {
-                alert('未找到对应的书籍信息');
+            // 创建根节点
+            const rootNode = this.createTagNode(tree, books, selectedTagPath, expandedNodes);
+            tagsTreeContainer.appendChild(rootNode);
+        }
+    },
+    
+    // 渲染书籍列表（表格形式）
+    renderBooksList(books) {
+        const booksListContainer = document.getElementById('booksList');
+        if (booksListContainer) {
+            booksListContainer.innerHTML = '';
+            
+            if (books.length === 0) {
+                booksListContainer.innerHTML = '<div style="text-align: center; color: #888; padding: 20px;">暂无书籍</div>';
                 return;
             }
             
-            // 使用node_id构建下载链接
-            const downloadUrl = `${host}/book_url/${book.book_id}`;
+            // 创建卡片容器
+            const cardsContainer = document.createElement('div');
+            cardsContainer.className = 'books-cards-container';
             
-            // 显示下载提醒模态窗
-            const downloadModal = document.getElementById('downloadModal');
-            const confirmDownloadBtn = document.getElementById('confirmDownload');
+            // 添加列表头部
+            const listHeader = document.createElement('div');
+            listHeader.className = 'books-list-header';
+            listHeader.innerHTML = `
+                <div>书名</div>
+                <div>作者</div>
+                <div>出版社</div>
+                <div>状态</div>
+            `;
+            cardsContainer.appendChild(listHeader);
             
-            // 设置模态窗为flex显示以居中内容
-            downloadModal.style.display = 'flex';
-            // 添加active类以触发动画
-            setTimeout(() => {
-                downloadModal.classList.add('active');
-            }, 10);
-            
-            // 确认按钮点击事件
-            const handleConfirmDownload = function() {
-                // 移除事件监听以防止多次绑定
-                confirmDownloadBtn.removeEventListener('click', handleConfirmDownload);
+            books.forEach(book => {
+                // 创建卡片元素
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.dataset.bookId = book.book_id;
                 
-                // 添加关闭动画
-                downloadModal.classList.remove('active');
+                const statusInfo = BookManager.getStatusInfo(book.read_status);
                 
-                // 隐藏模态窗后跳转
-                setTimeout(() => {
-                    downloadModal.style.display = 'none';
-                    // 跳转到下载链接
-                    location.href = downloadUrl;
-                }, 300);
-            };
-            
-            // 绑定点击事件
-            confirmDownloadBtn.addEventListener('click', handleConfirmDownload);
-            
-        } catch (error) {
-            // 出错时隐藏模态窗并显示错误
-            console.error('Error processing file link:', error);
-            alert('处理文件链接时出错，请检查控制台获取更多信息。');
-        }
-    },
-
-    // 构建文件夹树结构
-    buildFolderTree(books) {
-        const tree = {};
-        
-        books.forEach(book => {
-            // 使用bookpath字段作为路径
-            const pathParts = book.from ? book.from.split('/').filter(part => part.trim() !== '') : [];
-            let currentLevel = tree;
-            
-            // 创建文件夹层级
-            pathParts.forEach((part, index) => {
-                if (!currentLevel[part]) {
-                    currentLevel[part] = {
-                        isFolder: true,
-                        name: part,
-                        path: pathParts.slice(0, index + 1).join('/'),
-                        children: {},
-                        books: []
-                    };
-                }
+                // 创建卡片内容
+                card.innerHTML = `
+                    <div class="book-card-content">
+                        <h3 class="book-card-title">${book.name}</h3>
+                    </div>
+                    <div class="book-card-author">${book.author}</div>
+                    <div class="book-card-publisher">${book.publisher}</div>
+                    <div class="book-card-status">
+                        <span class="status-badge status-${this.getStatusClass(statusInfo.text)}">
+                            ${statusInfo.text}
+                        </span>
+                    </div>
+                `;
                 
-                // 如果是最后一级，添加书籍
-                if (index === pathParts.length - 1) {
-                    currentLevel[part].books.push(book);
-                }
-                
-                currentLevel = currentLevel[part].children;
+                cardsContainer.appendChild(card);
             });
             
-            // 如果没有路径信息，将书籍放在根目录
-            if (pathParts.length === 0) {
-                if (!currentLevel['未分类']) {
-                    currentLevel['未分类'] = {
-                        isFolder: true,
-                        name: '未分类',
-                        path: '',
-                        children: {},
-                        books: []
-                    };
-                }
-                currentLevel['未分类'].books.push(book);
-            }
-        });
-        
-        return tree;
-    },
-
-    // 渲染文件夹导航栏
-    renderFolderNavigation() {
-        const bookshelf = document.getElementById('bookshelf');
-        const navElement = document.createElement('div');
-        navElement.className = 'folder-navigation';
-        
-        let navHTML = '<div class="folder-nav-item" data-path="">根目录</div>';
-        
-        currentFolderPath.forEach((folderName, index) => {
-            const path = currentFolderPath.slice(0, index + 1).join('/');
-            navHTML += `<span class="folder-nav-separator">></span>`;
-            navHTML += `<div class="folder-nav-item" data-path="${path}">${folderName}</div>`;
-        });
-        
-        navElement.innerHTML = navHTML;
-        bookshelf.prepend(navElement);
-        
-        // 添加导航点击事件
-        navElement.querySelectorAll('.folder-nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const path = this.getAttribute('data-path');
-                if (path === '') {
-                    currentFolderPath = [];
-                } else {
-                    currentFolderPath = path.split('/');
-                }
-                BookManager.loadBookData().then(data => {
-                    ViewRenderer.renderFolderView(data.books);
-                });
-            });
-        });
-    },
-
-    // 获取当前路径下的内容
-    getCurrentFolderContent(tree, path) {
-        let current = tree;
-        
-        for (const folderName of path) {
-            if (current[folderName]) {
-                current = current[folderName].children;
-            } else {
-                return {}; // 路径不存在
-            }
+            booksListContainer.appendChild(cardsContainer);
         }
-        
-        return current;
     },
-
-    // 渲染文件夹视图
+    
+    // 获取状态对应的CSS类
+    getStatusClass(status) {
+        switch (status) {
+            case '已读':
+                return 'active';
+            case '在读':
+                return 'warning';
+            case '未读':
+                return 'inactive';
+            default:
+                return '';
+        }
+    },
+    
+    // 渲染文件夹视图 - 采用左右分栏布局
     renderFolderView(books) {
         const bookshelf = document.getElementById('bookshelf');
         bookshelf.className = 'bookshelf folder-view';
@@ -266,180 +294,38 @@ const ViewRenderer = {
             searchBar.style.display = 'none';
         }
         
-        // 构建文件夹树
-        const folderTree = this.buildFolderTree(books);
-        
-        // 获取当前路径下的内容
-        const currentContent = this.getCurrentFolderContent(folderTree, currentFolderPath);
-        
-        // 渲染导航栏
-        this.renderFolderNavigation();
-        
-        // 渲染当前路径下的文件夹
-        for (const itemName in currentContent) {
-            const item = currentContent[itemName];
-            
-            if (item.isFolder) {
-                // 渲染文件夹
-                const folderElement = document.createElement('div');
-                folderElement.className = 'folder';
-                folderElement.innerHTML = `
-                <div class="folder-header" data-folder="${item.name}">
-                    <i class="fas fa-folder"></i>
-                    <span>${item.name} (${item.books.length + Object.keys(item.children).length})</span>
+        // 创建左右分栏布局
+        bookshelf.innerHTML = `
+            <div class="books-container">
+                <!-- 标签树形结构 -->
+                <div class="tags-tree-container">
+                    <h4>标签分类</h4>
+                    <div id="tagsTree" class="tags-tree"></div>
                 </div>
-                <div class="folder-content">
-                    <div class="folder-books">
-                        ${item.books.map(book => `
-                            <div class="folder-book" data-id="${book.book_id}">
-                                <div class="reading-status ${BookManager.getStatusInfo(book.read_status).className}">
-                                    ${BookManager.getStatusInfo(book.read_status).text}
-                                    ${BookManager.getStatusInfo(book.read_status).tooltip ? `<span class="reading-plan-tooltip">${BookManager.getStatusInfo(book.read_status).tooltip}</span>` : ''}
-                                </div>
-                                <div class="book-icon">
-                                    <i class="fas fa-book"></i>
-                                </div>
-                                <div class="book-title">${book.name}</div>
-                                <div class="book-author">${book.author}</div>
-                                <div class="book-publisher">${book.publisher}</div>
-                            </div>
-                        `).join('')}
-                    </div>
+                
+                <!-- 书籍列表 -->
+                <div class="books-list-container">
+                    <div id="booksList" class="books-list"></div>
                 </div>
-            `;
-                bookshelf.appendChild(folderElement);
-            }
-        }
-        
-        // 渲染当前路径下的书籍
-        const fullPath = currentFolderPath.length > 0 ? currentFolderPath.join('/') + '/' : '';
-        const currentFolderBooks = books.filter(book => {
-            // 处理路径匹配逻辑
-            const bookPath = book.from || '';
-            if (fullPath === '' && bookPath === '') {
-                return true; // 根目录且书籍没有路径信息
-            }
-            return bookPath === fullPath;
-        });
-        
-        if (currentFolderBooks.length > 0) {
-            const booksContainer = document.createElement('div');
-            booksContainer.className = 'current-folder-books';
-            booksContainer.innerHTML = `
-            <h3><i class="fas fa-books"></i> 当前文件夹的书籍 (${currentFolderBooks.length})</h3>
-            <div class="folder-books">
-                ${currentFolderBooks.map(book => `
-                    <div class="folder-book" data-id="${book.book_id}">
-                        <div class="reading-status ${BookManager.getStatusInfo(book.read_status).className}">
-                            ${BookManager.getStatusInfo(book.read_status).text}
-                            ${BookManager.getStatusInfo(book.read_status).tooltip ? `<span class="reading-plan-tooltip">${BookManager.getStatusInfo(book.read_status).tooltip}</span>` : ''}
-                        </div>
-                        <div class="book-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <div class="book-title">${book.name}</div>
-                        <div class="book-author">${book.author}</div>
-                        <div class="book-publisher">${book.publisher}</div>
-                    </div>
-                `).join('')}
             </div>
         `;
-            bookshelf.appendChild(booksContainer);
-        }
         
-        // 添加文件夹点击事件
-        document.querySelectorAll('.folder-header').forEach(header => {
-            header.addEventListener('click', function() {
-                const folderName = this.getAttribute('data-folder');
-                currentFolderPath.push(folderName);
-                BookManager.loadBookData().then(data => {
-                    ViewRenderer.renderFolderView(data.books);
-                });
-            });
-        });
+        // 初始化状态
+        this.selectedTagPath = null; // 当前选中的标签路径
+        this.expandedNodes = new Set(); // 保存展开的节点路径
         
-        // 添加书籍点击事件
-        document.querySelectorAll('.folder-book').forEach(book => {
-            book.addEventListener('click', (e) => {
-                const bookId = e.currentTarget.getAttribute('data-id');
-                this.handleBookClick(bookId);
-            });
-        });
-    }
-};
-
-// 搜索处理器
-const SearchHandler = {
-    performSearch(data) {
-        const searchInput = document.querySelector('.search-bar input');
-        const term = searchInput.value.toLowerCase();
+        // 渲染标签树形结构
+        this.renderTagsTree(books, this.selectedTagPath, this.expandedNodes);
         
-        if (term.trim() === '') {
-            if (currentView === 'grid') {
-                ViewRenderer.renderBooks(data.books);
-            } else {
-                ViewRenderer.renderFolderView(data.books);
-            }
-            return;
-        }
-        
-        const filteredBooks = data.books.filter(book => 
-            book.name.toLowerCase().includes(term) || 
-            book.author.toLowerCase().includes(term) ||
-            (book.from && book.from.toLowerCase().includes(term))
-        );
-        
-        if (currentView === 'grid') {
-            ViewRenderer.renderBooks(filteredBooks);
-        } else {
-            ViewRenderer.renderFolderView(filteredBooks);
-        }
-    }
-};
-
-// 视图控制器
-const ViewController = {
-    init(data) {
-        ViewRenderer.renderBooks(data.books);
-        
-        // 视图切换功能
-        const gridViewBtn = document.getElementById('gridView');
-        const folderViewBtn = document.getElementById('folderView');
-        
-        gridViewBtn.addEventListener('click', () => this.switchView('grid', data));
-        folderViewBtn.addEventListener('click', () => this.switchView('folder', data));
-        
-        // 搜索功能
-        const searchInput = document.querySelector('.search-bar input');
-        const searchButton = document.querySelector('.search-bar button');
-        
-        searchButton.addEventListener('click', () => SearchHandler.performSearch(data));
-        searchInput.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') SearchHandler.performSearch(data);
-        });
-    },
-
-    switchView(view, data) {
-        currentView = view;
-        const gridViewBtn = document.getElementById('gridView');
-        const folderViewBtn = document.getElementById('folderView');
-        
-        if (view === 'grid') {
-            gridViewBtn.classList.add('active');
-            folderViewBtn.classList.remove('active');
-            ViewRenderer.renderBooks(data.books);
-        } else {
-            folderViewBtn.classList.add('active');
-            gridViewBtn.classList.remove('active');
-            currentFolderPath = []; // 重置路径
-            ViewRenderer.renderFolderView(data.books);
-        }
+        // 初始渲染全部书籍
+        this.filterBooksByTagPath(null, books);
     }
 };
 
 // 初始化页面
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     BookManager.loadBookData().then(data => {
-        ViewController.init(data);
+        // 直接渲染文件夹视图
+        ViewRenderer.renderFolderView(data.books);
     });
 });

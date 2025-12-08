@@ -51,8 +51,7 @@ rss订阅包含首页和技术栈的内容，不包括碎碎念的内容。
 网站托管：github pages
 
 天气图标网站： https://icons.qweather.com/
-图片视频托管平台：小红书
-文件托管平台：豆包AI云盘（单文件最高50GB）
+图片视频托管平台：B站
 latex公式生成：https://www.latexlive.com/
 latex显示：MathJax
 代码高亮：Prism.js

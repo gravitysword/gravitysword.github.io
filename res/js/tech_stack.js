@@ -6,7 +6,7 @@ import { BLOG_getKnowledgeItems, loadArticleFullContent } from '/res/js/blog_msg
 // 初始化全局变量
 let knowledgeList = []; // 所有文章的元数据列表
 let currentPage = 1;
-let itemsPerPage = 5;
+let itemsPerPage = 6;
 let totalPages = 1;
 let totalItems = 0;
 let isSearchMode = false; // 是否处于搜索模式
@@ -16,18 +16,20 @@ let searchResults = []; // 搜索结果列表
  * 知识库文章点击事件
  */
 function bindKnowledgeItemEvents() {
-    document.querySelectorAll('.blog-list ul li').forEach(item => {
-        item.addEventListener('click', () => {
-            const subtitle = item.querySelector('.blog-title').textContent;
-            // 去除高亮标签
-            const cleanSubtitle = subtitle.replace(/<[^>]*>/g, '');
-            
-            // 在当前列表中查找对应的文章
-            const currentList = isSearchMode ? searchResults : knowledgeList;
-            const article = currentList.find(a => a.subtitle === cleanSubtitle);
-            
-            if (article && article.id) {
-                window.location.href = `/view/blog.html?id=${article.id}`;
+    document.querySelectorAll('.blog-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const articleId = card.dataset.id;
+            if (articleId) {
+                window.location.href = `/view/blog.html?id=${articleId}`;
+            }
+        });
+        
+        // 添加键盘导航支持
+        card.setAttribute('tabindex', '0');
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
             }
         });
     });
@@ -85,12 +87,13 @@ async function loadKnowledgeData(page = 1, showLoading = true) {
  * 显示加载指示器
  */
 function showLoadingIndicator() {
-    const listElement = document.querySelector('.blog-list ul');
+    const listElement = document.querySelector('.blog-grid');
     listElement.innerHTML = `
-        <li class="loading-content">
+        <div class="loading-content">
             <div class="loading-spinner"></div>
-            <p>正在加载文章内容...</p>
-        </li>
+            <h3>正在加载</h3>
+            <p>精彩内容即将呈现...</p>
+        </div>
     `;
 }
 
@@ -109,11 +112,14 @@ function hideLoadingIndicator() {
  * @param {string} message - 错误信息
  */
 function displayErrorMessage(message) {
-    const listElement = document.querySelector('.blog-list ul');
+    const listElement = document.querySelector('.blog-grid');
     listElement.innerHTML = `
-        <li class="error-content">
+        <div class="error-content">
+            <div class="error-icon">⚠️</div>
+            <h3>加载失败</h3>
             <p>${message}</p>
-        </li>
+            <button class="retry-button" onclick="location.reload()">重新加载</button>
+        </div>
     `;
 }
 
@@ -126,33 +132,45 @@ function displayKnowledgeItems() {
     const endIndex = Math.min(startIndex + itemsPerPage, currentList.length);
     const pageItems = currentList.slice(startIndex, endIndex);
     
-    const listElement = document.querySelector('.blog-list ul');
+    const listElement = document.querySelector('.blog-grid');
     
     if (pageItems.length === 0 && !isSearchMode) {
         listElement.innerHTML = `
-            <li class="empty-content">
-                <p>暂无文章内容</p>
-            </li>
+            <div class="empty-content">
+                <div class="empty-icon">📝</div>
+                <h3>暂无文章内容</h3>
+                <p>敬请期待更多精彩内容</p>
+            </div>
         `;
     } else {
         listElement.innerHTML = pageItems.map(item => `
-            <li>
-                <div class="geometric-decoration"></div>
-                <div class="right-line"></div>
-                <div class="bottom-line"></div>
-                <div class="card-header">
-                    <span class="blog-title">${item.subtitle}</span>
-                    <span class="blog-subtitle">${item.title}</span>
-                </div>
-                <div class="blog-introduce">
-                    <img class="calendar" src="/res/media/svg/sys/calendar.svg" alt="logo">
-                    <span class="blog-date">${item.date}</span>
-                    <div class="blog-tags-container">
-                        ${item.tag.map(t => `<span class="blog-tag">${t}</span>`).join('')}
+            <article class="blog-card" data-id="${item.id}">
+                <header class="card-header">
+                    <h2 class="blog-title">${item.subtitle}</h2>
+                    <p class="blog-subtitle">${item.title}</p>
+                </header>
+                
+                <div class="card-meta">
+                    <div class="meta-left">
+                        <div class="date-info">
+                            <svg class="calendar-icon" viewBox="0 0 24 24" width="16" height="16">
+                                <path fill="currentColor" d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                            </svg>
+                            <time class="blog-date">${item.date}</time>
+                        </div>
+                    </div>
+                    <div class="meta-right">
+                        <div class="blog-tags">
+                            ${item.tag.slice(0, 3).map(t => `<span class="blog-tag">${t}</span>`).join('')}
+                            ${item.tag.length > 3 ? `<span class="blog-tag more-tags">+${item.tag.length - 3}</span>` : ''}
+                        </div>
                     </div>
                 </div>
-                <div class="blog-summary">${item.description}</div>
-            </li>
+                
+                <div class="card-content">
+                    <p class="blog-summary">${item.description}</p>
+                </div>
+            </article>
         `).join('');
     }
     
@@ -177,9 +195,12 @@ function updatePagination() {
         const startPage = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
         const endPage = Math.min(startPage + 4, totalPages);
         
-        for (let i = startPage; i <= endPage; i++) {
-            pageNumbersHTML += `<a href="#" class="page-number ${i === currentPage ? 'active' : ''}">${i}</a>`;
-        }
+        pageNumbersHTML = Array.from(
+            { length: endPage - startPage + 1 },
+            (_, i) => startPage + i
+        ).map(page => `
+            <a href="#" class="page-number ${page === currentPage ? 'active' : ''}">${page}</a>
+        `).join('');
     }
     
     paginationElement.innerHTML = `
@@ -267,26 +288,6 @@ async function loadPage(page) {
 }
 
 /**
- * 高亮搜索关键词
- * @param {string} text - 文本内容
- * @param {Array} keywords - 关键词数组
- * @returns {string} 高亮后的文本
- */
-function highlightKeywords(text, keywords) {
-    if (!text || keywords.length === 0) return text;
-    
-    let highlightedText = text;
-    keywords.forEach(keyword => {
-        if (keyword.length > 0) {
-            const regex = new RegExp(`(${escapeRegExp(keyword)})`, 'gi');
-            highlightedText = highlightedText.replace(regex, '<mark>$1</mark>');
-        }
-    });
-    
-    return highlightedText;
-}
-
-/**
  * 转义正则表达式特殊字符
  * @param {string} string - 需要转义的字符串
  * @returns {string} 转义后的字符串
@@ -300,20 +301,29 @@ function escapeRegExp(string) {
  * @param {Array} keywords - 关键词数组
  */
 function displayNoResultsMessage(keywords) {
-    const listElement = document.querySelector('.blog-list ul');
+    const listElement = document.querySelector('.blog-grid');
     listElement.innerHTML = `
-        <li class="no-results">
+        <div class="no-results">
             <div class="no-results-content">
+                <div class="no-results-icon">🔍</div>
                 <h3>未找到相关文章</h3>
                 <p>抱歉，没有找到与 "${keywords.join(' ')}" 相关的文章</p>
-                <button class="clear-search-btn">清除搜索</button>
+                <div class="no-results-actions">
+                    <button class="clear-search-btn">清除搜索</button>
+                    <button class="search-tips-btn">搜索建议</button>
+                </div>
             </div>
-        </li>
+        </div>
     `;
     
     // 绑定清除搜索事件
     listElement.querySelector('.clear-search-btn').addEventListener('click', () => {
         clearSearch();
+    });
+    
+    // 绑定搜索建议事件
+    listElement.querySelector('.search-tips-btn').addEventListener('click', () => {
+        alert('搜索建议：\n• 尝试使用不同的关键词\n• 检查拼写是否正确\n• 使用更通用的词汇');
     });
     
     // 隐藏分页
@@ -333,30 +343,28 @@ function displaySearchResults(filteredList, keywords) {
     }
     
     // 显示结果统计
-    const searchStats = document.querySelector('.search-stats');
+    let searchStats = document.querySelector('.search-stats');
     if (!searchStats) {
         // 创建搜索结果统计元素
         const searchSection = document.querySelector('.search-section');
-        const statsDiv = document.createElement('div');
-        statsDiv.className = 'search-stats';
-        statsDiv.innerHTML = `
-            <div class="search-result-info">
-                <span class="result-count">找到 ${filteredList.length} 篇相关文章</span>
-                <span class="search-keywords">关键词：${keywords.join('、')}</span>
-                <button class="clear-search">清除搜索</button>
-            </div>
-        `;
-        searchSection.appendChild(statsDiv);
-        
-        // 绑定清除搜索事件
-        statsDiv.querySelector('.clear-search').addEventListener('click', () => {
-            clearSearch();
-        });
-    } else {
-        // 更新统计信息
-        searchStats.querySelector('.result-count').textContent = `找到 ${filteredList.length} 篇相关文章`;
-        searchStats.querySelector('.search-keywords').textContent = `关键词：${keywords.join('、')}`;
+        searchStats = document.createElement('div');
+        searchStats.className = 'search-stats';
+        searchSection.appendChild(searchStats);
     }
+    
+    // 更新统计信息
+    searchStats.innerHTML = `
+        <div class="search-result-info">
+            <span class="result-count">找到 ${filteredList.length} 篇相关文章</span>
+            <span class="search-keywords">关键词：${keywords.join('、')}</span>
+            <button class="clear-search">清除搜索</button>
+        </div>
+    `;
+    
+    // 绑定清除搜索事件
+    searchStats.querySelector('.clear-search').addEventListener('click', () => {
+        clearSearch();
+    });
     
     // 显示过滤后的文章列表
     searchResults = filteredList;
@@ -381,25 +389,6 @@ function clearSearch() {
     }
     
     displayKnowledgeItems();
-}
-
-/**
- * 处理搜索输入事件
- */
-function handleSearchInput() {
-    // 延迟执行搜索，避免频繁触发
-    clearTimeout(window.searchTimeout);
-    window.searchTimeout = setTimeout(performSearch, 500);
-}
-
-/**
- * 处理搜索按键事件
- * @param {KeyboardEvent} e - 键盘事件
- */
-function handleSearchKeypress(e) {
-    if (e.key === 'Enter') {
-        performSearch();
-    }
 }
 
 /**
@@ -440,18 +429,10 @@ async function performSearch() {
     
     // 过滤文章（搜索所有内容：标题、标签、内容和日期）
     const filteredList = knowledgeList.filter(item => {
-        // 检查标题
         const inTitle = keywords.some(keyword => item.subtitle.toLowerCase().includes(keyword));
-        
-        // 检查标签
         const inTags = keywords.some(keyword => item.tag.some(t => t.toLowerCase().includes(keyword)));
-        
-        // 检查日期
         const inDate = keywords.some(keyword => item.date.toLowerCase().includes(keyword));
-        
-        // 检查内容
-        const inContent = item.fullContent && 
-                        keywords.some(keyword => item.fullContent.includes(keyword));
+        const inContent = item.fullContent && keywords.some(keyword => item.fullContent.includes(keyword));
         
         return inTitle || inTags || inDate || inContent;
     });
@@ -460,15 +441,35 @@ async function performSearch() {
     displaySearchResults(filteredList, keywords);
 }
 
+// DOM 元素引用
+const paginationElement = document.querySelector('.pagination');
+
 document.addEventListener('DOMContentLoaded', async function() {
     const searchInput = document.querySelector('.search-input');
     const searchButton = document.querySelector('.search-button');
     
     // 绑定搜索事件
     searchButton.addEventListener('click', performSearch);
-    searchInput.addEventListener('keypress', handleSearchKeypress);
+    
+    // 处理搜索按键事件
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+    
     // 添加实时搜索
-    searchInput.addEventListener('input', handleSearchInput);
+    searchInput.addEventListener('input', () => {
+        // 延迟执行搜索，避免频繁触发
+        clearTimeout(window.searchTimeout);
+        window.searchTimeout = setTimeout(performSearch, 500);
+    });
+    
+    // 添加窗口大小变化事件监听
+    window.addEventListener('resize', () => {
+        // 重新计算并更新布局
+        displayKnowledgeItems();
+    });
     
     // 初始化加载第一页数据
     await loadKnowledgeData(1);

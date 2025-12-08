@@ -1,33 +1,32 @@
 /* Sspai Web Theme A theme to [sspai](ssp.ai) default theme. Developed by Codegass(wchweichenhao@gmial.com) & Yves(yves@sspai.com) Download Cuto on the App Store and Google Play! */
 @font-face {
-    font-family: 'AlibabaPuHuiTi';
+    font-family: AlibabaPuHuiTi;
     src: url('/res/font/AlibabaPuHuiTi.woff2') format('woff2');
   }
 
 @font-face {
-    font-family: 'SourceHanSerifSC';
+    font-family: SourceHanSerifSC;
     src: url('/res/font/SourceHanSerifSC.otf') format('opentype');
-  
+
 }
 
 :root {
-    --primary: #000000;
-    --secondary: #333333;
-    --accent: #ffffff;
-    --light: #ffffff;
-    --dark: #000000;
+    --primary: #000;
+    --secondary: #333;
+    --accent: #fff;
+    --light: #fff;
+    --dark: #000;
     --success: #28a745;
     --warning: #ffc107;
     --danger: #dc3545;
-    --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --shadow: 0 5px 15px rgb(0 0 0 / 10%);
     --blue-accent: #4a90e2;
     --blue-light: #7bb3f0;
     --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 body {
-    font-family: 'AlibabaPuHuiTi', sans-serif;
-
+    font-family: AlibabaPuHuiTi, sans-serif;
     background: #000;
     color: var(--light);
     min-height: 100vh;
@@ -43,7 +42,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 20px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgb(255 255 255 / 10%);
     margin-bottom: 30px;
 }
 
@@ -51,7 +50,7 @@ header {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin: 0px 50px;
+    margin: 0 50px;
 }
 
 .logo i {
@@ -64,366 +63,12 @@ header {
     font-weight: 700;
 }
 
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
 .search-bar {
     display: flex;
     gap: 15px;
     margin: 50px 200px;
+    display: none; /* 隐藏搜索栏 */
 }
-
-.search-bar input {
-    flex: 1;
-    padding: 15px 20px;
-    border: 1px solid #444;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    background: rgba(50, 50, 50, 0.9);
-    box-shadow: var(--shadow);
-    color: #fff;
-    transition: var(--transition);
-}
-
-.search-bar input:focus {
-    outline: none;
-    border-color: var(--blue-accent);
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
-}
-
-.search-bar input::placeholder {
-    color: #aaa;
-}
-
-.search-bar button {
-    background: var(--blue-accent);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: var(--transition);
-    box-shadow: var(--shadow);
-}
-
-.search-bar button:hover {
-    background: var(--blue-light);
-    transform: translateY(-2px);
-}
-
-.view-toggle {
-    display: flex;
-    gap: 10px;
-}
-
-.toggle-btn {
-    background: rgba(50, 50, 50, 0.9);
-    border: 1px solid #444;
-    color: #ddd;
-    padding: 8px 15px;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.toggle-btn.active {
-    background: var(--blue-accent);
-    color: white;
-    border-color: var(--blue-accent);
-}
-
-.bookshelf {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 30px;
-    margin-top: 30px;
-}
-
-.folder-view {
-    display: block;
-}
-
-.folder {
-    background: rgba(50, 50, 50, 0.9);
-    border: 1px solid #444;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-}
-
-.folder-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid #444;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 600;
-    font-size: 1.2rem;
-    transition: var(--transition);
-}
-
-.folder-header i {
-    color: var(--blue-accent);
-    transition: transform 0.3s ease;
-}
-
-.folder-header:hover {
-    background: linear-gradient(to right, rgba(74, 144, 226, 0.3), rgba(100, 160, 255, 0.3));
-}
-
-.folder-content {
-    display: none;
-    padding: 15px 20px;
-}
-
-.folder-content.expanded {
-    display: block;
-}
-
-.folder-header.expanded i {
-    transform: rotate(90deg);
-}
-
-.folder-books {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-    margin-top: 15px;
-}
-
-.folder-book {
-    background: rgba(30, 30, 30, 0.9);
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 20px; /* 增加内边距 */
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 内容居中 */
-    text-align: center; /* 文字居中 */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    position: relative;
-}
-
-.folder-book:hover {
-    transform: translateY(-8px) scale(1.05); /* 增强悬停效果 */
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
-    border-color: var(--blue-accent);
-    z-index: 1;
-}
-
-.folder-book .book-icon {
-    font-size: 3rem; /* 增大图标 */
-    color: var(--blue-accent); /* 统一主题色 */
-    margin-bottom: 15px;
-    transition: color 0.3s;
-}
-
-.folder-book:hover .book-icon {
-    color: var(--blue-light); /* 悬停颜色渐变 */
-}
-
-.folder-book .book-title {
-    font-size: 1.1rem; /* 增大字体 */
-    margin-bottom: 8px;
-    color: #fff;
-    text-shadow: 0 0 3px rgba(255,255,255,0.2);
-}
-
-.folder-book .book-author,
-.folder-book .book-publisher {
-    font-size: 0.85rem;
-    color: #ccc;
-    margin: 4px 0;
-    opacity: 0.9;
-}
-
-.folder-book::after { /* 添加装饰元素 */
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--blue-accent), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.folder-book:hover::after {
-    opacity: 1;
-}
-
-/* 容器样式，用于居中或布局 */
-.book-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
-  justify-content: center;
-}
-
-/* 容器样式，用于居中或布局 */
-.book-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
-  justify-content: center;
-  background-color: #000; /* 黑色背景 */
-  color: #fff; /* 默认白色文字 */
-}
-
-/* 容器样式，用于居中或布局 */
-.book-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 50px; /* 增大间距，防止3D效果时重叠 */
-  padding: 50px; /* 增加容器内边距 */
-  justify-content: center;
-  background-color: #000; /* 黑色背景 */
-  color: #fff; /* 默认白色文字 */
-  /* 为子元素设置透视视角，这是实现3D效果的关键 */
-  perspective: 1000px;
-}
-/* 书籍卡片整体样式 - 黑暗主题 */
-.book-card {
-  width: 200px;
-  background: #1a1a1a; /* 深灰黑色背景 */
-  border-radius: 4px 12px 12px 4px;
-  box-shadow: 
-    0 4px 8px rgba(0,0,0,0.6),
-    0 6px 20px rgba(0,0,0,0.4),
-    inset -4px 0 4px rgba(255,255,255,0.05); /* 微调内阴影为亮色 */
-  padding: 20px 15px;
-  border-left: 8px solid #333; /* 深色书脊 */
-  position: relative;
-  transition: transform 0.3s ease;
-  font-family: 'Georgia', serif;
-  overflow: hidden;
-  color: #e0e0e0; /* 主文字颜色 */
-}
-
-/* 悬停效果 */
-.book-card:hover {
-  transform: translateY(-5px) scale(1.03);
-  box-shadow: 
-    0 10px 20px rgba(0,0,0,0.8),
-    0 15px 35px rgba(0,0,0,0.6),
-    inset -4px 0 4px rgba(255,255,255,0.1);
-}
-
-/* 书封样式 - 深色皮革质感 */
-.book-cover {
-  background: linear-gradient(145deg, #2c2220, #1e1715); /* 深棕黑渐变 */
-  border-radius: 2px 8px 8px 2px;
-  padding: 25px 15px;
-  box-shadow: 
-    inset 0 0 10px rgba(0,0,0,0.8),
-    0 2px 5px rgba(0,0,0,0.4);
-  position: relative;
-  margin-bottom: 20px;
-  border: 1px solid #3a3a3a; /* 添加边框增强轮廓 */
-}
-
-/* 封面装饰线 - 金色细线 */
-.book-cover::before {
-  content: "";
-  position: absolute;
-  top: 10%;
-  left: 15%;
-  right: 15%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, #d4af37, transparent); /* 金线效果 */
-  border-radius: 1px;
-}
-
-/* 书本图标样式 - 金色 */
-.book-cover-img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-  color: #d4af37; /* 金色 */
-  font-size: 3.5rem;
-  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4); /* 金色辉光 */
-}
-
-/* 标题样式 - 白色带微光 */
-.book-title {
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: #ffffff;
-  margin: 0 0 10px;
-  line-height: 1.3;
-  text-shadow: 0 0 5px rgba(255,255,255,0.1);
-  border-bottom: 1px solid #444; /* 深灰分隔线 */
-  padding-bottom: 8px;
-}
-
-/* 作者和出版社样式 - 浅灰色 */
-.book-author, .book-publisher {
-  font-size: 0.9rem;
-  color: #b0b0b0;
-  margin: 5px 0;
-  letter-spacing: 0.3px;
-}
-
-/* 图标装饰 - 金色 */
-.book-author::before {
-  content: "✒ ";
-  color: #d4af37;
-  opacity: 0.9;
-}
-
-.book-publisher::before {
-  content: "🏢 ";
-  color: #d4af37;
-  opacity: 0.9;
-}
-
-/* 书角效果 - 金色 */
-.book-card::after {
-  content: "";
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  width: 20px;
-  height: 20px;
-  border-bottom: 2px solid #d4af37;
-  border-right: 2px solid #d4af37;
-  border-radius: 0 0 4px 0;
-}
-
-/* 添加书本底部投影增强立体感 */
-.book-card::before {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 15px;
-  right: 15px;
-  height: 10px;
-  background: rgba(0,0,0,0.5);
-  border-radius: 50%;
-  filter: blur(5px);
-  z-index: -1;
-}
-
-
-
-
-
-
 
 footer {
     text-align: center;
@@ -433,253 +78,249 @@ footer {
     color: #aaa;
 }
 
-.folder-navigation {
+/* 书籍管理容器样式 - 左右分栏布局 */
+.books-container {
     display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 10px 15px;
-    background: rgba(50, 50, 50, 0.9);
+    gap: 20px;
+    height: calc(100vh - 300px);
+}
+
+/* 标签树形结构样式 */
+.tags-tree-container {
+    width: 250px;
+    background-color: rgb(50 50 50 / 90%);
+    border: 1px solid #444;
     border-radius: 8px;
-    border: 1px solid #444;
+    padding: 15px;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
 }
 
-.folder-nav-item {
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: background 0.3s;
-}
-
-.folder-nav-item:hover {
-    background: rgba(74, 144, 226, 0.3);
-}
-
-.folder-nav-separator {
-    margin: 0 8px;
-    color: #bbb;
-}
-
-/* 新增：书籍封面预览效果 */
-.book-cover-preview {
-    position: relative;
-    height: 120px; /* 调整高度 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 10px; /* 减小外边距 */
-    width: 90px; /* 调整宽度 */
-    perspective: 1000px;
-}
-
-.book-cover-img {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, #3a5fcd, #4a90e2);
-    border-radius: 4px;
-    transform: rotateY(-10deg);
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.book:hover .book-cover-img {
-    transform: rotateY(0deg) translateZ(10px);
-    box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.5);
-}
-
-.book-cover-img i {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 2rem; /* 减小图标大小 */
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .stats {
-        width: 100%;
-        justify-content: space-around;
-    }
-
-    .bookshelf {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 15px;
-    }
-
-    .book {
-        height: 300px; /* 调整移动端高度 */
-    }
-
-    .book-title {
-        font-size: 1rem;
-    }
-
-    .book-cover {
-        font-size: 3rem;
-    }
-
-    .reading-status {
-        font-size: 0.7rem;
-        padding: 3px 8px;
-    }
-}
-
-/* 阅读状态标签样式 */
-.reading-status {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    z-index: 2;
-    transition: all 0.3s ease;
-    cursor: default;
-}
-
-/* 已读状态 */
-.status-read {
-    background-color: rgba(40, 167, 69, 0.2);
-    color: #28a745;
-    border: 1px solid rgba(40, 167, 69, 0.3);
-}
-
-/* 在读状态 */
-.status-reading {
-    background-color: rgba(74, 144, 226, 0.2);
-    color: #4a90e2;
-    border: 1px solid rgba(74, 144, 226, 0.3);
-}
-
-/* 无状态 */
-.status-none {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-/* 未读状态 */
-.status-unread {
-    background-color: rgba(220, 53, 69, 0.2);
-    color: #dc3545;
-    border: 1px solid rgba(220, 53, 69, 0.3);
-    cursor: pointer;
-}
-
-.status-unread:hover {
-    background-color: rgba(220, 53, 69, 0.3);
-}
-
-/* 阅读计划提示框 */
-.reading-plan-tooltip {
-    visibility: hidden;
-    opacity: 0;
-    position: absolute;
-    top: 35px;
-    left: 10px;
-    background-color: rgba(30, 30, 30, 0.95);
-    color: #fff;
-    padding: 10px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    z-index: 3;
-    transition: all 0.3s ease;
-    width: 200px;
-}
-
-.reading-status:hover .reading-plan-tooltip {
-    visibility: visible;
-    opacity: 1;
-    top: 40px;
-}
-
-/* 下载提醒模态窗 */
-.download-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.download-modal.active {
-    opacity: 1;
-}
-
-.download-modal .modal-content {
-    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-    border: 1px solid #444;
-    border-radius: 12px;
-    padding: 30px;
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
-}
-
-.download-modal.active .modal-content {
-    transform: scale(1);
-}
-
-.download-modal .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.download-modal .modal-icon {
-    color: #4a90e2;
-}
-
-.download-modal h3 {
-    margin: 0;
-    color: #fff;
-    font-size: 1.3em;
-}
-
-.download-modal p {
-    color: #ccc;
-    margin: 10px 0;
-    line-height: 1.5;
-}
-
-.download-modal .modal-button {
-    background: #111;
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 25px;
+.tags-tree-container h4 {
     font-size: 16px;
+    font-weight: 600;
+    color: var(--blue-accent);
+    margin-bottom: 15px;
+    font-family: SourceHanSerifSC, serif;
+}
+
+.tags-tree {
+    font-family: SourceHanSerifSC, serif;
+}
+
+.tag-node {
+    margin-bottom: 5px;
+}
+
+.tag-node-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 20px;
-    min-width: 120px;
+    border-radius: 4px;
+    transition: var(--transition);
 }
 
-.download-modal .modal-button:hover {
-    transform: translateY(-2px);
+.tag-node-header:hover {
+    background-color: rgb(74 144 226 / 30%);
 }
 
-.download-modal .modal-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 10px rgba(74, 144, 226, 0.3);
+.tag-node-header.active {
+    background-color: var(--blue-accent);
+    color: white;
+}
+
+.tag-toggle {
+    font-size: 12px;
+    cursor: pointer;
+    width: 15px;
+    text-align: center;
+}
+
+.tag-name {
+    flex: 1;
+    font-size: 14px;
+}
+
+.tag-children {
+    margin-left: 20px;
+    display: none;
+}
+
+.tag-children.open {
+    display: block;
+}
+
+/* 书籍列表容器样式 */
+.books-list-container {
+    flex: 1;
+    background-color: rgb(50 50 50 / 90%);
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+}
+
+/* 书籍列表样式 - 表格形式 */
+.books-cards-container {
+    width: 100%;
+    background-color: rgb(30 30 30 / 90%);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: inset 0 0 10px rgb(0 0 0 / 50%);
+}
+
+/* 书籍列表头部 */
+.books-list-header {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr 1fr;
+    gap: 10px;
+    background-color: rgb(74 144 226 / 30%);
+    border-bottom: 1px solid #444;
+    padding: 12px 15px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--blue-accent);
+    font-family: SourceHanSerifSC, serif;
+    align-items: center;
+}
+
+/* 书籍列表行 */
+.books-cards-container .book-card {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #444;
+    background-color: rgb(30 30 30 / 90%);
+    cursor: default;
+    transition: var(--transition);
+    height: auto;
+    width: auto;
+    position: relative;
+    overflow: visible;
+    box-shadow: none;
+    border-radius: 0;
+    background: rgb(30 30 30 / 90%);
+    border: none;
+    font-size: 14px;
+}
+
+/* 列表行悬停效果 */
+.books-cards-container .book-card:hover {
+    background-color: rgb(74 144 226 / 10%);
+    border-color: #444;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 移除卡片的伪元素样式 */
+.books-cards-container .book-card::before,
+.books-cards-container .book-card::after {
+    display: none;
+}
+
+/* 书籍卡片内容 */
+.books-cards-container .book-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* 书籍标题样式 */
+.books-cards-container .book-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--light);
+    margin: 0;
+    padding: 0;
+    border-bottom: none;
+    background: none;
+    text-align: left;
+    box-shadow: none;
+    line-height: 1.4;
+    font-family: SourceHanSerifSC, serif;
+}
+
+/* 作者和出版社样式 */
+.books-cards-container .book-card-author,
+.books-cards-container .book-card-publisher {
+    font-size: 14px;
+    color: var(--light);
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    font-style: normal;
+    line-height: 1.4;
+    font-family: SourceHanSerifSC, serif;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+/* 作者样式 */
+.books-cards-container .book-card-author {
+    font-weight: 500;
+    color: var(--blue-accent);
+    margin-top: 0;
+}
+
+/* 状态标签样式 - 改为简单的标签 */
+.books-cards-container .book-card-status {
+    margin: 0;
+    text-align: left;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: white;
+    border-radius: 12px;
+    box-shadow: none;
+    min-width: 60px;
+    text-align: center;
+    transform: none;
+    font-family: SourceHanSerifSC, serif;
+}
+
+/* 移除书签装饰 */
+.status-badge::before,
+.status-badge::after {
+    display: none;
+}
+
+/* 状态颜色 */
+.status-active {
+    background-color: rgba(152, 195, 121, 1); /* 绿色 - 已读 */
+    color: white;
+    border-color: transparent;
+}
+
+.status-warning {
+    background-color: rgba(97, 175, 239, 1); /* 蓝色 - 在读 */
+    color: white;
+    border-color: transparent;
+}
+
+.status-inactive {
+    background-color: rgba(224, 108, 117, 1); /* 红色 - 未读 */
+    color: white;
+    border-color: transparent;
 }
