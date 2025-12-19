@@ -33,33 +33,33 @@ body {
 }
 
 .container {
-    margin: 0 100px;
-    padding-top: 100px; /* 添加顶部内边距，避免被导航栏覆盖 */
+    margin: 0 80px;
+    padding-top: 90px; /* 添加顶部内边距，避免被导航栏覆盖 */
 }
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0;
+    padding: 15px 0;
     border-bottom: 1px solid rgb(255 255 255 / 10%);
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin: 0 50px;
+    gap: 10px;
+    margin: 0 30px;
 }
 
 .logo i {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     color: var(--blue-accent);
 }
 
 .logo h1 {
-    font-size: 2.2rem;
+    font-size: 1.6rem;
     font-weight: 700;
 }
 
@@ -82,7 +82,6 @@ footer {
 .books-container {
     display: flex;
     gap: 20px;
-    height: calc(100vh - 300px);
 }
 
 /* 标签树形结构样式 */
@@ -92,7 +91,6 @@ footer {
     border: 1px solid #444;
     border-radius: 8px;
     padding: 15px;
-    overflow-y: auto;
     box-shadow: var(--shadow);
 }
 
@@ -159,8 +157,203 @@ footer {
     border: 1px solid #444;
     border-radius: 8px;
     padding: 20px;
-    overflow-y: auto;
     box-shadow: var(--shadow);
+}
+
+/* 书籍列表头部行 */
+.books-list-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.books-list-header-row h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--blue-accent);
+    margin: 0;
+    font-family: SourceHanSerifSC, serif;
+}
+
+/* 视图切换按钮 */
+.view-toggle-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.view-toggle-btn {
+    background-color: rgb(74 144 226 / 30%);
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: var(--blue-accent);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 14px;
+}
+
+.view-toggle-btn:hover {
+    background-color: rgb(74 144 226 / 50%);
+    transform: translateY(-2px);
+}
+
+.view-toggle-btn.active {
+    background-color: var(--blue-accent);
+    color: white;
+    border-color: var(--blue-accent);
+}
+
+/* 网格容器样式 */
+.books-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+    padding: 10px 0;
+}
+
+/* 卡片样式 */
+.book-card-grid {
+    background-color: rgb(30 30 30 / 90%);
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 12px;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1.414; /* A4纸比例 1:√2 */
+}
+
+.book-card-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.book-card-grid:hover {
+    background-color: rgb(40 40 40 / 90%);
+    border-color: var(--blue-accent);
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+}
+
+/* 卡片内容样式 */
+.book-card-grid-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.book-card-grid-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--light);
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--blue-accent);
+    padding-bottom: 6px;
+    background: none;
+    text-align: left;
+    box-shadow: none;
+    line-height: 1.4;
+    font-family: SourceHanSerifSC, serif;
+}
+
+.book-card-grid-author {
+    font-size: 13px;
+    color: var(--blue-accent);
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    font-style: normal;
+    line-height: 1.4;
+    font-family: SourceHanSerifSC, serif;
+    font-weight: 500;
+}
+
+.book-card-grid-publisher {
+    font-size: 11px;
+    color: var(--light);
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    font-style: normal;
+    line-height: 1.4;
+    font-family: SourceHanSerifSC, serif;
+    opacity: 0.8;
+}
+
+.book-card-grid-status {
+    margin: 0;
+    text-align: left;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid #444;
+}
+
+.book-card-grid-status .status-badge {
+    margin-top: 0;
+}
+
+/* 书籍封面效果 */
+.book-card-grid::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 30px;
+    height: 40px;
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.2) 0%, rgba(0, 0, 0, 0.1) 100%);
+    border-radius: 4px;
+    z-index: 1;
+}
+
+/* 书页细节 */
+.book-card-grid-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 10% 10%, rgba(74, 144, 226, 0.1) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 优化阴影效果 */
+.book-card-grid {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.book-card-grid:hover {
+    box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3), 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* 调整卡片颜色和纹理 */
+.book-card-grid {
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+    border: 2px solid rgba(74, 144, 226, 0.2);
+}
+
+.book-card-grid:hover {
+    background: linear-gradient(135deg, rgba(40, 40, 40, 0.9) 0%, rgba(60, 60, 60, 0.9) 100%);
+    border: 2px solid rgba(74, 144, 226, 0.4);
 }
 
 /* 书籍列表样式 - 表格形式 */
@@ -193,7 +386,7 @@ footer {
     grid-template-columns: 2fr 1.5fr 1.5fr 1fr;
     gap: 10px;
     align-items: center;
-    padding: 15px;
+    padding: 12px 15px;
     border-bottom: 1px solid #444;
     background-color: rgb(30 30 30 / 90%);
     cursor: default;
@@ -321,6 +514,13 @@ footer {
 
 .status-inactive {
     background-color: rgba(224, 108, 117, 1); /* 红色 - 未读 */
+    color: white;
+    border-color: transparent;
+}
+
+/* 封存状态样式 - 浅灰色背景，白色文字 */
+.status-archived {
+    background-color: rgba(153, 153, 153, 0.7); /* 浅灰色 */
     color: white;
     border-color: transparent;
 }
