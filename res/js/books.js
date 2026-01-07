@@ -1,35 +1,18 @@
+import { backend } from '/res/js/blog_msg.js';
+
 // 书籍管理器
 const BookManager = {
-    // 获取书籍数据 - 从本地配置文件加载
+    // 获取书籍数据 - 从本地 CSV 配置文件加载
     async loadBookData() {
         try {
-            const response = await fetch('/config/books.json');
-            const configData = await response.json();
+            const response = await fetch('/config/books.csv');
+            const csvText = await response.text();
             
-            // 检查配置数据格式
-            if (configData && configData.books && Array.isArray(configData.books)) {
-                // 转换数据格式以匹配现有视图渲染逻辑
-                const books = configData.books.map(book => ({
-                    book_id: book.id,
-                    name: book.title,
-                    author: book.author,
-                    publisher: book.publisher,
-                    read_status: book.status,
-                    from: book.tags ? book.tags.join('/') : '',
-                    created_at: book.created_at
-                }));
-                
-                // 按照创建时间由近至远排序
-                books.sort((a, b) => {
-                    return new Date(b.created_at) - new Date(a.created_at);
-                });
-                
-                console.log('成功从本地配置加载书籍数据:', books);
-                return { books };
-            } else {
-                console.error('书籍配置文件格式不正确');
-                return { books: [] };
-            }
+            // 解析 CSV 数据
+            const books = this.parseCSV(csvText);
+            
+            console.log('成功从本地 CSV 配置加载书籍数据:', books);
+            return { books };
         } catch (error) {
             console.error('加载书籍数据失败:', error);
             // 如果加载失败，使用默认数据
@@ -37,16 +20,93 @@ const BookManager = {
         }
     },
 
+    // 解析 CSV 数据
+    parseCSV(csvText) {
+        const lines = csvText.trim().split('\n');
+        if (lines.length < 2) {
+            return [];
+        }
+
+        // 解析表头
+        const headers = lines[0].split(',').map(h => h.trim());
+        
+        // 解析数据行
+        const books = [];
+        for (let i = 1; i < lines.length; i++) {
+            const values = this.parseCSVLine(lines[i]);
+            if (values.length !== headers.length) {
+                console.warn(`第 ${i + 1} 行数据格式不正确，跳过`);
+                continue;
+            }
+
+            const book = {};
+            headers.forEach((header, index) => {
+                book[header] = values[index];
+            });
+
+            // 转换数据格式以匹配现有视图渲染逻辑
+            books.push({
+                book_id: book.id,
+                name: book.title,
+                author: this.deserializeArray(book.author),
+                publisher: book.publisher,
+                read_status: book.status,
+                from: book.tags ? this.deserializeArray(book.tags).join('/') : '',
+                created_at: book.created_at
+            });
+        }
+
+        // 按照创建时间由近至远排序
+        books.sort((a, b) => {
+            return new Date(b.created_at) - new Date(a.created_at);
+        });
+
+        return books;
+    },
+
+    // 解析 CSV 行（处理包含逗号的字段）
+    parseCSVLine(line) {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            
+            if (char === '"') {
+                inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+                result.push(current);
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        
+        result.push(current);
+        return result;
+    },
+
+    // 反序列化数组（使用 "||" 分隔符）
+    deserializeArray(str) {
+        if (!str || str.trim() === '') {
+            return [];
+        }
+        return str.split('||').map(item => item.trim()).filter(item => item !== '');
+    },
+
     // 获取状态文本和类名
     getStatusInfo(status) {
-        // 解析双维度状态格式："活跃状态-阅读状态"
-        const [activeStatus, readingStatus] = status.split('-') || ['阅读中', '待读'];
+        // 简化的状态系统：只支持"阅读中"和"闲置"两种状态
+        const validStatuses = ['阅读中', '闲置'];
         
-        // 根据活跃状态和阅读状态返回显示信息
+        // 如果状态有效，直接使用；否则默认为"闲置"
+        const normalizedStatus = validStatuses.includes(status) ? status : '闲置';
+        
         return {
-            text: readingStatus,
-            activeStatus: activeStatus,
-            readingStatus: readingStatus,
+            text: normalizedStatus,
+            activeStatus: normalizedStatus,
+            readingStatus: normalizedStatus,
             tooltip: ''
         };
     }
@@ -56,7 +116,25 @@ const BookManager = {
 const ViewRenderer = {
     selectedTagPath: null, // 当前选中的标签路径
     expandedNodes: new Set(), // 保存展开的节点路径
-    currentView: 'list', // 当前视图类型：'list' 或 'cards'
+    currentView: 'cards', // 当前视图类型：'list' 或 'cards'
+    
+    // 处理图书点击事件 - 跳转到后端书籍详情页
+    async handleBookClick(bookId) {
+        try {
+            const config = await backend();
+            if (!config) {
+                console.error('无法获取后端配置');
+                alert('无法连接到服务器，请稍后重试');
+                return;
+            }
+            
+            const bookDetailUrl = `${config.host}/book/${bookId}`;
+            window.location.href = bookDetailUrl;
+        } catch (error) {
+            console.error('跳转到书籍详情页失败:', error);
+            alert('跳转失败，请稍后重试');
+        }
+    },
     
     // 构建标签树形结构
     buildTagsTree(books) {
@@ -271,6 +349,7 @@ const ViewRenderer = {
                 const card = document.createElement('div');
                 card.className = 'book-card';
                 card.dataset.bookId = book.book_id;
+                card.style.cursor = 'pointer';
                 
                 const statusInfo = BookManager.getStatusInfo(book.read_status);
             
@@ -279,7 +358,7 @@ const ViewRenderer = {
                 <div class="book-card-content">
                     <h3 class="book-card-title">${book.name}</h3>
                 </div>
-                <div class="book-card-author">${book.author.replace(/\n/g, '<br>')}</div>
+                <div class="book-card-author">${Array.isArray(book.author) ? book.author.join('<br>') : book.author}</div>
                 <div class="book-card-publisher">${book.publisher}</div>
                 <div class="book-card-status">
                     <span class="status-badge status-${this.getStatusClass(statusInfo)}">
@@ -287,6 +366,11 @@ const ViewRenderer = {
                     </span>
                 </div>
             `;
+                
+                // 添加点击事件
+                card.addEventListener('click', () => {
+                    this.handleBookClick(book.book_id);
+                });
                 
                 cardsContainer.appendChild(card);
             });
@@ -315,22 +399,56 @@ const ViewRenderer = {
                 const card = document.createElement('div');
                 card.className = 'book-card-grid';
                 card.dataset.bookId = book.book_id;
+                card.style.cursor = 'pointer';
                 
                 const statusInfo = BookManager.getStatusInfo(book.read_status);
             
+            // 创建边框纹理元素
+            const borderTexture = document.createElement('div');
+            borderTexture.className = 'book-card-grid-border-texture';
+            
+            // 创建边缘光晕元素
+            const edgeGlow = document.createElement('div');
+            edgeGlow.className = 'book-card-grid-edge-glow';
+            
+            // 创建纸张纹理元素
+            const texture = document.createElement('div');
+            texture.className = 'book-card-grid-texture';
+            
+            // 创建书脊装订线元素
+            const spine = document.createElement('div');
+            spine.className = 'book-card-grid-spine';
+            
             // 创建卡片内容
-            card.innerHTML = `
-                <div class="book-card-grid-content">
-                    <h3 class="book-card-grid-title">${book.name}</h3>
-                    <div class="book-card-grid-author">${book.author.replace(/\n/g, '<br>')}</div>
-                    <div class="book-card-grid-publisher">${book.publisher}</div>
-                    <div class="book-card-grid-status">
-                        <span class="status-badge status-${this.getStatusClass(statusInfo)}">
-                            ${statusInfo.text}
-                        </span>
-                    </div>
-                </div>
+            const content = document.createElement('div');
+            content.className = 'book-card-grid-content';
+            content.innerHTML = `
+                <h3 class="book-card-grid-title">${book.name}</h3>
+                <div class="book-card-grid-author">${Array.isArray(book.author) ? book.author.join('<br>') : book.author}</div>
+                <div class="book-card-grid-publisher">${book.publisher}</div>
             `;
+            
+            // 创建状态标签
+            const status = document.createElement('div');
+            status.className = 'book-card-grid-status';
+            status.innerHTML = `
+                <span class="status-badge status-${this.getStatusClass(statusInfo)}">
+                    ${statusInfo.text}
+                </span>
+            `;
+                
+                // 按顺序添加元素
+                card.appendChild(borderTexture);
+                card.appendChild(edgeGlow);
+                card.appendChild(texture);
+                card.appendChild(spine);
+                card.appendChild(content);
+                card.appendChild(status);
+                
+                // 添加点击事件
+                card.addEventListener('click', () => {
+                    this.handleBookClick(book.book_id);
+                });
                 
                 cardsContainer.appendChild(card);
             });
@@ -341,21 +459,14 @@ const ViewRenderer = {
     
     // 获取状态对应的CSS类
     getStatusClass(statusInfo) {
-        // 封存状态下所有标签使用统一的浅灰色样式
-        if (statusInfo.activeStatus === '封存') {
-            return 'archived';
-        } else {
-            // 阅读中状态下根据阅读状态返回不同样式
-            switch (statusInfo.readingStatus) {
-                case '已读':
-                    return 'active';
-                case '在读':
-                    return 'warning';
-                case '待读':
-                    return 'inactive';
-                default:
-                    return '';
-            }
+        // 简化的状态系统：只支持"阅读中"和"闲置"两种状态
+        switch (statusInfo.readingStatus) {
+            case '阅读中':
+                return 'reading';
+            case '闲置':
+                return 'idle';
+            default:
+                return 'idle';
         }
     },
     
@@ -387,11 +498,11 @@ const ViewRenderer = {
                     <div class="books-list-header-row">
                         <h4>书籍列表</h4>
                         <div class="view-toggle-buttons">
-                            <button id="viewListBtn" class="view-toggle-btn active" title="列表视图">
-                                <i class="fas fa-list"></i>
-                            </button>
-                            <button id="viewCardsBtn" class="view-toggle-btn" title="卡片视图">
+                            <button id="viewCardsBtn" class="view-toggle-btn active" title="卡片视图">
                                 <i class="fas fa-th-large"></i>
+                            </button>
+                            <button id="viewListBtn" class="view-toggle-btn" title="列表视图">
+                                <i class="fas fa-list"></i>
                             </button>
                         </div>
                     </div>

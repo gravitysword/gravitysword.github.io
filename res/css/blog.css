@@ -23,10 +23,11 @@ img[src$=".svg"]:not(.modal-image),
 .main-content {
     background-color: #000;
     flex-grow: 1;
-    width: 55%;
-    margin: 5% auto;
-    padding: 40px;
-    border-radius: 10px;
+    width: 58%;
+    margin: 3.5% auto;
+    padding: 48px;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* 3. 分割线样式 */
@@ -46,7 +47,7 @@ img[src$=".svg"]:not(.modal-image),
 }
 
 .title-wrapper {
-    margin-bottom: 40px;
+    margin-bottom: 35px;
 }
 
 .title {
@@ -127,9 +128,9 @@ img[src$=".svg"]:not(.modal-image),
 
 .section-divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 10%), transparent);
-    margin: 0 auto 40px;
-    max-width: 200px;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 8%), transparent);
+    margin: 0 auto 35px;
+    max-width: 180px;
 }
 
 /* 动画效果 */
@@ -163,59 +164,58 @@ img[src$=".svg"]:not(.modal-image),
 
 /* 6. 工具区域样式 */
 .tool {
-    margin-top: 20px;
+    margin-top: 12px;
 }
 
 .share {
     text-align: center;
 }
 
-/* From Uiverse.io by adamgiebl */
 .share button {
-    font-size: 16px;
+    font-size: 15px;
     background: rgb(0 0 0);
     color: white;
-    padding: 12px 16px;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
-    transition: all 0.3s;
+    transition: all 0.25s ease;
     cursor: pointer;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     margin: 0 auto;
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 42px;
+    min-height: 42px;
 }
 
 .share button span {
-    transition: all 0.3s ease-in-out;
-    font-size: 14px;
+    transition: all 0.25s ease-in-out;
+    font-size: 13px;
 }
 
 .share button svg {
-    width: 70%;
+    width: 65%;
     display: block;
     transform-origin: center center;
-    transition: transform 0.3s ease-in-out;
-    margin-right: 10px;
+    transition: transform 0.25s ease-in-out;
+    margin-right: 8px;
     fill: white;
 }
 
 .share button:hover .share-svg {
-    animation: fly-1 0.6s ease-in-out infinite alternate;
+    animation: fly-1 0.5s ease-in-out infinite alternate;
 }
 
 .share button:hover svg {
-    transform: translateX(1.2em) rotate(45deg) scale(1.1);
+    transform: translateX(1.1em) rotate(45deg) scale(1.05);
 }
 
 .share button:hover span {
-    transform: translateX(5em);
+    transform: translateX(4em);
 }
 
 .share button:active {
-    transform: scale(0.95);
+    transform: scale(0.96);
 }
 
 @keyframes fly-1 {
@@ -241,15 +241,15 @@ img[src$=".svg"]:not(.modal-image),
     z-index: 1000;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(3px);
 }
 
 .modal-image {
-    max-width: 90%;
-    max-height: 90vh;
+    max-width: 92%;
+    max-height: 92vh;
     opacity: 0;
-    transform: scale(0.8);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: scale(0.85);
+    transition: opacity 0.25s ease, transform 0.25s ease;
     filter: none !important;
 }
 
@@ -260,112 +260,26 @@ img[src$=".svg"]:not(.modal-image),
 
 .modal-close {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 25px;
+    right: 25px;
     color: #fff;
-    font-size: 2rem;
+    font-size: 1.8rem;
     cursor: pointer;
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(0 0 0 / 50%);
+    background-color: rgb(0 0 0 / 40%);
     border-radius: 50%;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.25s ease;
 }
 
 .modal-close:hover {
-    background-color: rgb(255 255 255 / 20%);
+    background-color: rgb(255 255 255 / 15%);
 }
 
-/* 下载提醒模态窗 */
-.download-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgb(0 0 0 / 70%);
-    backdrop-filter: blur(5px);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
 
-.download-modal.active {
-    opacity: 1;
-}
-
-.download-modal .modal-content {
-    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-    border: 1px solid #444;
-    border-radius: 12px;
-    padding: 30px;
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-    box-shadow: 0 10px 30px rgb(0 0 0 / 50%);
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
-}
-
-.download-modal.active .modal-content {
-    transform: scale(1);
-}
-
-.download-modal .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.download-modal .modal-icon {
-    color: #4a90e2;
-}
-
-.download-modal h3 {
-    margin: 0;
-    color: #fff;
-    font-size: 1.3em;
-}
-
-.download-modal p {
-    color: #ccc;
-    margin: 10px 0;
-    line-height: 1.5;
-}
-
-.download-modal .modal-button {
-    background: #111;
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 25px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 20px;
-    min-width: 120px;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.download-modal .modal-button:hover {
-    transform: translateY(-2px);
-}
-
-.download-modal .modal-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 10px rgb(74 144 226 / 30%);
-}
 
 
 /* 11. 响应式设计 */
@@ -429,37 +343,30 @@ img[src$=".svg"]:not(.modal-image),
 /* 手机设备 (480px 以下) */
 @media screen and (max-width: 480px) {
     .main-content {
-        width: 98%;
-        margin: 1% auto;
-        padding: 15px;
+        width: 96%;
+        margin: 0.5% auto;
+        padding: 18px;
     }
     
     .introduce {
-        padding: 30px 0 20px;
+        padding: 25px 0 18px;
     }
     
     .title {
-        font-size: 1.8em;
-        margin-bottom: 12px;
+        font-size: 1.7em;
+        margin-bottom: 10px;
     }
     
     .meta-item {
-        font-size: 13px;
+        font-size: 12px;
     }
     
-    /* 模态窗响应式 */
-    .download-modal .modal-content {
-        padding: 20px;
-        width: 95%;
-    }
-    
-    /* 图片模态窗响应式 */
     .modal-close {
-        top: 10px;
-        right: 10px;
-        width: 35px;
-        height: 35px;
-        font-size: 1.5rem;
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+        font-size: 1.4rem;
     }
 }
 
@@ -486,8 +393,8 @@ img[src$=".svg"]:not(.modal-image),
 }
 
 .image-caption {
-    margin-top: 8px;
-    font-size: 14px;
+    margin-top: 7px;
+    font-size: 13.5px;
     color: #ccc;
     font-style: italic;
     text-align: center;
@@ -506,33 +413,33 @@ img[src$=".svg"]:not(.modal-image),
 @media screen and (max-width: 768px) {
     pre {
         overflow-x: auto;
-        font-size: 13px;
-        padding: 10px;
+        font-size: 12.5px;
+        padding: 9px;
     }
     
     pre code {
-        font-size: 13px;
-        line-height: 1.4;
+        font-size: 12.5px;
+        line-height: 1.45;
     }
     
     .code-language-label {
-        font-size: 12px;
-        padding: 4px 8px;
+        font-size: 11.5px;
+        padding: 3px 7px;
     }
     
     .copy-code-button {
-        font-size: 12px;
-        padding: 6px 10px;
-        min-width: 44px;
-        min-height: 44px;
+        font-size: 11.5px;
+        padding: 5px 9px;
+        min-width: 42px;
+        min-height: 42px;
     }
     
     .code-collapse-button,
     .code-collapse-bottom-button {
-        font-size: 12px;
-        padding: 6px 10px;
-        min-width: 44px;
-        min-height: 44px;
+        font-size: 11.5px;
+        padding: 5px 9px;
+        min-width: 42px;
+        min-height: 42px;
     }
 }
 

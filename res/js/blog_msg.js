@@ -127,7 +127,7 @@ export async function backend() {
         return {
             test_host,
             work_host,
-            host: window.location.hostname === "127.0.0.1" 
+            host: String(window.location.hostname).includes("192.168")
                 ? (env === "web" ? work_host : test_host) 
                 : work_host
         };
