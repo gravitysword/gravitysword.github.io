@@ -1,20 +1,15 @@
-/* Sspai Web Theme A theme to [sspai](ssp.ai) default theme. Developed by Codegass(wchweichenhao@gmial.com) & Yves(yves@sspai.com) Download Cuto on the App Store and Google Play! */
-@font-face {
-    font-family: 'AlibabaPuHuiTi';
-    src: url('/res/font/AlibabaPuHuiTi.woff2') format('woff2');
-  }
 
-@font-face {
-    font-family: 'SourceHanSerifSC';
-    src: url('/res/font/SourceHanSerifSC.otf') format('opentype');
-  
+:root{
+    --SourceHanSerifSC: "Source Han Serif SC VF", sans-serif;
+    --AlibabaPuHuiTi: "Alibaba PuHuiTi";
 }
+
 body {
 	font-size: 18px;
 	background: #000000;
 	margin: 0px;
 	padding: 0px;
-	font-family: "AlibabaPuHuiTi";
+	font-family: var(--AlibabaPuHuiTi);
 	line-height: 1.6;
 	color: #ffffff;
 }
@@ -98,7 +93,7 @@ body {
 	line-height: 1.8;
     font-weight: 500;
     letter-spacing: 0.5px; 
-    font-family: 'SourceHanSerifSC';
+    font-family: Roboto, "Source Han Serif SC VF", sans-serif;
     text-indent: 2em;
 }
 .content a {
@@ -727,7 +722,7 @@ body {
 	margin-top: 5px;
     font-weight: 400;
     letter-spacing: 0.3px;
-    font-family: 'SourceHanSerifSC';
+    font-family: var(--SourceHanSerifSC);
     font-size: 0.99em;
 }
 .content ol#footnotes {
