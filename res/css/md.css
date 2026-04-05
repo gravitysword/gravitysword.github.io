@@ -1,18 +1,4 @@
 
-:root{
-    --SourceHanSerifSC: "Source Han Serif SC VF", sans-serif;
-    --AlibabaPuHuiTi: "Alibaba PuHuiTi";
-}
-
-body {
-	font-size: 18px;
-	background: #000000;
-	margin: 0px;
-	padding: 0px;
-	font-family: var(--AlibabaPuHuiTi);
-	line-height: 1.6;
-	color: #ffffff;
-}
 .content h1 {
 	font-size: 1.9em;
 	font-weight: 600;
@@ -93,7 +79,7 @@ body {
 	line-height: 1.8;
     font-weight: 500;
     letter-spacing: 0.5px; 
-    font-family: Roboto, "Source Han Serif SC VF", sans-serif;
+    font-family: var(--SourceHanSerifSC), sans-serif;
     text-indent: 2em;
 }
 .content a {

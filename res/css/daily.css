@@ -1,12 +1,8 @@
-@font-face {
-    font-family: AlibabaPuHuiTi;
-    src: url('/res/font/AlibabaPuHuiTi.woff2') format('woff2');
-  }
 
 body {
     background-color: #000;
     color: #fff;
-    font-family: AlibabaPuHuiTi, Arial, sans-serif;
+    font-family: var(--AlibabaPuHuiTi);
     font-size: 18px;
     margin: 0;
     padding: 0;

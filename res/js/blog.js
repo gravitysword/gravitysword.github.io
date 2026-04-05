@@ -1,4 +1,4 @@
-import { BLOG_getContent,backend,CORS_file_config } from '/res/js/blog_msg.js';
+import { BLOG_getContent } from '/res/js/blog_msg.js';
 
 
 // 配置marked解析器选项
@@ -258,12 +258,9 @@ const ImageHandler = {
     
     const modalImg = document.createElement('img');
     modalImg.className = 'modal-image';
-    modalImg.crossOrigin = 'anonymous';
-    modalImg.referrerPolicy = 'no-referrer';
     modalImg.onerror = function() {
       this.src = '/res/media/svg/sys/image-error.svg';
       this.onerror = null;
-      // 确保错误图标显示为白色
       this.style.filter = 'invert(100%) brightness(100%)';
     };
     
@@ -311,7 +308,10 @@ const ImageHandler = {
 
     const handleImageClick = (e) => {
       if (e.target.tagName === 'IMG' && !e.target.classList.contains('weather')) {
-        showImage(e.target.src);
+        // 优先使用data-original-src属性（原图URL）
+        const originalSrc = e.target.getAttribute('data-original-src');
+        const imageSrc = originalSrc || e.target.src;
+        showImage(imageSrc);
       }
     };
 
@@ -582,30 +582,19 @@ const TableHandler = {
     document.querySelectorAll('table').forEach((table, tableIndex) => {
       table.classList.add('styled-table');
       
-      // 添加可访问性标题
       const caption = document.createElement('caption');
       caption.textContent = `数据表格 ${tableIndex + 1}`;
       table.insertBefore(caption, table.firstChild);
       
-      // 添加跳过表格链接
-      const skipLink = document.createElement('a');
-      skipLink.href = `#table-${tableIndex + 1}-end`;
-      skipLink.className = 'skip-table';
-      skipLink.textContent = '跳过表格';
-      table.parentNode.insertBefore(skipLink, table);
-      
-      // 包装表格
       const wrapper = document.createElement('div');
       wrapper.className = 'table-wrapper';
       table.parentNode.insertBefore(wrapper, table);
       wrapper.appendChild(table);
       
-      // 自动识别数据类型
       const headers = table.querySelectorAll('th');
       const rows = table.querySelectorAll('tbody tr');
       
       headers.forEach((header, colIndex) => {
-        // 为可排序表头添加tabindex
         if (header.classList.contains('sortable')) {
           header.setAttribute('tabindex', '0');
           header.setAttribute('role', 'button');
@@ -613,7 +602,6 @@ const TableHandler = {
         }
       });
       
-      // 分析每列的数据类型
       headers.forEach((header, colIndex) => {
         const cells = Array.from(rows)
           .map(row => row.cells[colIndex]?.textContent.trim() || '')
@@ -621,7 +609,6 @@ const TableHandler = {
         
         const dataType = this.detectDataType(cells);
         
-        // 为每个单元格添加数据类型属性
         rows.forEach(row => {
           const cell = row.cells[colIndex];
           if (cell) {
@@ -635,22 +622,14 @@ const TableHandler = {
         });
       });
       
-      // 键盘导航支持
       table.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'TH' && e.target.classList.contains('sortable')) {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            e.target.click(); // 触发排序
+            e.target.click();
           }
         }
       });
-      
-      // 添加表格结束标记
-      const endMarker = document.createElement('div');
-      endMarker.id = `table-${tableIndex + 1}-end`;
-      endMarker.style.position = 'absolute';
-      endMarker.style.left = '-10000px';
-      table.parentNode.insertBefore(endMarker, table.nextSibling);
     });
   },
   
@@ -690,70 +669,7 @@ const TableHandler = {
   }
 };
 
-// 文件链接处理模块
-const FileLinkHandler = {
-  // 添加文件链接跳转功能
-  addFileLinkHandler() {
-    document.querySelectorAll('files').forEach(fileElement => {
-      fileElement.style.cursor = 'pointer'; // 添加指针样式，提示用户可点击
 
-      fileElement.addEventListener('click', async function() {
-        let fileId = this.getAttribute('file-id');
-        if (!fileId) {
-          console.error('File element is missing an id attribute.');
-          alert('文件元素缺少ID属性。');
-          return;
-        }
-
-        let files = await CORS_file_config();
-        fileId = files.files[String(fileId)].file_id;
-
-        try {
-          // 获取files.json配置
-          const config = await backend();
-          const host = config.host;
-          const downloadUrl = `${host}/file_url/${fileId}`;
-          
-          // 显示下载提醒模态窗
-          const downloadModal = document.getElementById('downloadModal');
-          const confirmDownloadBtn = document.getElementById('confirmDownload');
-          
-          // 设置模态窗为flex显示以居中内容
-          downloadModal.style.display = 'flex';
-          // 添加active类以触发动画
-          setTimeout(() => downloadModal.classList.add('active'), 10);
-          
-          // 确认按钮点击事件
-          const handleConfirmDownload = function() {
-            // 移除事件监听以防止多次绑定
-            confirmDownloadBtn.removeEventListener('click', handleConfirmDownload);
-            
-            // 添加关闭动画
-            downloadModal.classList.remove('active');
-            
-            // 隐藏模态窗后跳转
-            setTimeout(() => {
-              downloadModal.style.display = 'none';
-              // 跳转到下载链接
-              location.href = downloadUrl;
-            }, 300);
-          };
-          
-          // 绑定点击事件
-          confirmDownloadBtn.addEventListener('click', handleConfirmDownload);
-          
-        } catch (error) {
-          // 出错时隐藏模态窗并显示错误
-          console.error('Error processing file link:', error);
-          const downloadModal = document.getElementById('downloadModal');
-          downloadModal.style.display = 'none';
-          downloadModal.classList.remove('active');
-          alert('处理文件链接时出错，请检查控制台获取更多信息。');
-        }
-      });
-    });
-  }
-};
 
 // 分享功能模块
 const ShareHandler = {
@@ -845,7 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ImageHandler.addImageCaptions();
       
       // 添加文件链接跳转功能（在所有DOM操作完成后执行）
-      setTimeout(() => FileLinkHandler.addFileLinkHandler(), 500);
+      //setTimeout(() => FileLinkHandler.addFileLinkHandler(), 500);
 
       // 初始化分享功能
       ShareHandler.initShare();

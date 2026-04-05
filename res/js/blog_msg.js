@@ -122,14 +122,11 @@ export async function loadArticleFullContent(article) {
 export async function backend() {
     try {
         const response = await fetch("/config/backend.json");
-        const { test_host, work_host, env } = await response.json();
+        const {fileApi, filePreApi} = await response.json();
         
         return {
-            test_host,
-            work_host,
-            host: String(window.location.hostname).includes("192.168")
-                ? (env === "web" ? work_host : test_host) 
-                : work_host
+            fileApi,
+            filePreApi,
         };
     } catch (error) {
         console.error('Error fetching backend.json:', error);

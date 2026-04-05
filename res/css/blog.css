@@ -1,10 +1,13 @@
 
-/* 1. 页面基础样式 */
+
 body {
-    margin: 0;
-    padding: 0;
-    background-color: #000;
-    font-family: AlibabaPuHuiTi, sans-serif;
+	font-size: 18px;
+	background: #000000;
+	margin: 0px;
+	padding: 0px;
+	font-family: var(--AlibabaPuHuiTi);
+	line-height: 1.6;
+	color: #ffffff;
 }
 
 /* 图标样式 - 确保在黑色背景上显示为白色 */

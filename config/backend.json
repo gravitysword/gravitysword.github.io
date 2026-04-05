@@ -1,5 +1,3 @@
 {
-    "test_host": "http://192.168.72.128:10001/api",
-    "work_host": "http://117.72.62.161:10001/api",
-    "env" : "web1"
+    "fileApi": "http://117.72.62.161/files"
 }

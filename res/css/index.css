@@ -1,13 +1,10 @@
-@font-face {
-    font-family: AlibabaPuHuiTi;
-    src: url('/res/font/AlibabaPuHuiTi.woff2') format('woff2');
-}
+
 
 body {
     margin: 0;
     padding: 0;
     background-color: #000;
-    font-family: AlibabaPuHuiTi, sans-serif;
+    font-family: var(--AlibabaPuHuiTi), sans-serif;
     font-size: 16px;
     min-height: 100vh; 
     display: flex;

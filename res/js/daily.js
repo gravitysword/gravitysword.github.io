@@ -2,6 +2,22 @@
  * 时间轴动态功能
  */
 
+import { backend } from '/res/js/blog_msg.js';
+
+const UUID4_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isUUID4(filename) {
+    return UUID4_PATTERN.test(filename);
+}
+
+let backendConfig = null;
+async function getBackendConfig() {
+    if (!backendConfig) {
+        backendConfig = await backend();
+    }
+    return backendConfig;
+}
+
 // 全局配置和状态
 let dailyFilePaths = []; // 所有daily文件路径
 let loadedItems = []; // 已加载的动态内容
@@ -157,24 +173,39 @@ function createDailyItem(item, index) {
         const picturesContainer = document.createElement('div');
         picturesContainer.className = 'pictures-grid mb-4';
         
-        item.pictures.forEach(picUrl => {
+        item.pictures.forEach(async (picUrl) => {
             const pictureWrapper = document.createElement('div');
             pictureWrapper.className = 'picture-wrapper';
             
             const picture = document.createElement('img');
-            // 使用渐进式加载技术
-            const lazyLoadImg = new Image();
-            lazyLoadImg.onload = () => {
-                picture.src = lazyLoadImg.src;
-                picture.classList.add('loaded');
-            };
-            lazyLoadImg.src = picUrl;
-            
-            picture.src = '/res/media/svg/image-placeholder.svg'; // 占位符
+            picture.src = '/res/media/svg/image-placeholder.svg';
             picture.alt = 'Timeline Image';
             picture.className = 'timeline-image opacity-0 transition-opacity duration-500';
-            picture.referrerPolicy = 'no-referrer';
-            picture.crossOrigin = 'anonymous';
+            
+            if (isUUID4(picUrl)) {
+                try {
+                    const config = await getBackendConfig();
+                    if (config && config.fileApi) {
+                        const previewUrl = `${config.fileApi}/${picUrl}/thumbnail`;
+                        const originalUrl = `${config.fileApi}/${picUrl}/content`;
+                        
+                        picture.src = previewUrl;
+                        picture.setAttribute('data-original-src', originalUrl);
+                        picture.classList.add('loaded');
+                    }
+                } catch (error) {
+                    console.error('处理图片时出错:', error);
+                    picture.src = '/res/media/svg/image-error.svg';
+                }
+            } else {
+                const lazyLoadImg = new Image();
+                lazyLoadImg.onload = () => {
+                    picture.src = lazyLoadImg.src;
+                    picture.classList.add('loaded');
+                };
+                lazyLoadImg.src = picUrl;
+            }
+            
             picture.onerror = function() {
                 this.src = '/res/media/svg/image-error.svg';
                 this.onerror = null;
@@ -379,10 +410,8 @@ const initMediaViewer = () => {
   
   const modalImg = document.createElement('img');
   modalImg.className = 'modal-image';
-  modalImg.crossOrigin = 'anonymous';
-  modalImg.referrerPolicy = 'no-referrer';
   modalImg.onerror = function() {
-    this.src = '/res/media/svg/sys/image-error.svg';
+    this.src = '/res/media/svg/image-error.svg';
     this.onerror = null;
   };
   
@@ -411,9 +440,9 @@ const initMediaViewer = () => {
 
   const handleImageClick = (e) => {
     if (e.target.classList.contains('timeline-image')) {
-      const originalSrc = e.target.src;
+      const originalSrc = e.target.getAttribute('data-original-src') || e.target.src;
       // 只有当图片已经加载完成才显示大图查看
-      if (originalSrc !== '/res/media/svg/image-placeholder.svg' && e.target.classList.contains('loaded')) {
+      if (e.target.src !== '/res/media/svg/image-placeholder.svg' && e.target.classList.contains('loaded')) {
         showImage(originalSrc);
       }
     }
