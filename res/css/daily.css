@@ -2,8 +2,8 @@
 body {
     background-color: #000;
     color: #fff;
-    font-family: var(--AlibabaPuHuiTi);
-    font-size: 18px;
+    font-family: var(--SourceHanSansSC);
+    font-size: 16px;
     margin: 0;
     padding: 0;
     line-height: 1.6;
@@ -16,11 +16,6 @@ p {
     font-size: 16px;
     color: #000;
     line-height: 1.8;
-}
-
-/* 移除背景动画，保持纯黑 */
-body::before {
-    display: none;
 }
 
 .top-section {
@@ -44,6 +39,7 @@ body::before {
 
 .top-sign-0 {
     font-size: 2.2rem;
+    font-family: '楷体','Microsoft YaHei', STKaiti, sans-serif;
     color: #fff;
     margin-bottom: 15px;
     text-shadow: 2px 2px 4px rgb(0 0 0 / 30%);
@@ -53,7 +49,8 @@ body::before {
 }
 
 .top-sign-1 {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+    font-family: '楷体','Microsoft YaHei', STKaiti, sans-serif;
     color: #e0e0e0;
     text-shadow: 1px 1px 2px rgb(0 0 0 / 20%);
     animation: fadeInUp 1s ease-out;
@@ -300,7 +297,7 @@ video{
 }
 
 .timeline-item-content {
-    background-color: #fff;
+    background-color: #eeeeee;
     border-radius: 8px;
     padding: 25px;
     margin-left: 50px;
@@ -323,7 +320,7 @@ video{
     width: 0;
     height: 0;
     border: 4px solid transparent;
-    border-right-color: #fff;
+    border-right-color: #eeeeee;
 }
 
 

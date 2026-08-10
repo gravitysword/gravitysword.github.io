@@ -354,13 +354,7 @@ async function initTimeline() {
         </div>
     `;
     
-    // 获取文件路径并计算总页数
-    if (dailyFilePaths.length === 0) {
-        dailyFilePaths = await fetchDailyFilePaths();
-        totalPages = Math.ceil(dailyFilePaths.length / itemsPerPage);
-    }
-    
-    // 加载第一页数据
+    // 加载第一页数据（loadDailyPage 内部会初始化文件路径并计算总页数）
     const initialItems = await loadDailyPage(1);
     
     timelineContainer.innerHTML = '';

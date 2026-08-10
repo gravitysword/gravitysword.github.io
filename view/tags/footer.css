@@ -1,175 +1,118 @@
 /* 页脚整体样式 */
 .bottom {
     width: 100%;
-    background-color: #000; /* 纯黑色背景 */
-    color: #fff; /* 白色文字 */
-    padding: 32px 20px 16px;
-    margin: 50px 0 100px;
-    font-size: 15px;
+    background-color: #000;
+    color: #fff;
+    padding: 28px 20px;
+    margin: 60px 0 0;
+    font-size: 14px;
     letter-spacing: 0.5px;
-    box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.12);
+    border-top: 1px solid rgb(255 255 255 / 8%);
     box-sizing: border-box;
 }
 
+/* 统一为两行堆叠居中：第一行版权与备案，第二行友情链接 */
 .bottom-content {
     max-width: 900px;
     margin: 0 auto;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    gap: 16px;
+    text-align: center;
+    gap: 14px;
 }
 
-.copyright-info {
+/* 版权与备案 */
+.footer-meta {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .copyright {
     font-weight: 500;
-    color: inherit; /* 继承父元素颜色，保持简洁 */
+    color: #eee;
 }
 
-.attention-0 {
-    font-size: 13px;
-    color: #bbb; /* 浅灰色次要文字 */
-    font-style: italic;
-}
-
-.beian-info {
-    margin: 0 12px;
+.meta-separator {
+    color: #555;
 }
 
 .beian {
-    color: #888; /* 灰色链接 */
+    color: #888;
     text-decoration: none;
     font-size: 13px;
-    padding: 8px 4px;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
+    padding: 4px;
     transition: color 0.2s;
 }
 
 .beian:hover {
-    color: #fff; /* 悬停变白色 */
+    color: #fff;
     text-decoration: underline;
 }
 
+/* 友情链接 */
 .friend-links {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .friend-links-title {
-    font-weight: 600;
-    color: inherit; /* 继承父元素颜色 */
-    font-size: 14px;
+    font-size: 13px;
+    color: #888;
 }
 
 .friend-link {
-    color: #bbb; /* 浅灰色链接 */
+    color: #bbb;
     text-decoration: none;
-    font-size: 14px;
-    margin-left: 4px;
-    padding: 8px 4px;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
+    font-size: 13px;
+    padding: 4px;
     transition: color 0.2s;
 }
 
 .friend-link:hover {
-    color: #fff; /* 悬停变白色 */
+    color: #fff;
     text-decoration: underline;
 }
 
 /* 大屏幕适配 */
 @media (max-width: 1024px) {
     .bottom {
-        padding: 28px 16px 14px;
-    }
-    .bottom-content {
-        max-width: 800px;
+        padding: 24px 16px;
     }
 }
 
 /* 平板适配 */
 @media (max-width: 768px) {
     .bottom {
-        padding: 24px 16px 12px;
-        font-size: 14px;
-        margin: 40px 0 80px;
-    }
-    .bottom-content {
-        max-width: 100%;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 16px;
-    }
-    .beian-info {
-        margin: 0;
-    }
-    .friend-links {
-        justify-content: center;
-    }
-}
-
-/* 小平板适配 */
-@media (max-width: 600px) {
-    .bottom {
-        padding: 20px 12px 10px;
+        padding: 20px 16px;
         font-size: 13px;
-        margin: 30px 0 60px;
+        margin-top: 40px;
     }
     .bottom-content {
-        align-items: flex-start;
-        text-align: left;
         gap: 12px;
-    }
-    .copyright-info {
-        gap: 3px;
-    }
-    .attention-0 {
-        font-size: 12px;
-    }
-    .beian {
-        font-size: 12px;
-    }
-    .friend-links {
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        gap: 6px;
-    }
-    .friend-links-title {
-        font-size: 13px;
-    }
-    .friend-link {
-        font-size: 13px;
-        margin-left: 0;
     }
 }
 
 /* 手机适配 */
 @media (max-width: 480px) {
     .bottom {
-        padding: 16px 10px 8px;
+        padding: 16px 12px;
         font-size: 12px;
-        margin: 20px 0 50px;
+        margin-top: 30px;
     }
     .bottom-content {
         gap: 10px;
     }
-    .friend-links {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+    .footer-meta {
+        gap: 6px;
     }
-    .friend-links-title {
-        margin-bottom: 4px;
+    .friend-links {
+        gap: 6px;
     }
 }

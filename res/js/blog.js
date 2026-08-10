@@ -9,19 +9,30 @@ const markedOptions = {
     smartLists: true, // 使用比原生markdown更时髦的列表
     smartypants: true, // 使用更为时髦的标点
     xhtml: true, // 使用xhtml闭合标签
-    html: true, // 允许HTML标签
-    highlight: (code, lang) => {
-        // 如果有语言标识且有hljs库，则进行高亮
-        if (lang && window.hljs) {
-            try {
-                return window.hljs.highlight(code, { language: lang }).value;
-            } catch (e) {
-                console.error('语法高亮错误:', e);
-            }
-        }
-        return code; // 如果没有语言标识或没有hljs库，则返回原代码
-    }
+    html: true // 允许HTML标签
+    // 语法高亮由 Prism 在渲染后统一处理（见 CodeBlockHandler）
 };
+
+// 复制文本到剪贴板（navigator.clipboard 不可用时降级为 textarea + execCommand）
+async function copyText(text) {
+    if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        return true;
+    }
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-9999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        document.execCommand('copy');
+    } finally {
+        document.body.removeChild(textArea);
+    }
+    return true;
+}
 
 // Markdown内容处理模块
 const MarkdownHandler = {
@@ -61,11 +72,31 @@ const MarkdownHandler = {
 
 // 博客信息处理模块
 const BlogInfoHandler = {
+    // 显示加载失败提示
+    showError(message) {
+        const titleElement = document.querySelector('.title');
+        if (titleElement) titleElement.textContent = '文章加载失败';
+        
+        const contentElement = document.getElementById('markdown-content');
+        if (contentElement) {
+            contentElement.innerHTML = `<div class="content-error"><p>${message}</p></div>`;
+        }
+    },
+
     // 更新博客标题、日期和标签
     updateBlogInfo(blog_details) {
+        // 校验元数据合法性，避免解析异常导致整页崩溃
+        if (!blog_details || typeof blog_details !== 'object') {
+            this.showError('文章信息加载异常，请联系博主');
+            return;
+        }
+        
         // 更新标题
         const titleElement = document.querySelector('.title');
         titleElement.textContent = blog_details.subtitle || blog_details.title;
+        
+        // 同步更新浏览器标签页标题
+        document.title = `${titleElement.textContent} - 泛舟游客的博客`;
         
         // 更新日期
         document.querySelector('.blog-date').textContent = blog_details.date;
@@ -75,22 +106,24 @@ const BlogInfoHandler = {
         if (weatherElement) {
             if (!blog_details.weather) {
                 weatherElement.style.display = 'none';
-                console.log("天气信息为空，隐藏天气图标");
             } else {
                 weatherElement.setAttribute('src', `/res/media/svg/weather/${blog_details.weather}.svg`);
             }
         }
 
-        // 更新标签
-        const tagsHtml = blog_details.tag.map(tag_item => 
-            `<span class="blog-tag">#${tag_item}</span>`
-        ).join('');
-        
-        const metaContainer = document.querySelector('.meta-info');
-        const tagContainer = document.createElement('div');
-        tagContainer.className = 'meta-item blog-tags';
-        tagContainer.innerHTML = tagsHtml;
-        metaContainer.appendChild(tagContainer);
+        // 更新标签（无标签时跳过创建容器）
+        const tags = Array.isArray(blog_details.tag) ? blog_details.tag : [];
+        if (tags.length > 0) {
+            const tagsHtml = tags.map(tag_item => 
+                `<span class="blog-tag">#${tag_item}</span>`
+            ).join('');
+            
+            const metaContainer = document.querySelector('.meta-info');
+            const tagContainer = document.createElement('div');
+            tagContainer.className = 'meta-item blog-tags';
+            tagContainer.innerHTML = tagsHtml;
+            metaContainer.appendChild(tagContainer);
+        }
     }
 };
 
@@ -133,27 +166,15 @@ const CodeBlockHandler = {
         copyButton.textContent = '复制';
         
         copyButton.addEventListener('click', async () => {
-            const code = codeBlock.textContent;
+            // 折叠状态下也复制全文（避免复制到截断的预览内容）
+            const code = codeBlock.dataset.fullContent || codeBlock.textContent;
             
             try {
-                if (navigator.clipboard) {
-                    await navigator.clipboard.writeText(code);
-                } else {
-                    // 降级方案：使用传统的复制方法
-                    const textArea = document.createElement('textarea');
-                    textArea.value = code;
-                    textArea.style.position = 'fixed';
-                    textArea.style.left = '-9999px';
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                }
-                copyButton.textContent = '已复制!';
+                await copyText(code);
+                copyButton.textContent = '✓ 已复制';
             } catch (err) {
                 console.error('复制失败:', err);
-                copyButton.textContent = '复制失败';
+                copyButton.textContent = '✗ 失败';
             } finally {
                 setTimeout(() => {
                     copyButton.textContent = '复制';
@@ -169,6 +190,12 @@ const CodeBlockHandler = {
         const codeContent = codeBlock.textContent;
         const codeLines = codeContent.split('\n');
         
+        // 仅超过15行的代码块才折叠，短代码直接完整展示
+        if (codeLines.length <= 15) return;
+        
+        // 标记为可折叠代码块：只有它才需要底部按钮占位间距（见 md.css .has-collapse）
+        pre.classList.add('has-collapse');
+        
         // 创建顶部折叠控制器
         const topCollapseButton = document.createElement('button');
         topCollapseButton.className = 'code-collapse-button';
@@ -183,6 +210,7 @@ const CodeBlockHandler = {
         
         // 保存原始内容和前5行内容
         const originalContent = codeContent;
+        codeBlock.dataset.fullContent = originalContent; // 供复制按钮获取全文
         const previewLines = codeLines.slice(0, 5);
         const previewContent = previewLines.join('\n') + (codeLines.length > 5 ? '\n...' : '');
         
@@ -261,7 +289,8 @@ const ImageHandler = {
     modalImg.onerror = function() {
       this.src = '/res/media/svg/sys/image-error.svg';
       this.onerror = null;
-      this.style.filter = 'invert(100%) brightness(100%)';
+      // 用 !important 覆盖 CSS 中 .modal-image 的 filter:none，让错误图标保持白色可见
+      this.style.setProperty('filter', 'invert(100%) brightness(100%)', 'important');
     };
     
     const closeBtn = document.createElement('div');
@@ -272,17 +301,23 @@ const ImageHandler = {
     modal.appendChild(closeBtn);
     document.body.appendChild(modal);
 
+    // 打开模态窗时隐藏目录，关闭时恢复
+    const setTocVisible = (visible) => {
+      const tocContainer = document.querySelector('.toc-container');
+      const tocToggleButton = document.querySelector('.toc-toggle-button');
+      if (tocContainer) tocContainer.style.display = visible ? '' : 'none';
+      if (tocToggleButton) tocToggleButton.style.display = visible ? (window.innerWidth <= 1200 ? 'flex' : 'none') : 'none';
+    };
+
     const showImage = (src) => {
       modalImg.classList.remove('active');
       modal.style.display = 'flex';
       modalImg.src = src;
       
-      // 禁用目录功能
-      const tocContainer = document.querySelector('.toc-container');
-      const tocToggleButton = document.querySelector('.toc-toggle-button');
+      // 锁定背景滚动
+      document.body.style.overflow = 'hidden';
       
-      if (tocContainer) tocContainer.style.display = 'none';
-      if (tocToggleButton) tocToggleButton.style.display = 'none';
+      setTocVisible(false);
       
       requestAnimationFrame(() => {
         modalImg.classList.add('active');
@@ -295,19 +330,15 @@ const ImageHandler = {
         modal.style.display = 'none';
         modalImg.src = '';
         
-        // 重新启用目录功能
-        const tocContainer = document.querySelector('.toc-container');
-        const tocToggleButton = document.querySelector('.toc-toggle-button');
+        // 恢复背景滚动
+        document.body.style.overflow = '';
         
-        if (tocContainer) tocContainer.style.display = '';
-        if (tocToggleButton) {
-          tocToggleButton.style.display = window.innerWidth <= 1200 ? 'flex' : 'none';
-        }
+        setTocVisible(true);
       }, 300);
     };
 
     const handleImageClick = (e) => {
-      if (e.target.tagName === 'IMG' && !e.target.classList.contains('weather')) {
+      if (e.target.tagName === 'IMG' && !e.target.classList.contains('weather') && !e.target.classList.contains('modal-image')) {
         // 优先使用data-original-src属性（原图URL）
         const originalSrc = e.target.getAttribute('data-original-src');
         const imageSrc = originalSrc || e.target.src;
@@ -392,7 +423,7 @@ const VideoHandler = {
   // 添加视频错误处理
   handleVideoError() {
     document.querySelectorAll('video').forEach(video => {
-      if (!video.hasAttribute('onerror')) {
+      if (!video.dataset.errorHandled) {
         video.crossOrigin = 'anonymous';
         video.onerror = function() {
           const errorMsg = document.createElement('div');
@@ -401,7 +432,7 @@ const VideoHandler = {
           this.parentNode.insertBefore(errorMsg, this);
           this.style.display = 'none';
         };
-        video.setAttribute('onerror', 'true');
+        video.dataset.errorHandled = 'true';
       }
     });
   },
@@ -464,127 +495,15 @@ const VideoHandler = {
   }
 };
 
-// 段落缩进处理模块
-const ParagraphIndentHandler = {
-  // 为文章段落添加缩进
-  addParagraphIndent() {
-    const content = document.getElementById('markdown-content');
-    if (!content) return;
-
-    // 等待内容完全渲染
-    setTimeout(() => this.processContent(content), 100);
-  },
-
-  // 处理内容区域的段落缩进
-  processContent(content) {
-    // 处理现有的p标签
-    this.handleExistingParagraphs(content);
-    
-    // 处理br标签分割的文本
-    this.handleBrTags(content);
-  },
-
-  // 处理现有的p标签
-  handleExistingParagraphs(content) {
-    content.querySelectorAll('p').forEach(p => {
-      // 排除特定容器内的段落
-      if (!this.shouldSkipIndent(p)) {
-        this.handleParagraphWithBr(p);
-      }
-    });
-  },
-
-  // 处理包含br标签的段落
-  handleParagraphWithBr(paragraph) {
-    // 检查段落内是否有br标签
-    const brTags = paragraph.querySelectorAll('br');
-    if (brTags.length > 0) {
-      // 有br标签的段落，创建新的结构来处理
-      this.splitParagraphByBr(paragraph);
-    } else {
-      // 没有br标签的段落，直接缩进
-      paragraph.style.textIndent = '2em';
-    }
-  },
-
-  // 按br标签分割段落并添加缩进
-  splitParagraphByBr(paragraph) {
-    // 保存原始HTML结构
-    const originalHTML = paragraph.innerHTML;
-    
-    // 用br标签分割内容
-    const parts = originalHTML.split(/<br\s*\/?>/gi);
-    
-    if (parts.length > 1) {
-      // 创建新的HTML结构，保持原有格式
-      const newHTML = parts
-        .filter(part => part.trim())
-        .map((part, index) => {
-          const cleanPart = part.trim();
-          const style = index === 0 
-            ? 'display: block; text-indent: 2em;'
-            : 'display: block; text-indent: 2em; margin-top: 0.5em;';
-          return `<span style="${style}">${cleanPart}</span>`;
-        })
-        .join('');
-      
-      paragraph.innerHTML = newHTML;
-    } else {
-      // 只有一个段落，直接缩进
-      paragraph.style.textIndent = '2em';
-    }
-  },
-
-  // 处理br标签分割的文本
-  handleBrTags(content) {
-    // 找到所有br标签
-    content.querySelectorAll('br').forEach(br => {
-      // 获取br标签的父元素
-      const parent = br.parentNode;
-      
-      // 如果父元素是p标签，已在handleExistingParagraphs中处理
-      if (parent.tagName === 'P') return;
-      
-      // 非P标签内的br标签，给父元素添加缩进
-      if (parent && !this.shouldSkipIndent(parent)) {
-        parent.style.textIndent = '2em';
-      }
-    });
-
-    // 处理直接包含文本的div或其他元素
-    content.querySelectorAll('div, section, article').forEach(container => {
-      if (!this.shouldSkipIndent(container)) {
-        // 处理直接子文本节点
-        Array.from(container.childNodes).forEach(node => {
-          if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
-            const p = document.createElement('p');
-            p.textContent = node.textContent.trim();
-            p.style.textIndent = '2em';
-            container.replaceChild(p, node);
-          }
-        });
-      }
-    });
-  },
-
-  // 判断是否应该跳过缩进
-  shouldSkipIndent(element) {
-    // 跳过特定标签内的元素
-    const skipSelectors = ['pre', 'code', 'table', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ol', 'ul', 'dt', 'dd', 'dl'];
-    return skipSelectors.some(selector => element.closest(selector));
-  }
-};
+// 段落缩进由 md.css 的 .content p { text-indent: 2em } 统一处理，
+// 旧的内联缩进模块已删除（避免 innerHTML 重写破坏段内格式）
 
 // 表格处理模块
 const TableHandler = {
   // 为表格添加样式和增强功能
   enhanceTables() {
-    document.querySelectorAll('table').forEach((table, tableIndex) => {
+    document.querySelectorAll('table').forEach((table) => {
       table.classList.add('styled-table');
-      
-      const caption = document.createElement('caption');
-      caption.textContent = `数据表格 ${tableIndex + 1}`;
-      table.insertBefore(caption, table.firstChild);
       
       const wrapper = document.createElement('div');
       wrapper.className = 'table-wrapper';
@@ -593,14 +512,6 @@ const TableHandler = {
       
       const headers = table.querySelectorAll('th');
       const rows = table.querySelectorAll('tbody tr');
-      
-      headers.forEach((header, colIndex) => {
-        if (header.classList.contains('sortable')) {
-          header.setAttribute('tabindex', '0');
-          header.setAttribute('role', 'button');
-          header.setAttribute('aria-sort', 'none');
-        }
-      });
       
       headers.forEach((header, colIndex) => {
         const cells = Array.from(rows)
@@ -621,15 +532,6 @@ const TableHandler = {
           }
         });
       });
-      
-      table.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'TH' && e.target.classList.contains('sortable')) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            e.target.click();
-          }
-        }
-      });
     });
   },
   
@@ -637,15 +539,15 @@ const TableHandler = {
   detectDataType(values) {
     if (values.length === 0) return 'text';
     
-    // 检测布尔值
-    const boolValues = ['true', 'false', '是', '否', 'yes', 'no', '1', '0'];
-    if (values.every(v => boolValues.includes(v.toLowerCase()))) {
-      return 'boolean';
-    }
-    
-    // 检测数字
+    // 先检测数字（避免 1/0 被误判为布尔值）
     if (values.every(v => !isNaN(v) && !isNaN(parseFloat(v)))) {
       return 'number';
+    }
+    
+    // 检测布尔值
+    const boolValues = ['true', 'false', '是', '否', 'yes', 'no'];
+    if (values.every(v => boolValues.includes(v.toLowerCase()))) {
+      return 'boolean';
     }
     
     // 检测货币
@@ -691,27 +593,8 @@ const ShareHandler = {
   // 复制到剪贴板
   async copyToClipboard(content) {
     try {
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(content);
+      if (await copyText(content)) {
         alert('URL 已成功复制到剪贴板');
-      } else {
-        // 降级方案
-        const textArea = document.createElement('textarea');
-        textArea.value = content;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-9999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        
-        try {
-          document.execCommand('copy');
-          alert('URL 已成功复制到剪贴板');
-        } catch (err) {
-          alert('无法复制 URL');
-        } finally {
-          document.body.removeChild(textArea);
-        }
       }
     } catch (error) {
       console.error('复制 URL 时出错:', error);
@@ -720,32 +603,59 @@ const ShareHandler = {
   }
 };
 
+// 回到顶部模块
+const ReadingProgressHandler = {
+  // 初始化回到顶部按钮
+  init() {
+    // 回到顶部按钮
+    const backToTop = document.createElement('button');
+    backToTop.className = 'back-to-top';
+    backToTop.textContent = '↑';
+    backToTop.title = '回到顶部';
+    backToTop.setAttribute('aria-label', '回到顶部');
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.body.appendChild(backToTop);
+    
+    // 根据滚动位置显示/隐藏按钮
+    const update = () => {
+      backToTop.classList.toggle('visible', window.scrollY > 400);
+    };
+    
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   // 初始化图片放大功能
   ImageHandler.initImageZoom();
+  
+  // 初始化阅读进度条和回到顶部按钮
+  ReadingProgressHandler.init();
   
   // 主要初始化函数
   async function initBlog() {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const blogId = urlParams.get('id');
-      console.log(`Blog ID: ${blogId}`);
+      
+      // 缺少 id 参数时给出友好提示，避免空白页
+      if (!blogId) {
+        BlogInfoHandler.showError('未找到文章，请从首页或文章列表进入');
+        return;
+      }
       
       // 渲染Markdown内容
       await MarkdownHandler.renderMarkdown(blogId);
       
-      // 为所有视频元素添加跨域属性
-      document.querySelectorAll('video').forEach(video => {
-        video.crossOrigin = 'anonymous';
-      });
-      
-      // 处理视频相关功能
+      // 处理视频相关功能（handleVideoError 内部会统一设置 crossOrigin）
       VideoHandler.handleVideoError();
       VideoHandler.addVideoTimeJump();
       
       // 获取并更新博客信息
       const blog_details = await BLOG_getContent(blogId);
-      console.log('Blog Details:', blog_details);
       BlogInfoHandler.updateBlogInfo(blog_details);
       
       // 为代码块添加功能
@@ -754,15 +664,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // 为表格添加样式和增强功能
       TableHandler.enhanceTables();
       
-      // 为文章段落添加缩进
-      ParagraphIndentHandler.addParagraphIndent();
-      
       // 识别图片alt属性并添加注释
       ImageHandler.addImageCaptions();
       
-      // 添加文件链接跳转功能（在所有DOM操作完成后执行）
-      //setTimeout(() => FileLinkHandler.addFileLinkHandler(), 500);
-
       // 初始化分享功能
       ShareHandler.initShare();
       
@@ -770,7 +674,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const prismScript = document.createElement('script');
       prismScript.src = '/res/js/prism/prism.js';
       prismScript.onload = function() {
-        console.log('Prism.js loaded successfully');
         // Prism加载完成后，为所有代码块重新应用高亮
         document.querySelectorAll('pre code').forEach(codeBlock => {
           if (window.Prism) {
@@ -781,6 +684,11 @@ document.addEventListener('DOMContentLoaded', () => {
       document.head.appendChild(prismScript);
     } catch (error) {
       console.error('Error loading blog:', error);
+      // 内容未加载成功时显示友好提示，避免空白页
+      const contentElement = document.getElementById('markdown-content');
+      if (contentElement && contentElement.children.length === 0) {
+        BlogInfoHandler.showError('文章加载失败，请刷新重试或联系博主');
+      }
     }
   }
   

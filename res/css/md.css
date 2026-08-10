@@ -12,18 +12,21 @@
 
 .content h2, .content h3, .content h4, .content h5, .content h6 {
 	line-height: 1.4em;
-	margin-top: 2.2em;
-	margin-bottom: 4px;;
-
+	margin-top: 1.8em;
+	margin-bottom: 4px;
 }
 .content h3{
-    display: inline;
-    background: linear-gradient(180deg, transparent 80%, #ff7e79 80%);
+    display: inline-block; /* inline 会使 padding-top 无效且影响 TOC 定位 */
+    text-decoration: underline; /* 用下划线替代渐变背景，多行标题不会断线 */
+    text-decoration-color: #ff7e79;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    text-underline-position: under;
 
 }
 .content h2 {
 	font-size: 1.3em;
-	margin: 40px 10px 20px 0;
+	margin: 36px 0 14px;
 	padding-left: 12px;
 	border-left: 6px solid #ff7e79;
 	font-weight: 700;
@@ -34,7 +37,7 @@
 	font-weight: 700;
 	font-size: 1.2em;
 	line-height: 1.4;
-	margin: 10px 0 5px;
+	margin: 24px 0 10px;
 	padding-top: 10px;
 }
 .content h4 {
@@ -42,7 +45,7 @@
 	text-transform: uppercase;
 	font-size: 1.1em;
 	line-height: 1.4;
-	margin: 10px 0 5px;
+	margin: 24px 0 8px;
 	padding-top: 10px;
 }
 .content h5, .content h6 {
@@ -56,7 +59,6 @@
 	font-weight: normal;
 }
 .content img {
-	border-radius: 8px;
 	display: block;
 	height: auto;
 	margin: 25px auto;
@@ -69,16 +71,16 @@
 	margin-top: 12px;
 	margin-bottom: 20px;
 	padding-left: 5%;
-	line-height: 1.8;
+	line-height: 1.7;
 }
 
 /* 定义自定义字体 */
 
 .content p {
-	margin: 0 0 20px;
-	line-height: 1.8;
+	margin: 0 0 16px;
+	line-height: 1.7;
     font-weight: 500;
-    letter-spacing: 0.5px; 
+    letter-spacing: 0.2px; 
     font-family: var(--SourceHanSerifSC), sans-serif;
     text-indent: 2em;
 }
@@ -97,22 +99,24 @@
 }
 .content blockquote {
 	font-size: 1em;
-	font-style: italic;
 	padding: 25px 35px;
 	margin: 20px 0;
 	position: relative;
 	line-height: 1.8;
 	text-indent: 0;
 	border: none;
-	background-color: #200;
+	background-color: #121212; /* 弱化背景，中文不加斜体 */
 	border-radius: 5px;
-	border-left: 3px solid #444;
+	border-left: 3px solid rgb(255 126 121 / 50%);
+}
+.content blockquote p {
+	text-indent: 0; /* 引用块内段落不缩进，与 blockquote 一致 */
 }
 .content blockquote:before {
-	content: "";
+	content: "\201C"; /* 左引号 */
 	left: 12px;
-	top: 0;
-	color: #444;
+	top: -14px;
+	color: rgba(255, 255, 255, 0.15);
 	font-size: 4em;
 	font-family: Arial, serif;
 	line-height: 1em;
@@ -120,16 +124,15 @@
 	position: absolute;
 }
 .content blockquote:after {
-	content: "";
+	content: "\201D"; /* 右引号 */
 	right: 12px;
-	bottom: -26px;
-	color: #444;
+	bottom: -40px;
+	color: rgba(255, 255, 255, 0.15);
 	font-size: 4em;
 	font-family: Arial, serif;
 	line-height: 1em;
 	font-weight: 700;
 	position: absolute;
-	bottom: -31px;
 }
 .content strong, .content dfn {
 	font-weight: 700;
@@ -137,7 +140,7 @@
 }
 .content em, .content dfn {
 	font-style: italic;
-	font-weight: 400;
+	font-weight: 500;
 }
 .content del {
 	text-decoration: line-through;
@@ -152,7 +155,8 @@
 	padding: 4px 4px;
     margin: 0 4px;
 	font-size: 90%;
-	white-space: nowrap;
+	font-family: 'Fira Code', 'Consolas', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace; /* 与代码块字体一致 */
+	overflow-wrap: break-word; /* 长行内代码自动换行，避免撑破容器 */
 }
 
 
@@ -160,7 +164,10 @@
 	margin: 1em 0;
 }
 .content figcaption {
-	font-size: 0.75em;
+	font-size: 14px;
+	color: #ccc;
+	font-style: italic;
+	text-align: center;
 	padding: 0.5em 2em;
 	margin-bottom: 2em;
 }
@@ -215,7 +222,7 @@
 	border-spacing: 0;
 	border-radius: 10px;
 	overflow: hidden;
-	font-size: 13.5px;
+	font-size: 14px;
 	background: linear-gradient(145deg, #161616 0%, #0c0c0c 100%);
 	box-shadow: 
 		0 6px 24px rgba(0, 0, 0, 0.25),
@@ -270,12 +277,6 @@
 .content table td:focus {
 	outline: 2px solid #ff6b66;
 	outline-offset: -2px;
-}
-
-.content table th.sortable:focus {
-	outline: 2px solid #ff6b66;
-	outline-offset: -2px;
-	background-color: #3a3a3a;
 }
 
 
@@ -362,44 +363,6 @@
     position: relative;
 }
 
-/* 表格排序图标 - 从blog.css迁移 */
-.content table th.sortable {
-	cursor: pointer;
-	padding-right: 30px;
-	position: relative;
-}
-
-.content table th.sortable::before {
-	content: '\2191';
-	position: absolute;
-	right: 10px;
-	top: 50%;
-	transform: translateY(-50%);
-	opacity: 0.3;
-	transition: opacity 0.3s;
-	font-size: 12px;
-}
-
-.content table th.sortable::after {
-	content: '\2193';
-	position: absolute;
-	right: 10px;
-	top: 50%;
-	transform: translateY(-50%);
-	opacity: 0.3;
-	transition: opacity 0.3s;
-	font-size: 12px;
-	margin-top: 8px;
-}
-
-.content table th.sortable.asc::before {
-	opacity: 1;
-}
-
-.content table th.sortable.desc::after {
-	opacity: 1;
-}
-
 
 
 /* 表格响应式设计 - 优化移动端显示 */
@@ -432,15 +395,16 @@
 .content pre {
 	position: relative;
 	margin: 20px 0;
-	overflow: hidden;
+	overflow-x: auto; /* 允许长行横向滚动 */
+	overflow-y: hidden;
 	background: #1a1a1a;
 	border-radius: 8px;
 	padding: 20px;
 	border: 1px solid #333;
 }
 
-.content pre:not(.code-collapsed) {
-	padding-bottom: 50px; /* 为底部折叠按钮留出空间 */
+.content pre.has-collapse:not(.code-collapsed) {
+	padding-bottom: 50px; /* 仅可折叠代码块展开时为底部折叠按钮留出空间 */
 }
 
 
@@ -484,6 +448,10 @@
 	font-size: 10px;
 	font-family: 'SFMono-Regular', Consolas, monospace;
 	z-index: 10;
+	max-width: calc(100% - 150px); /* 为右侧复制/折叠按钮留出空间 */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 /* 代码折叠按钮样式 */
@@ -519,8 +487,8 @@
 /* 底部折叠按钮样式 */
 .code-collapse-bottom-button {
 	position: absolute;
-	bottom: 100px;
-	right: 100px;
+	bottom: 10px;
+	right: 10px;
 	background: rgba(0, 0, 0, 0.8);
 	color: #eee;
 	border: 1px solid rgba(255, 255, 255, 0.2);
@@ -576,7 +544,7 @@
     border-radius: 16px;
     color: #c8c8c8;
     font-size: 0.88em;
-    font-weight: 400;
+    font-weight: 500;
     font-family: 'SFMono-Regular', Consolas, monospace;
     text-decoration: none;
     cursor: pointer;
@@ -627,7 +595,7 @@
     color: #b0b0b0;
     font-size: 0.9em;
     font-family: 'SFMono-Regular', Consolas, monospace;
-    font-weight: 400;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     letter-spacing: 0.5px;
@@ -704,9 +672,12 @@
 .content ol p, .content ul p {
 	margin-bottom: 0px;
 }
+.content li p {
+	text-indent: 0; /* 列表项内的段落不缩进 */
+}
 .content li {
 	margin-top: 5px;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0.3px;
     font-family: var(--SourceHanSerifSC);
     font-size: 0.99em;
@@ -725,7 +696,7 @@
 .content ol#footnotes li {
 	margin-bottom: 10px;
 	margin-left: 16px;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 2;
 	list-style-type: none;
 }

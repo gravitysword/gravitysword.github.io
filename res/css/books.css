@@ -16,7 +16,8 @@
 }
 
 body {
-    font-family: var(--AlibabaPuHuiTi), sans-serif;
+    font-family: var(--SourceHanSansSC), sans-serif;
+    font-size: 16px;
     background: #000;
     color: var(--light);
     min-height: 100vh;
@@ -31,9 +32,9 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
+    padding: 8px 0;
     border-bottom: 1px solid rgb(255 255 255 / 10%);
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .logo {
@@ -41,11 +42,6 @@ header {
     align-items: center;
     gap: 10px;
     margin: 0 30px;
-}
-
-.logo i {
-    font-size: 1.8rem;
-    color: var(--blue-accent);
 }
 
 .logo h1 {
@@ -469,17 +465,17 @@ footer {
     line-height: 1.4;
     font-family: var(--SourceHanSerifSC), serif;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    min-height: 42px;
+    min-height: 63px;
 }
 
 .book-card-grid-author {
     font-size: 13px;
     color: var(--blue-accent);
-    margin: 0;
+    margin: 4px 0 0 0;
     padding: 2px 0;
     text-align: left;
     font-style: normal;
@@ -846,7 +842,7 @@ footer {
     
     .book-card-grid-title {
         font-size: 13px;
-        min-height: 36px;
+        min-height: 55px;
     }
     
     .book-card-grid-author {
@@ -891,7 +887,7 @@ footer {
     
     .book-card-grid-title {
         font-size: 12px;
-        min-height: 32px;
+        min-height: 50px;
     }
     
     .book-card-grid-author {

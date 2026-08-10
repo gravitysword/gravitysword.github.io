@@ -51,12 +51,12 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // 隐藏所有标题文本，但保留横条
+        // 降低所有非高亮标题文本的亮度，保留横条
         allItems.forEach(item => {
             const link = item.querySelector('a');
             // 移除active类，让CSS控制非活动项的颜色
             link.classList.remove('active');
-            // 添加一个类来隐藏文本但保持横条可见
+            // 添加一个类来降低文本亮度但保持横条可见
             link.classList.add('text-hidden');
             // 确保链接本身是可见的
             link.style.visibility = 'visible';

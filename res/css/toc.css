@@ -49,11 +49,6 @@
 
 
 
-/* 移除圆点样式 */
-.toc-container li::before {
-    display: none; /* 隐藏圆点 */
-}
-
 /* 增加文字左侧内边距 */
 .toc-container a {
     color: #aaa;
@@ -111,7 +106,7 @@
 /* 目录切换按钮样式 */
 .toc-toggle-button {
     position: fixed;
-    top: 20px;
+    top: 50%;
     left: 20px;
     width: 36px;
     height: 36px;
@@ -126,17 +121,17 @@
     z-index: 1001;
     transition: all 0.2s ease;
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(calc(-50% - 20px));
 }
 
 .toc-toggle-button.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(-50%);
 }
 
 .toc-toggle-button:hover {
     background-color: rgb(50 50 50 / 80%);
-    transform: scale(1.05);
+    transform: translateY(-50%) scale(1.05);
 }
 
 .toc-toggle-button svg {
@@ -148,6 +143,7 @@
 .toc-container.toc-visible {
     transform: translateX(0);
     opacity: 1;
+    background-color: rgb(0 0 0 / 80%);
 }
 
 /* 移除目录项的圆点，保持简约风格 */
@@ -179,8 +175,9 @@
 
 
 
+/* 不高亮的目录项降低亮度显示，而非完全隐藏 */
 .text-hidden {
-    color: rgb(0 0 0 / 0%) !important;
+    color: rgb(170 170 170 / 70%) !important;
     transition: color 0.5s ease !important;
 }
 

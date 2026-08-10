@@ -28,18 +28,6 @@
     <script src="/res/js/katex/katex.min.js"></script>
     <script src="/res/js/katex/contrib/auto-render.min.js"></script>
 
-    <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.getElementById("markdown-content"), {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "$", right: "$", display: false}
-                ],
-                throwOnError: false
-            });
-        });
-    </script>
-
     <link rel="stylesheet" href="/res/js/prism/prism-trae-dark.css">
 
 
@@ -47,7 +35,8 @@
     <script src="/res/js/extend/element_extend.js" type="module"></script>
 
     <!-- 字体扩展 -->
-    <script src="/res/js/extend/html_entend.js" type="module"></script>
+    <link rel="stylesheet" href="/res/css/extend.css">
+    <script src="/res/js/extend/font_trigger.js" defer></script>
     
 </head>
 
@@ -74,7 +63,7 @@
             </div>
         </div>
         <div class="section-divider"></div>
-        <div class="content" style="background-color: rgb(0, 0, 0); ">
+        <div class="content">
             <div id="markdown-content"></div>
         </div>
         <hr width="100%" />
@@ -91,7 +80,7 @@
                                 </path>
                             </svg></div>
                     </div>
-                    <span>share</span>
+                    <span>分享</span>
                 </button>
             </div>
         </div>

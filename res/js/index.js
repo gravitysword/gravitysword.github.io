@@ -4,11 +4,9 @@
 import { BLOG_getBlogItems } from '/res/js/blog_msg.js';
 
 // 状态变量
-let bloglist = []; // 当前页的文章列表
 let currentPage = 1;
 const itemsPerPage = 5;
 let totalPages = 1;
-let totalItems = 0;
 
 // DOM 元素引用
 const blogListElement = document.querySelector('.content-container .blog-list ul');
@@ -23,12 +21,12 @@ function displayBlogItems(items) {
         <li>
             <span class="blog-id" style="display:none">${item.id}</span>
             <span class="blog-title">${item.title}</span>
+            <span class="blog-description">${item.description}</span>
             <span class="blog-introduce">
                 <img class="calendar" src="/res/media/svg/sys/calendar.svg" loading="lazy" alt="日历">
                 <span class="blog-date">${item.date}</span>
                 ${item.tag.map(t => `<span class="blog-tag">#${t}</span>`).join('')}
             </span>
-            <span class="blog-description">${item.description}</span>
         </li>
     `).join('');
     
@@ -179,27 +177,26 @@ async function loadBlogPage(page) {
         
         if (result && result.items) {
             currentPage = page;
-            bloglist = result.items;
-            totalItems = result.total;
             totalPages = result.totalPages;
             
-            displayBlogItems(bloglist);
+            displayBlogItems(result.items);
             updatePagination();
         } else {
-            blogListElement.innerHTML = `
-                <li class="error-content">
-                    <p>加载失败，请稍后重试</p>
-                </li>
-            `;
+            showLoadError();
         }
     } catch (error) {
         console.error('Error loading blog page:', error);
-        blogListElement.innerHTML = `
-            <li class="error-content">
-                <p>加载失败，请稍后重试</p>
-            </li>
-        `;
+        showLoadError();
     }
+}
+
+// 显示加载失败提示
+function showLoadError() {
+    blogListElement.innerHTML = `
+        <li class="error-content">
+            <p>加载失败，请稍后重试</p>
+        </li>
+    `;
 }
 
 /**

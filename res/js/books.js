@@ -1,5 +1,3 @@
-import { backend } from '/res/js/blog_msg.js';
-
 // 书籍管理器
 const BookManager = {
     // 获取书籍数据 - 从本地 CSV 配置文件加载
@@ -11,7 +9,6 @@ const BookManager = {
             // 解析 CSV 数据
             const books = this.parseCSV(csvText);
             
-            console.log('成功从本地 CSV 配置加载书籍数据:', books);
             return { books };
         } catch (error) {
             console.error('加载书籍数据失败:', error);
@@ -95,19 +92,12 @@ const BookManager = {
         return str.split('||').map(item => item.trim()).filter(item => item !== '');
     },
 
-    // 获取状态文本和类名
+    // 获取状态文本和CSS类（简化状态系统：只支持"阅读中"和"闲置"）
     getStatusInfo(status) {
-        // 简化的状态系统：只支持"阅读中"和"闲置"两种状态
-        const validStatuses = ['阅读中', '闲置'];
-        
-        // 如果状态有效，直接使用；否则默认为"闲置"
-        const normalizedStatus = validStatuses.includes(status) ? status : '闲置';
-        
+        const text = status === '阅读中' ? '阅读中' : '闲置';
         return {
-            text: normalizedStatus,
-            activeStatus: normalizedStatus,
-            readingStatus: normalizedStatus,
-            tooltip: ''
+            text,
+            className: text === '阅读中' ? 'reading' : 'idle'
         };
     }
 };
@@ -117,24 +107,6 @@ const ViewRenderer = {
     selectedTagPath: null, // 当前选中的标签路径
     expandedNodes: new Set(), // 保存展开的节点路径
     currentView: 'cards', // 当前视图类型：'list' 或 'cards'
-    
-    // 处理图书点击事件 - 跳转到后端书籍详情页
-    async handleBookClick(bookId) {
-        try {
-            const config = await backend();
-            if (!config) {
-                console.error('无法获取后端配置');
-                alert('无法连接到服务器，请稍后重试');
-                return;
-            }
-            
-            const bookDetailUrl = `${config.host}/book/${bookId}`;
-            window.location.href = bookDetailUrl;
-        } catch (error) {
-            console.error('跳转到书籍详情页失败:', error);
-            alert('跳转失败，请稍后重试');
-        }
-    },
     
     // 构建标签树形结构
     buildTagsTree(books) {
@@ -279,14 +251,6 @@ const ViewRenderer = {
         }
     },
     
-    // 切换视图类型
-    toggleView() {
-        this.currentView = this.currentView === 'list' ? 'cards' : 'list';
-        this.updateViewButtons();
-        // 重新渲染当前筛选的书籍
-        this.filterBooksByTagPath(this.selectedTagPath, this.currentBooks);
-    },
-    
     // 更新视图切换按钮状态
     updateViewButtons() {
         const listBtn = document.getElementById('viewListBtn');
@@ -349,7 +313,6 @@ const ViewRenderer = {
                 const card = document.createElement('div');
                 card.className = 'book-card';
                 card.dataset.bookId = book.book_id;
-                card.style.cursor = 'pointer';
                 
                 const statusInfo = BookManager.getStatusInfo(book.read_status);
             
@@ -361,16 +324,11 @@ const ViewRenderer = {
                 <div class="book-card-author">${Array.isArray(book.author) ? book.author.join('<br>') : book.author}</div>
                 <div class="book-card-publisher">${book.publisher}</div>
                 <div class="book-card-status">
-                    <span class="status-badge status-${this.getStatusClass(statusInfo)}">
+                    <span class="status-badge status-${statusInfo.className}">
                         ${statusInfo.text}
                     </span>
                 </div>
             `;
-                
-                // 添加点击事件
-                card.addEventListener('click', () => {
-                    this.handleBookClick(book.book_id);
-                });
                 
                 cardsContainer.appendChild(card);
             });
@@ -399,7 +357,6 @@ const ViewRenderer = {
                 const card = document.createElement('div');
                 card.className = 'book-card-grid';
                 card.dataset.bookId = book.book_id;
-                card.style.cursor = 'pointer';
                 
                 const statusInfo = BookManager.getStatusInfo(book.read_status);
             
@@ -432,7 +389,7 @@ const ViewRenderer = {
             const status = document.createElement('div');
             status.className = 'book-card-grid-status';
             status.innerHTML = `
-                <span class="status-badge status-${this.getStatusClass(statusInfo)}">
+                <span class="status-badge status-${statusInfo.className}">
                     ${statusInfo.text}
                 </span>
             `;
@@ -445,11 +402,6 @@ const ViewRenderer = {
                 card.appendChild(content);
                 card.appendChild(status);
                 
-                // 添加点击事件
-                card.addEventListener('click', () => {
-                    this.handleBookClick(book.book_id);
-                });
-                
                 cardsContainer.appendChild(card);
             });
             
@@ -457,23 +409,8 @@ const ViewRenderer = {
         }
     },
     
-    // 获取状态对应的CSS类
-    getStatusClass(statusInfo) {
-        // 简化的状态系统：只支持"阅读中"和"闲置"两种状态
-        switch (statusInfo.readingStatus) {
-            case '阅读中':
-                return 'reading';
-            case '闲置':
-                return 'idle';
-            default:
-                return 'idle';
-        }
-    },
-    
     // 渲染文件夹视图 - 采用左右分栏布局
     renderFolderView(books) {
-        this.currentBooks = books; // 存储当前书籍数据
-        
         const bookshelf = document.getElementById('bookshelf');
         bookshelf.className = 'bookshelf folder-view';
         bookshelf.innerHTML = '';
@@ -515,18 +452,15 @@ const ViewRenderer = {
         const listBtn = document.getElementById('viewListBtn');
         const cardsBtn = document.getElementById('viewCardsBtn');
         
+        const setView = (view) => {
+            this.currentView = view;
+            this.updateViewButtons();
+            this.filterBooksByTagPath(this.selectedTagPath, books);
+        };
+        
         if (listBtn && cardsBtn) {
-            listBtn.addEventListener('click', () => {
-                this.currentView = 'list';
-                this.updateViewButtons();
-                this.filterBooksByTagPath(this.selectedTagPath, books);
-            });
-            
-            cardsBtn.addEventListener('click', () => {
-                this.currentView = 'cards';
-                this.updateViewButtons();
-                this.filterBooksByTagPath(this.selectedTagPath, books);
-            });
+            listBtn.addEventListener('click', () => setView('list'));
+            cardsBtn.addEventListener('click', () => setView('cards'));
         }
         
         // 渲染标签树形结构

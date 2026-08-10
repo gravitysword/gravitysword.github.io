@@ -150,6 +150,10 @@ function displayKnowledgeItems() {
                     <p class="blog-subtitle">${item.title}</p>
                 </header>
                 
+                <div class="card-content">
+                    <p class="blog-summary">${item.description}</p>
+                </div>
+                
                 <div class="card-meta">
                     <div class="meta-left">
                         <div class="date-info">
@@ -165,10 +169,6 @@ function displayKnowledgeItems() {
                             ${item.tag.length > 3 ? `<span class="blog-tag more-tags">+${item.tag.length - 3}</span>` : ''}
                         </div>
                     </div>
-                </div>
-                
-                <div class="card-content">
-                    <p class="blog-summary">${item.description}</p>
                 </div>
             </article>
         `).join('');
@@ -285,15 +285,6 @@ async function loadPage(page) {
         // 非搜索模式下，加载指定页的数据
         await loadKnowledgeData(page, false);
     }
-}
-
-/**
- * 转义正则表达式特殊字符
- * @param {string} string - 需要转义的字符串
- * @returns {string} 转义后的字符串
- */
-function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**
@@ -440,9 +431,6 @@ async function performSearch() {
     // 显示搜索结果
     displaySearchResults(filteredList, keywords);
 }
-
-// DOM 元素引用
-const paginationElement = document.querySelector('.pagination');
 
 document.addEventListener('DOMContentLoaded', async function() {
     const searchInput = document.querySelector('.search-input');
