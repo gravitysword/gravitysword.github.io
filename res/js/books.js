@@ -415,12 +415,6 @@ const ViewRenderer = {
         bookshelf.className = 'bookshelf folder-view';
         bookshelf.innerHTML = '';
         
-        // 隐藏搜索栏
-        const searchBar = document.querySelector('.search-bar');
-        if (searchBar) {
-            searchBar.style.display = 'none';
-        }
-        
         // 创建左右分栏布局
         bookshelf.innerHTML = `
             <div class="books-container">
@@ -436,10 +430,10 @@ const ViewRenderer = {
                         <h4>书籍列表</h4>
                         <div class="view-toggle-buttons">
                             <button id="viewCardsBtn" class="view-toggle-btn active" title="卡片视图">
-                                <i class="fas fa-th-large"></i>
+                                <svg viewBox="0 0 448 512" width="14" height="14" fill="currentColor"><path d="M0 96C0 60.7 28.7 32 64 32h96c35.3 0 64 28.7 64 64v96c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zm160 0H64v96h96V96zM288 32h96c35.3 0 64 28.7 64 64v96c0 35.3-28.7 64-64 64h-96c-35.3 0-64-28.7-64-64V96c0-35.3 28.7-64 64-64zm96 160V96h-96v96h96zM0 320c0-35.3 28.7-64 64-64h96c35.3 0 64 28.7 64 64v96c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64v-96zm160 0H64v96h96v-96zM288 256h96c35.3 0 64 28.7 64 64v96c0 35.3-28.7 64-64 64h-96c-35.3 0-64-28.7-64-64v-96c0-35.3 28.7-64 64-64zm96 160v-96h-96v96h96z"/></svg>
                             </button>
                             <button id="viewListBtn" class="view-toggle-btn" title="列表视图">
-                                <i class="fas fa-list"></i>
+                                <svg viewBox="0 0 512 512" width="14" height="14" fill="currentColor"><path d="M40 48C17.9 48 0 65.9 0 88v48c0 22.1 17.9 40 40 40h48c22.1 0 40-17.9 40-40V88c0-22.1-17.9-40-40-40H40zm192 0c-13.3 0-24 10.7-24 24s10.7 24 24 24h256c13.3 0 24-10.7 24-24s-10.7-24-24-24H232zm0 160c-13.3 0-24 10.7-24 24s10.7 24 24 24h256c13.3 0 24-10.7 24-24s-10.7-24-24-24H232zm0 160c-13.3 0-24 10.7-24 24s10.7 24 24 24h256c13.3 0 24-10.7 24-24s-10.7-24-24-24H232zM16 232c0-13.3 10.7-24 24-24h48c13.3 0 24 10.7 24 24v48c0 13.3-10.7 24-24 24H40c-13.3 0-24-10.7-24-24v-48zm192 0c-13.3 0-24 10.7-24 24s10.7 24 24 24h256c13.3 0 24-10.7 24-24s-10.7-24-24-24H232z"/></svg>
                             </button>
                         </div>
                     </div>

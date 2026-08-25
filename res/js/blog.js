@@ -1,4 +1,5 @@
 import { BLOG_getContent } from '/res/js/blog_msg.js';
+import { initImageViewer } from '/res/js/extend/image_viewer.js';
 
 
 // 配置marked解析器选项
@@ -278,29 +279,8 @@ const CodeBlockHandler = {
 
 // 图片处理模块
 const ImageHandler = {
-  // 初始化图片放大功能
+  // 初始化图片放大功能（实现见共享模块 extend/image_viewer.js）
   initImageZoom() {
-    const modal = document.createElement('div');
-    modal.className = 'image-modal';
-    modal.style.display = 'none';
-    
-    const modalImg = document.createElement('img');
-    modalImg.className = 'modal-image';
-    modalImg.onerror = function() {
-      this.src = '/res/media/svg/sys/image-error.svg';
-      this.onerror = null;
-      // 用 !important 覆盖 CSS 中 .modal-image 的 filter:none，让错误图标保持白色可见
-      this.style.setProperty('filter', 'invert(100%) brightness(100%)', 'important');
-    };
-    
-    const closeBtn = document.createElement('div');
-    closeBtn.className = 'modal-close';
-    closeBtn.innerHTML = '×';
-    
-    modal.appendChild(modalImg);
-    modal.appendChild(closeBtn);
-    document.body.appendChild(modal);
-
     // 打开模态窗时隐藏目录，关闭时恢复
     const setTocVisible = (visible) => {
       const tocContainer = document.querySelector('.toc-container');
@@ -309,80 +289,17 @@ const ImageHandler = {
       if (tocToggleButton) tocToggleButton.style.display = visible ? (window.innerWidth <= 1200 ? 'flex' : 'none') : 'none';
     };
 
-    const showImage = (src) => {
-      modalImg.classList.remove('active');
-      modal.style.display = 'flex';
-      modalImg.src = src;
-      
-      // 锁定背景滚动
-      document.body.style.overflow = 'hidden';
-      
-      setTocVisible(false);
-      
-      requestAnimationFrame(() => {
-        modalImg.classList.add('active');
-      });
-    };
-
-    const closeModal = () => {
-      modalImg.classList.remove('active');
-      setTimeout(() => {
-        modal.style.display = 'none';
-        modalImg.src = '';
-        
-        // 恢复背景滚动
+    initImageViewer({
+      shouldOpen: (img) => !img.classList.contains('weather') && !img.classList.contains('modal-image'),
+      onOpen: () => {
+        document.body.style.overflow = 'hidden'; // 锁定背景滚动
+        setTocVisible(false);
+      },
+      onClose: () => {
         document.body.style.overflow = '';
-        
         setTocVisible(true);
-      }, 300);
-    };
-
-    const handleImageClick = (e) => {
-      if (e.target.tagName === 'IMG' && !e.target.classList.contains('weather') && !e.target.classList.contains('modal-image')) {
-        // 优先使用data-original-src属性（原图URL）
-        const originalSrc = e.target.getAttribute('data-original-src');
-        const imageSrc = originalSrc || e.target.src;
-        showImage(imageSrc);
-      }
-    };
-
-    // 添加触摸事件支持
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
-    
-    modal.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }, false);
-    
-    modal.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
-      handleSwipe();
-    }, false);
-    
-    const handleSwipe = () => {
-      // 检测左右滑动
-      const diffX = touchEndX - touchStartX;
-      const diffY = touchEndY - touchStartY;
-      
-      // 如果水平滑动距离大于垂直滑动距离，并且滑动距离超过50px，则关闭模态窗
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-        closeModal();
-      }
-    };
-
-    document.addEventListener('click', handleImageClick);
-    closeBtn.addEventListener('click', closeModal);
-    closeBtn.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      closeModal();
+      },
     });
-    modal.addEventListener('click', (e) => e.target === modal && closeModal());
-    modal.addEventListener('touchstart', (e) => e.target === modal && closeModal());
-    document.addEventListener('keydown', (e) => e.key === 'Escape' && closeModal());
   },
 
   // 识别图片alt属性并添加注释

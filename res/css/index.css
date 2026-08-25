@@ -256,7 +256,8 @@ a {
 
 .content-container .blog-list li .blog-title {
     font-size: 20px;
-    width: 100%;
+    /* 宽度贴合文字，让 hover 下划线精确展开到文字宽度（替代 JS 测量） */
+    width: fit-content;
     color: #222;
     overflow-wrap: break-word;
     font-weight: 600;
@@ -277,17 +278,22 @@ a {
 }
 
 .content-container .blog-list li:hover .blog-title::after {
-    width: var(--title-width, 100%);
+    width: 100%;
 }
 
+/* 元信息行：日期与标签固定间隔，整体靠左 */
 .content-container .blog-list li .blog-introduce {
-    margin-top: 14px;
+    margin-top: 16px;
     font-size: 0.8rem;
     display: flex;
-    flex-flow: row wrap;
-    color: #555;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
+}
+
+.content-container .blog-list li .blog-introduce .blog-meta-date {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .content-container .blog-list li .blog-introduce .calendar {
@@ -297,14 +303,20 @@ a {
 }
 
 .content-container .blog-list li .blog-introduce .blog-date {
-    text-align: center;
-    font-weight: 500;
+    font-weight: 400;
+    color: #888;
+}
+
+/* 标签组：允许换行，间距统一由 gap 控制 */
+.content-container .blog-list li .blog-introduce .blog-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .content-container .blog-list li .blog-introduce .blog-tag {
     border-radius: 5px;
     text-align: center;
-    margin-left: 5px;
     color: #555;
     background-color: #f4f4f4;
     padding: 4px 10px;
@@ -313,8 +325,9 @@ a {
     font-weight: 500;
 }
 
+/* 摘要：最多两行，保证各卡片高度整齐 */
 .content-container .blog-list li .blog-description {
-    margin-top: 8px;
+    margin-top: 10px;
     font-size: 15px;
     color: #555;
     width: 100%;
@@ -322,6 +335,10 @@ a {
     overflow-wrap: break-word;
     line-height: 1.6;
     letter-spacing: 0.5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* 优化翻页栏样式 */

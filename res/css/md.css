@@ -399,8 +399,10 @@
 	overflow-y: hidden;
 	background: #1a1a1a;
 	border-radius: 8px;
-	padding: 20px;
+	/* 顶部留白加大，为左上角语言标签让位，避免首行紧贴/被遮挡；左右间距不变 */
+	padding: 48px 20px 20px;
 	border: 1px solid #333;
+	text-indent: 0; /* 代码块不做首行缩进 */
 }
 
 .content pre.has-collapse:not(.code-collapsed) {

@@ -49,13 +49,6 @@ header {
     font-weight: 700;
 }
 
-.search-bar {
-    display: flex;
-    gap: 15px;
-    margin: 50px 200px;
-    display: none; /* 隐藏搜索栏 */
-}
-
 footer {
     text-align: center;
     padding: 30px 0;

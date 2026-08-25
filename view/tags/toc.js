@@ -210,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 height: heading.offsetHeight,
                 element: heading // 存储元素引用以便快速访问
             }));
-            console.log('更新标题位置:', headingPositions.map(h => ({id: h.id, top: h.top})));
         }
 
         // 初始更新位置信息
@@ -294,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 // 只有当高亮标题变化时才更新DOM
                 if (newCurrentHeading && (!currentHeading || currentHeading.id !== newCurrentHeading.id)) {
                     currentHeading = newCurrentHeading;
-                    console.log('当前高亮标题:', currentHeading.id);
                     
                     // 更新高亮状态
                     tocLinks.forEach(link => {
@@ -315,7 +313,6 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // 监听内容变化，更新位置信息
         const contentObserver = new MutationObserver(debounce(() => {
-            console.log('内容变化，更新标题位置');
             updateHeadingPositions();
             updateTocHighlight();
         }, 100));

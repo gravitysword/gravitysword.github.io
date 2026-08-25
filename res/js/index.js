@@ -23,14 +23,17 @@ function displayBlogItems(items) {
             <span class="blog-title">${item.title}</span>
             <span class="blog-description">${item.description}</span>
             <span class="blog-introduce">
-                <img class="calendar" src="/res/media/svg/sys/calendar.svg" loading="lazy" alt="日历">
-                <span class="blog-date">${item.date}</span>
-                ${item.tag.map(t => `<span class="blog-tag">#${t}</span>`).join('')}
+                <span class="blog-meta-date">
+                    <img class="calendar" src="/res/media/svg/sys/calendar.svg" loading="lazy" alt="日历">
+                    <span class="blog-date">${item.date}</span>
+                </span>
+                <span class="blog-tags">
+                    ${item.tag.map(t => `<span class="blog-tag">#${t}</span>`).join('')}
+                </span>
             </span>
         </li>
     `).join('');
     
-    setTitleUnderlineWidth();
     addBlogItemClickEvents();
 }
 
@@ -127,26 +130,6 @@ function bindPaginationEvents() {
 }
 
 /**
- * 设置标题下划线
- */
-function setTitleUnderlineWidth() {
-    document.querySelectorAll('.blog-title').forEach(title => {
-        const measureSpan = document.createElement('span');
-        measureSpan.textContent = title.textContent;
-        measureSpan.style.cssText = `
-            position: absolute;
-            visibility: hidden;
-            white-space: nowrap;
-            font: ${getComputedStyle(title).font}
-        `;
-        
-        document.body.appendChild(measureSpan);
-        title.style.setProperty('--title-width', `${measureSpan.offsetWidth + 10}px`);
-        measureSpan.remove();
-    });
-}
-
-/**
  * 博客项点击事件
  */
 function addBlogItemClickEvents() {
@@ -209,9 +192,4 @@ async function initBlogList() {
 document.addEventListener('DOMContentLoaded', () => {
     // 启动博客列表
     initBlogList();
-    
-    // 添加窗口大小变化事件监听
-    window.addEventListener('resize', () => {
-        setTitleUnderlineWidth();
-    });
 });

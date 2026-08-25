@@ -3,6 +3,7 @@
  */
 
 import { backend } from '/res/js/blog_msg.js';
+import { initImageViewer } from '/res/js/extend/image_viewer.js';
 
 const UUID4_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -141,7 +142,7 @@ function createDailyItem(item, index) {
     const date = formatDate(item.date);
     
     const itemElement = document.createElement('div');
-    itemElement.className = 'relative mb-16 timeline-item opacity-0 translate-y-4 transition-all duration-700 ease-out';
+    itemElement.className = 'timeline-item';
     itemElement.dataset.index = index;
     
     const dot = document.createElement('div');
@@ -149,12 +150,11 @@ function createDailyItem(item, index) {
     itemElement.appendChild(dot);
     
     const content = document.createElement('div');
-    content.className = 'ml-16 bg-white rounded-md p-6 shadow-lg timeline-item-content';
+    content.className = 'timeline-item-content';
     
     // 日期和天气
     const dateElement = document.createElement('div');
-    dateElement.className = 'flex items-center mb-3';
-    let dateHtml = `<div class="text-sm text-gray-500">${date}`;
+    let dateHtml = `<div>${date}`;
     if (item.weather) {
         dateHtml += `<img class="weather" src="/res/media/svg/weather/${item.weather}.svg" alt="${item.weather}">`;
     }
@@ -164,23 +164,21 @@ function createDailyItem(item, index) {
     
     // 内容
     const paragraph = document.createElement('p');
-    paragraph.className = 'text-gray-500 mb-4';
     paragraph.innerHTML = item.content.replace(/\n/g, '<br>');
     content.appendChild(paragraph);
     
     // 图片
     if (item.pictures && item.pictures.length > 0) {
         const picturesContainer = document.createElement('div');
-        picturesContainer.className = 'pictures-grid mb-4';
+        picturesContainer.className = 'pictures-grid';
         
         item.pictures.forEach(async (picUrl) => {
             const pictureWrapper = document.createElement('div');
             pictureWrapper.className = 'picture-wrapper';
             
             const picture = document.createElement('img');
-            picture.src = '/res/media/svg/image-placeholder.svg';
             picture.alt = 'Timeline Image';
-            picture.className = 'timeline-image opacity-0 transition-opacity duration-500';
+            picture.className = 'timeline-image';
             
             if (isUUID4(picUrl)) {
                 try {
@@ -195,7 +193,7 @@ function createDailyItem(item, index) {
                     }
                 } catch (error) {
                     console.error('处理图片时出错:', error);
-                    picture.src = '/res/media/svg/image-error.svg';
+                    picture.src = '/res/media/svg/sys/image-error.svg';
                 }
             } else {
                 const lazyLoadImg = new Image();
@@ -207,7 +205,7 @@ function createDailyItem(item, index) {
             }
             
             picture.onerror = function() {
-                this.src = '/res/media/svg/image-error.svg';
+                this.src = '/res/media/svg/sys/image-error.svg';
                 this.onerror = null;
             };
             
@@ -221,7 +219,7 @@ function createDailyItem(item, index) {
     // 视频
     if (item.videos && item.videos.length > 0) {
         const videosContainer = document.createElement('div');
-        videosContainer.className = 'videos-grid mb-4';
+        videosContainer.className = 'videos-grid';
         
         item.videos.forEach(videoUrl => {
             const videoElement = document.createElement('video');
@@ -241,7 +239,6 @@ function createDailyItem(item, index) {
     // 标签
     if (item.hashtags && item.hashtags.length > 0) {
         const hashtagsContainer = document.createElement('div');
-        hashtagsContainer.className = 'flex flex-wrap';
         
         item.hashtags.forEach(hashtag => {
             const hashtagElement = document.createElement('div');
@@ -328,7 +325,6 @@ function setupIntersectionObserver() {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                entry.target.classList.remove('opacity-0', 'translate-y-4');
                 observer.unobserve(entry.target);
             }
         });
@@ -365,7 +361,6 @@ async function initTimeline() {
     
     if (initialItems.length === 0 && dailyFilePaths.length === 0) {
         const emptyMessage = document.createElement('div');
-        emptyMessage.className = 'text-center py-16';
         emptyMessage.innerHTML = `
             <div style="color: #888; font-size: 1.2rem; margin-bottom: 10px;">
                 📭
@@ -395,92 +390,11 @@ async function initTimeline() {
 }
 
 /**
- * 图片放大和视频播放功能
+ * 图片放大功能（实现见共享模块 extend/image_viewer.js）
  */
-const initMediaViewer = () => {
-  const modal = document.createElement('div');
-  modal.className = 'image-modal';
-  modal.style.display = 'none';
-  
-  const modalImg = document.createElement('img');
-  modalImg.className = 'modal-image';
-  modalImg.onerror = function() {
-    this.src = '/res/media/svg/image-error.svg';
-    this.onerror = null;
-  };
-  
-  const closeBtn = document.createElement('div');
-  closeBtn.className = 'modal-close';
-  closeBtn.innerHTML = '×';
-  
-  modal.appendChild(modalImg);
-  modal.appendChild(closeBtn);
-  document.body.appendChild(modal);
-
-  const showImage = (src) => {
-    modalImg.classList.remove('active');
-    modal.style.display = 'flex';
-    modalImg.src = src;
-    requestAnimationFrame(() => modalImg.classList.add('active'));
-  };
-
-  const closeModal = () => {
-    modalImg.classList.remove('active');
-    setTimeout(() => {
-      modal.style.display = 'none';
-      modalImg.src = '';
-    }, 300);
-  };
-
-  const handleImageClick = (e) => {
-    if (e.target.classList.contains('timeline-image')) {
-      const originalSrc = e.target.getAttribute('data-original-src') || e.target.src;
-      // 只有当图片已经加载完成才显示大图查看
-      if (e.target.src !== '/res/media/svg/image-placeholder.svg' && e.target.classList.contains('loaded')) {
-        showImage(originalSrc);
-      }
-    }
-  };
-
-  // 添加触摸事件支持
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let touchEndX = 0;
-  let touchEndY = 0;
-  
-  modal.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-  }, false);
-  
-  modal.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    touchEndY = e.changedTouches[0].screenY;
-    handleSwipe();
-  }, false);
-  
-  const handleSwipe = () => {
-    // 检测左右滑动
-    const diffX = touchEndX - touchStartX;
-    const diffY = touchEndY - touchStartY;
-    
-    // 如果水平滑动距离大于垂直滑动距离，并且滑动距离超过50px，则关闭模态窗
-    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-      closeModal();
-    }
-  };
-
-  document.addEventListener('click', handleImageClick);
-  closeBtn.addEventListener('click', closeModal);
-  closeBtn.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    closeModal();
-  });
-  modal.addEventListener('click', (e) => e.target === modal && closeModal());
-  modal.addEventListener('touchstart', (e) => e.target === modal && closeModal());
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && closeModal());
-};
+initImageViewer({
+  shouldOpen: (img) => img.classList.contains('timeline-image') && img.classList.contains('loaded'),
+});
 
 // 初始化时调用
-window.addEventListener('DOMContentLoaded', initMediaViewer);
 document.addEventListener('DOMContentLoaded', initTimeline);
