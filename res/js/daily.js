@@ -362,13 +362,13 @@ async function initTimeline() {
     if (initialItems.length === 0 && dailyFilePaths.length === 0) {
         const emptyMessage = document.createElement('div');
         emptyMessage.innerHTML = `
-            <div style="color: #888; font-size: 1.2rem; margin-bottom: 10px;">
+            <div style="color: #888; font-size: 1.2em; margin-bottom: 10px;">
                 📭
             </div>
-            <div style="color: #667eea; font-size: 1.1rem;">
+            <div style="color: #667eea; font-size: 1.1em;">
                 暂无动态内容
             </div>
-            <div style="color: #666; font-size: 0.9rem; margin-top: 8px;">
+            <div style="color: #666; font-size: 0.9em; margin-top: 8px;">
                 期待你的第一条碎碎念～
             </div>
         `;

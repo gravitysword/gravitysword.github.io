@@ -16,7 +16,7 @@
 }
 
 body {
-    font-family: var(--SourceHanSansSC), sans-serif;
+    font-family: var(--font-sans);
     font-size: 16px;
     background: #000;
     color: var(--light);
@@ -45,7 +45,7 @@ header {
 }
 
 .logo h1 {
-    font-size: 1.6rem;
+    font-size: 1.6em;
     font-weight: 700;
 }
 
@@ -78,11 +78,11 @@ footer {
     font-weight: 600;
     color: var(--blue-accent);
     margin-bottom: 15px;
-    font-family: var(--SourceHanSerifSC), serif;
+    font-family: var(--font-serif);
 }
 
 .tags-tree {
-    font-family: var(--SourceHanSerifSC), serif;
+    font-family: var(--font-serif);
 }
 
 .tag-node {
@@ -152,7 +152,7 @@ footer {
     font-weight: 600;
     color: var(--blue-accent);
     margin: 0;
-    font-family: var(--SourceHanSerifSC), serif;
+    font-family: var(--font-serif);
 }
 
 /* 视图切换按钮 */
@@ -456,7 +456,7 @@ footer {
     text-align: left;
     box-shadow: none;
     line-height: 1.4;
-    font-family: var(--SourceHanSerifSC), serif;
+    font-family: var(--font-serif);
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -473,7 +473,7 @@ footer {
     text-align: left;
     font-style: normal;
     line-height: 1.3;
-    font-family: var(--SourceHanSerifSC), serif;
+    font-family: var(--font-serif);
     font-weight: 500;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -487,7 +487,7 @@ footer {
     text-align: left;
     font-style: normal;
     line-height: 1.3;
-    font-family: var(--SourceHanSerifSC), serif;
+    font-family: var(--font-serif);
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -665,7 +665,7 @@ footer {
     font-weight: 600;
     font-size: 14px;
     color: var(--blue-accent);
-    font-family: var(--SourceHanSerifSC), serif;
+    font-family: var(--font-serif);
     align-items: center;
 }
 
@@ -730,7 +730,7 @@ footer {
     text-align: left;
     box-shadow: none;
     line-height: 1.4;
-    font-family: var(--SourceHanSerifSC), serif;
+    font-family: var(--font-serif);
 }
 
 /* 作者和出版社样式 */
@@ -743,7 +743,7 @@ footer {
     text-align: left;
     font-style: normal;
     line-height: 1.4;
-    font-family: var(--SourceHanSerifSC), serif;
+    font-family: var(--font-serif);
     display: flex;
     align-items: center;
     height: 100%;
@@ -776,7 +776,7 @@ footer {
     box-shadow: none;
     min-width: 55px;
     text-align: center;
-    font-family: var(--SourceHanSerifSC), serif;
+    font-family: var(--font-serif);
     transition: opacity 0.2s ease;
 }
 
@@ -898,7 +898,7 @@ footer {
     }
     
     .logo h1 {
-        font-size: 1.3rem;
+        font-size: 1.3em;
     }
 }
 

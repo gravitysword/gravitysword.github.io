@@ -2,7 +2,7 @@
 body {
     background-color: #000;
     color: #fff;
-    font-family: var(--SourceHanSansSC);
+    font-family: var(--font-sans);
     font-size: 16px;
     margin: 0;
     padding: 0;
@@ -38,8 +38,8 @@ p {
 }
 
 .top-sign-0 {
-    font-size: 2.2rem;
-    font-family: '楷体','Microsoft YaHei', STKaiti, sans-serif;
+    font-size: 2.2em;
+    font-family: '楷体','SimHei', STKaiti, sans-serif;
     color: #fff;
     margin-bottom: 15px;
     text-shadow: 2px 2px 4px rgb(0 0 0 / 30%);
@@ -49,8 +49,8 @@ p {
 }
 
 .top-sign-1 {
-    font-size: 1.5rem;
-    font-family: '楷体','Microsoft YaHei', STKaiti, sans-serif;
+    font-size: 1.5em;
+    font-family: '楷体','SimHei', STKaiti, sans-serif;
     color: #e0e0e0;
     text-shadow: 1px 1px 2px rgb(0 0 0 / 20%);
     animation: fadeInUp 1s ease-out;
@@ -122,7 +122,7 @@ p {
     /* 加载更多按钮响应式 */
     .load-more-button {
         padding: 12px 20px;
-        font-size: 0.9rem;
+        font-size: 0.9em;
         min-width: 44px;
         min-height: 44px;
     }
@@ -137,12 +137,12 @@ p {
     
     /* 顶部标题响应式 */
     .top-sign-0 {
-        font-size: 1.8rem;
+        font-size: 1.8em;
         letter-spacing: 1px;
     }
     
     .top-sign-1 {
-        font-size: 1rem;
+        font-size: 1em;
     }
     
     /* 时间轴内容响应式 */
@@ -160,7 +160,7 @@ p {
     /* 标签响应式 */
     .hashtag {
         padding: 3px 8px;
-        font-size: 0.7rem;
+        font-size: 0.7em;
         margin-right: 4px;
         margin-top: 4px;
     }
@@ -171,7 +171,7 @@ p {
         right: 10px;
         width: 35px;
         height: 35px;
-        font-size: 1.5rem;
+        font-size: 1.5em;
     }
     
     .modal-image {
@@ -338,7 +338,7 @@ video{
     margin-top: 6px;
     background-color: #333;
     border-radius: 12px;
-    font-size: 0.75rem;
+    font-size: 0.75em;
     color: #fff;
     transition: all 0.2s ease;
     cursor: pointer;
@@ -364,7 +364,7 @@ video{
     justify-content: space-between;
     align-items: center;
     color: #ccc;
-    font-size: 0.875rem;
+    font-size: 0.875em;
 }
 
 .beian {
@@ -419,7 +419,7 @@ video{
     border: 1px solid #333;
     border-radius: 6px;
     padding: 12px 24px;
-    font-size: 0.95rem;
+    font-size: 0.95em;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -582,7 +582,7 @@ video{
     top: 20px;
     right: 20px;
     color: #fff;
-    font-size: 2rem;
+    font-size: 2em;
     cursor: pointer;
     width: 40px;
     height: 40px;

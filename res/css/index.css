@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #000;
-    font-family: var(--SourceHanSansSC), sans-serif;
+    font-family: var(--font-sans);
     font-size: 16px;
     min-height: 100vh; 
     display: flex;
@@ -23,7 +23,7 @@ a {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-family:  '楷体','Microsoft YaHei', STKaiti, sans-serif;
+    font-family:  '楷体','SimHei', STKaiti, sans-serif;
     margin-top: 10px;
 }
 
@@ -179,7 +179,7 @@ a {
     margin-top: 10px;
     font-size: 16px  ;
         color : #000;
-    font-family: '楷体','Microsoft YaHei',  STKaiti, sans-serif;
+    font-family: '楷体','SimHei',  STKaiti, sans-serif;
 }
 
 .content-container .sidebar .sidebar-sign .sidebar-social  {
@@ -284,7 +284,7 @@ a {
 /* 元信息行：日期与标签固定间隔，整体靠左 */
 .content-container .blog-list li .blog-introduce {
     margin-top: 16px;
-    font-size: 0.8rem;
+    font-size: 0.8em;
     display: flex;
     align-items: center;
     gap: 20px;

@@ -1,11 +1,11 @@
 
 
 body {
-	font-size: 16px;
+	font-size: 17px;
 	background: #000000;
 	margin: 0px;
 	padding: 0px;
-	font-family: var(--SourceHanSansSC);
+	font-family: var(--font-sans);
 	line-height: 1.6;
 	color: #ffffff;
 }
@@ -271,7 +271,7 @@ img[src$=".svg"]:not(.modal-image),
     top: 25px;
     right: 25px;
     color: #fff;
-    font-size: 1.8rem;
+    font-size: 1.8em;
     cursor: pointer;
     width: 42px;
     height: 42px;
@@ -335,11 +335,11 @@ img[src$=".svg"]:not(.modal-image),
     /* 响应式图片注释 */
     .image-caption {
         font-size: 13px;
-        margin-top: 6px;
+        margin-top: 3px;
     }
     
     .image-wrapper {
-        margin: 15px 0;
+        margin: 15px auto;
     }
     
     /* 分享按钮响应式 */
@@ -376,16 +376,19 @@ img[src$=".svg"]:not(.modal-image),
         right: 12px;
         width: 36px;
         height: 36px;
-        font-size: 1.4rem;
+        font-size: 1.4em;
     }
 }
 
 /* 图片注释样式 */
 .image-wrapper {
-    display: inline-block;
-    margin: 20px 0;
-    text-align: center;
+    /* block + fit-content + margin auto：宽度收缩到图片宽度并水平居中，
+       替代原先的 inline-block（inline-block 在流中左对齐，导致图片贴左、右边距偏大） */
+    display: block;
+    width: fit-content;
     max-width: 100%;
+    margin: 20px auto;
+    text-align: center;
 }
 
 .image-wrapper img {
@@ -403,7 +406,7 @@ img[src$=".svg"]:not(.modal-image),
 }
 
 .image-caption {
-    margin-top: 7px;
+    margin-top: 4px;
     font-size: 14px;
     color: #ccc;
     font-style: italic;

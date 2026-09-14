@@ -53,7 +53,7 @@ B站视频下载： https://www.xtdowner.com/video/bilibili/
 音视频合并：https://www.hanloth.cn/tool/audio-video-combine
 微信视频号视频下载：https://github.com/qiye45/wechatVideoDownload
 
-字体： 阿里巴巴普惠体，思源宋体
+字体： 宋体、黑体
 
 
 # 时间轴

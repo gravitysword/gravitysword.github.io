@@ -16,7 +16,9 @@
 	margin-bottom: 4px;
 }
 .content h3{
-    display: inline-block; /* inline 会使 padding-top 无效且影响 TOC 定位 */
+    /* 必须为块级：inline-block 属于行内盒，不参与块级兄弟的 margin 折叠，
+       会导致 h2→h3 间距从折叠后的 24px 变为 14+24=38px */
+    display: block;
     text-decoration: underline; /* 用下划线替代渐变背景，多行标题不会断线 */
     text-decoration-color: #ff7e79;
     text-decoration-thickness: 2px;
@@ -29,19 +31,19 @@
 	margin: 36px 0 14px;
 	padding-left: 12px;
 	border-left: 6px solid #ff7e79;
-	font-weight: 700;
+	font-weight: 600;
 	line-height: 1.4;
 	transition: all 0.2s ease;
 }
 .content h3 {
-	font-weight: 700;
+	font-weight: 600;
 	font-size: 1.2em;
 	line-height: 1.4;
 	margin: 24px 0 10px;
 	padding-top: 10px;
 }
 .content h4 {
-	font-weight: 700;
+	font-weight: 600;
 	text-transform: uppercase;
 	font-size: 1.1em;
 	line-height: 1.4;
@@ -80,8 +82,8 @@
 	margin: 0 0 16px;
 	line-height: 1.7;
     font-weight: 500;
-    letter-spacing: 0.2px; 
-    font-family: var(--SourceHanSerifSC), sans-serif;
+    letter-spacing: 0.1px;
+    font-family: var(--font-serif);
     text-indent: 2em;
 }
 .content a {
@@ -680,8 +682,8 @@
 .content li {
 	margin-top: 5px;
     font-weight: 500;
-    letter-spacing: 0.3px;
-    font-family: var(--SourceHanSerifSC);
+    letter-spacing: 0.2px;
+    font-family: var(--font-serif);
     font-size: 0.99em;
 }
 .content ol#footnotes {

@@ -1,8 +1,6 @@
-/* 思源宋体（Noto Serif CJK）与思源黑体（Noto Sans CJK）：中文网字计划按需切片加载 */
-@import url('https://fontsapi.zeoseven.com/285/main/result.css?v=2');
-@import url('https://fontsapi.zeoseven.com/69/main/result.css?v=2');
+/* 英文字体统一用 Cambria；中文：宋体（SimSun）衬线正文，黑体（SimHei）无衬线界面 */
 
 :root{
-    --SourceHanSerifSC: "Noto Serif CJK";
-    --SourceHanSansSC: "Noto Sans CJK";
+    --font-serif: "Cambria", "SimSun", "宋体", "Songti SC", serif;
+    --font-sans: "Cambria", "SimHei", "黑体", "PingFang SC", sans-serif;
 }
